@@ -1,7 +1,7 @@
-// ==================== MAIN APP - ENHANCED VERSION ====================
+// ==================== MAIN APPLICATION - MODULAR STRUCTURE ====================
 
-// ==================== DATA ====================
-const featuredBooks = [
+// ==================== GLOBAL DATA ====================
+const booksData = [
   { id: '1', name: 'Đắc Nhân Tâm', author: 'Dale Carnegie', category: 'Kỹ năng sống', price: 86000, originalPrice: 120000, rating: 4.8, reviews: 1240, image: 'https://picsum.photos/seed/book1/300/400', badge: 'Bán chạy' },
   { id: '2', name: 'Nhà Giả Kim', author: 'Paulo Coelho', category: 'Văn học', price: 79000, originalPrice: 95000, rating: 4.9, reviews: 850, image: 'https://picsum.photos/seed/book2/300/400' },
   { id: '3', name: 'Nghĩ Giàu Làm Giàu', author: 'Napoleon Hill', category: 'Kinh tế', price: 110000, rating: 4.7, reviews: 620, image: 'https://picsum.photos/seed/book3/300/400', badge: 'Mới' },
@@ -12,7 +12,7 @@ const featuredBooks = [
   { id: '8', name: 'Muôn Kiếp Nhân Sinh', author: 'Nguyên Phong', category: 'Tôn giáo - Tâm linh', price: 168000, rating: 4.7, reviews: 980, image: 'https://picsum.photos/seed/book8/300/400' },
 ];
 
-const newReleases = [
+const newReleasesData = [
   { id: '9', name: 'Dune - Xứ Cát', author: 'Frank Herbert', category: 'Khoa học viễn tưởng', price: 210000, originalPrice: 250000, rating: 4.9, reviews: 150, image: 'https://picsum.photos/seed/book9/300/400', badge: 'Mới' },
   { id: '10', name: 'Atomic Habits', author: 'James Clear', category: 'Kỹ năng sống', price: 145000, rating: 4.8, reviews: 5200, image: 'https://picsum.photos/seed/book10/300/400' },
   { id: '11', name: 'Kẻ Trộm Sách', author: 'Markus Zusak', category: 'Văn học', price: 125000, originalPrice: 140000, rating: 4.7, reviews: 890, image: 'https://picsum.photos/seed/book11/300/400' },
@@ -20,102 +20,54 @@ const newReleases = [
   { id: '13', name: 'Tư Duy Nhanh Và Chậm', author: 'Daniel Kahneman', category: 'Kinh tế', price: 185000, originalPrice: 210000, rating: 4.8, reviews: 3400, image: 'https://picsum.photos/seed/book13/300/400', badge: 'Bán chạy' },
 ];
 
+// All books combined
+window.booksData = [...booksData, ...newReleasesData];
+
 // ==================== STATE ====================
-let cartItems = [];
 let currentRole = 'customer';
 let currentAdminView = 'overview';
-let selectedBook = null;
-let currentQty = 1;
-let currentHeroSlide = 0;
 let wishlists = new Set();
 
-// ==================== UTILITIES ====================
-function formatPrice(price) {
-  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
-}
+// ==================== ADMIN VIEWS REGISTRY ====================
+const adminViews = {
+  overview: overviewView,
+  import: importManagementView,
+  'book-info': bookInfoManagementView,
+  revenue: revenueManagementView,
+  sales: salesManagementView,
+  inventory: inventoryManagementView,
+  reports: reportsView,
+  settings: settingsView,
+  contact: contactView
+};
 
-function showToast(message) {
-  const toast = document.getElementById('toast');
-  const toastMessage = document.getElementById('toast-message');
-  toastMessage.textContent = message;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3000);
-}
+// View titles mapping
+const viewTitles = {
+  overview: 'Tổng quan',
+  import: 'Quản lý nhập sách',
+  'book-info': 'Quản lý thông tin sách',
+  revenue: 'Quản lý doanh thu',
+  sales: 'Quản lý bán hàng',
+  inventory: 'Quản lý kho',
+  reports: 'Báo cáo',
+  settings: 'Cài đặt hệ thống',
+  contact: 'Hỗ trợ & Liên hệ'
+};
 
-// Enhanced book card with discount calculation
-function createBookCard(book, isFlashSale = false) {
-  const displayPrice = isFlashSale ? Math.floor(book.price * 0.7) : book.price;
-  const displayOriginal = isFlashSale ? book.price : book.originalPrice;
-  const discount = displayOriginal ? Math.round((1 - displayPrice / displayOriginal) * 100) : 0;
-  const isWishlisted = wishlists.has(book.id);
+// ==================== INITIALIZATION ====================
+document.addEventListener('DOMContentLoaded', () => {
+  // Initialize components
+  initRoleToggle();
+  initHeroCarousel();
+  initFlashSaleTimer();
+  renderBooks();
+  initCartButton();
+  initAuthButton();
+  initAdminSidebar();
+  initChatbot();
   
-  return `
-    <div class="book-card" data-book-id="${book.id}">
-      <div class="book-image">
-        <img src="${book.image}" alt="${book.name}" referrerPolicy="no-referrer">
-        
-        <!-- Badges -->
-        <div class="book-badges">
-          ${book.badge ? `<span class="book-badge">${book.badge}</span>` : ''}
-          ${discount > 0 ? `<span class="book-badge discount">-${discount}%</span>` : ''}
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="book-quick-actions">
-          <button class="book-quick-btn wishlist ${isWishlisted ? 'active' : ''}" data-id="${book.id}" title="Yêu thích">
-            <i class="fas fa-heart ${isWishlisted ? 'fas' : 'far'}"></i>
-          </button>
-          <button class="book-quick-btn" onclick="event.stopPropagation(); quickViewBook('${book.id}')" title="Xem nhanh">
-            <i class="fas fa-eye"></i>
-          </button>
-        </div>
-
-        <!-- Quick Add -->
-        <div class="book-quick-add">
-          <button onclick="event.stopPropagation(); quickAddToCart('${book.id}')">
-            <i class="fas fa-shopping-cart"></i> Thêm Nhanh
-          </button>
-        </div>
-      </div>
-      
-      <div class="book-info">
-        <span class="book-category">${book.category}</span>
-        <h3 class="book-name">${book.name}</h3>
-        <p class="book-author">${book.author}</p>
-        <div class="book-rating">
-          <i class="fas fa-star"></i>
-          <span>${book.rating}</span>
-          <span class="reviews-count">(${book.reviews})</span>
-        </div>
-        <div class="book-card-bottom">
-          <div class="book-price">
-            <span class="current-price">${formatPrice(displayPrice)}</span>
-            ${displayOriginal ? `<span class="original-price">${formatPrice(displayOriginal)}</span>` : ''}
-          </div>
-          <button class="add-cart-btn" onclick="event.stopPropagation(); addToCartFromCard('${book.id}')">
-            <i class="fas fa-shopping-cart"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-// Quick functions for inline handlers
-function quickAddToCart(id) {
-  const book = [...featuredBooks, ...newReleases].find(b => b.id === id);
-  if (book) addToCart(book);
-}
-
-function quickViewBook(id) {
-  const book = [...featuredBooks, ...newReleases].find(b => b.id === id);
-  if (book) openBookModal(book);
-}
-
-function addToCartFromCard(id) {
-  const book = [...featuredBooks, ...newReleases].find(b => b.id === id);
-  if (book) addToCart(book);
-}
+  console.log('✅ Application initialized successfully');
+});
 
 // ==================== ROLE TOGGLE ====================
 function initRoleToggle() {
@@ -144,57 +96,7 @@ function initRoleToggle() {
 
 // ==================== HERO CAROUSEL ====================
 function initHeroCarousel() {
-  const slides = document.querySelectorAll('.hero-slide');
-  const indicatorsContainer = document.getElementById('hero-indicators');
-  const prevBtn = document.getElementById('hero-prev');
-  const nextBtn = document.getElementById('hero-next');
-  
-  // Create indicators
-  slides.forEach((_, index) => {
-    const indicator = document.createElement('div');
-    indicator.className = `hero-indicator ${index === 0 ? 'active' : ''}`;
-    indicator.addEventListener('click', () => goToSlide(index));
-    indicatorsContainer.appendChild(indicator);
-  });
-
-  // Navigation
-  prevBtn.addEventListener('click', () => prevSlide());
-  nextBtn.addEventListener('click', () => nextSlide());
-
-  // Auto slide
-  setInterval(() => {
-    nextSlide();
-  }, 5000);
-}
-
-function goToSlide(index) {
-  currentHeroSlide = index;
-  updateHeroSlide();
-}
-
-function nextSlide() {
-  const slides = document.querySelectorAll('.hero-slide');
-  currentHeroSlide = (currentHeroSlide + 1) % slides.length;
-  updateHeroSlide();
-}
-
-function prevSlide() {
-  const slides = document.querySelectorAll('.hero-slide');
-  currentHeroSlide = (currentHeroSlide - 1 + slides.length) % slides.length;
-  updateHeroSlide();
-}
-
-function updateHeroSlide() {
-  const slides = document.querySelectorAll('.hero-slide');
-  const indicators = document.querySelectorAll('.hero-indicator');
-  
-  slides.forEach((slide, i) => {
-    slide.classList.toggle('active', i === currentHeroSlide);
-  });
-  
-  indicators.forEach((indicator, i) => {
-    indicator.classList.toggle('active', i === currentHeroSlide);
-  });
+  const heroCarousel = new HeroCarousel('hero-slider');
 }
 
 // ==================== FLASH SALE TIMER ====================
@@ -208,9 +110,14 @@ function initFlashSaleTimer() {
     if (seconds < 0) { seconds = 59; minutes--; }
     if (minutes < 0) { minutes = 59; hours--; }
     if (hours < 0) { hours = 24; }
-    document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+    
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+    
+    if (hoursEl) hoursEl.textContent = hours.toString().padStart(2, '0');
+    if (minutesEl) minutesEl.textContent = minutes.toString().padStart(2, '0');
+    if (secondsEl) secondsEl.textContent = seconds.toString().padStart(2, '0');
   }, 1000);
 }
 
@@ -220,486 +127,90 @@ function renderBooks() {
   const featuredContainer = document.getElementById('featured-books');
   const newReleasesContainer = document.getElementById('new-releases');
 
-  // Flash Sale - first 5 books
-  flashSaleContainer.innerHTML = featuredBooks.slice(0, 5).map(book => createBookCard(book, true)).join('');
+  // Update bookCard instance callbacks
+  bookCard.onAddToCart = (book) => {
+    cartDrawer.addItem(book, 1);
+    toast.success(`Đã thêm "${book.name}" vào giỏ hàng`);
+  };
   
-  // Featured Books
-  featuredContainer.innerHTML = featuredBooks.map(book => createBookCard(book)).join('');
+  bookCard.onQuickView = (book) => {
+    bookDetailsModal.open(book);
+  };
   
-  // New Releases
-  newReleasesContainer.innerHTML = newReleases.map(book => createBookCard(book)).join('');
-
-  // Add click handlers for cards
-  document.querySelectorAll('.book-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const bookId = card.dataset.bookId;
-      const book = [...featuredBooks, ...newReleases].find(b => b.id === bookId);
-      if (book) openBookModal(book);
-    });
-  });
-
-  // Add wishlist handlers
-  document.querySelectorAll('.book-quick-btn.wishlist').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const id = btn.dataset.id;
-      toggleWishlist(id, btn);
-    });
-  });
-}
-
-function toggleWishlist(id, btn) {
-  if (wishlists.has(id)) {
-    wishlists.delete(id);
-    btn.classList.remove('active');
-    btn.innerHTML = '<i class="far fa-heart"></i>';
-  } else {
-    wishlists.add(id);
-    btn.classList.add('active');
-    btn.innerHTML = '<i class="fas fa-heart"></i>';
-    showToast('Đã thêm vào yêu thích');
-  }
-}
-
-// ==================== CART FUNCTIONALITY ====================
-function initCart() {
-  const cartBtn = document.getElementById('btn-cart');
-  const cartDrawer = document.getElementById('cart-drawer');
-  const cartOverlay = document.getElementById('cart-overlay');
-  const cartClose = document.getElementById('cart-close');
-
-  cartBtn.addEventListener('click', () => {
-    cartDrawer.classList.add('active');
-    cartOverlay.classList.add('active');
-  });
-
-  const closeCart = () => {
-    cartDrawer.classList.remove('active');
-    cartOverlay.classList.remove('active');
+  bookCard.onWishlist = (ids) => {
+    wishlists = new Set(ids);
   };
 
-  cartClose.addEventListener('click', closeCart);
-  cartOverlay.addEventListener('click', closeCart);
+  // Initialize bookCard with wishlists
+  bookCard.wishlists = wishlists;
+
+  // Flash Sale - first 5 books with 30% discount
+  bookCard.renderAll(booksData.slice(0, 5), 'flash-sale-books', { isFlashSale: true });
+  
+  // Featured Books
+  bookCard.renderAll(booksData, 'featured-books', {});
+  
+  // New Releases
+  bookCard.renderAll(newReleasesData, 'new-releases', {});
 }
 
-function addToCart(book, quantity = 1) {
-  const existing = cartItems.find(item => item.id === book.id);
-  if (existing) {
-    existing.quantity += quantity;
-  } else {
-    cartItems.push({ ...book, quantity });
-  }
-  updateCartUI();
-  showToast(`Đã thêm "${book.name}" vào giỏ hàng`);
-}
-
-function removeFromCart(id) {
-  cartItems = cartItems.filter(item => item.id !== id);
-  updateCartUI();
-}
-
-function updateCartQuantity(id, delta) {
-  const item = cartItems.find(item => item.id === id);
-  if (item) {
-    item.quantity += delta;
-    if (item.quantity < 1) {
-      removeFromCart(id);
-    } else {
-      updateCartUI();
-    }
+// ==================== CART ====================
+function initCartButton() {
+  const cartBtn = document.getElementById('btn-cart');
+  if (cartBtn) {
+    cartBtn.addEventListener('click', () => {
+      cartDrawer.toggle();
+    });
   }
 }
 
-function updateCartUI() {
-  const cartCount = document.getElementById('cart-count');
-  const cartItemsContainer = document.getElementById('cart-items');
-  const cartTotal = document.getElementById('cart-total');
-
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-  cartCount.textContent = totalItems;
-  cartCount.classList.toggle('hidden', totalItems === 0);
-  cartTotal.textContent = formatPrice(totalPrice);
-
-  if (cartItems.length === 0) {
-    cartItemsContainer.innerHTML = '<p class="cart-empty">Giỏ hàng trống</p>';
-  } else {
-    cartItemsContainer.innerHTML = cartItems.map(item => `
-      <div class="cart-item">
-        <img src="${item.image}" alt="${item.name}">
-        <div class="cart-item-info">
-          <h4 class="cart-item-name">${item.name}</h4>
-          <p class="cart-item-price">${formatPrice(item.price)}</p>
-          <div class="cart-item-qty">
-            <button onclick="updateCartQuantity('${item.id}', -1)">-</button>
-            <span>${item.quantity}</span>
-            <button onclick="updateCartQuantity('${item.id}', 1)">+</button>
-          </div>
-        </div>
-        <button class="cart-item-remove" onclick="removeFromCart('${item.id}')">
-          <i class="fas fa-trash"></i>
-        </button>
-      </div>
-    `).join('');
-  }
-}
-
-// Make functions global for inline handlers
-window.updateCartQuantity = updateCartQuantity;
-window.removeFromCart = removeFromCart;
-window.addToCart = addToCart;
-window.quickAddToCart = quickAddToCart;
-window.quickViewBook = quickViewBook;
-window.addToCartFromCard = addToCartFromCard;
-
-// ==================== BOOK MODAL ====================
-function initBookModal() {
-  const bookModal = document.getElementById('book-modal');
-  const bookClose = document.getElementById('book-close');
-
-  bookClose.addEventListener('click', closeBookModal);
-  bookModal.addEventListener('click', (e) => {
-    if (e.target === bookModal) closeBookModal();
-  });
-
-  document.getElementById('qty-minus').addEventListener('click', () => {
-    if (currentQty > 1) {
-      currentQty--;
-      document.getElementById('qty-input').value = currentQty;
-    }
-  });
-
-  document.getElementById('qty-plus').addEventListener('click', () => {
-    currentQty++;
-    document.getElementById('qty-input').value = currentQty;
-  });
-
-  document.getElementById('btn-add-to-cart').addEventListener('click', () => {
-    if (selectedBook) {
-      addToCart(selectedBook, currentQty);
-      closeBookModal();
-    }
-  });
-}
-
-function openBookModal(book) {
-  selectedBook = book;
-  currentQty = 1;
-  
-  document.getElementById('book-detail-image').src = book.image;
-  
-  // Badges
-  const badgeEl = document.getElementById('book-detail-badge');
-  const discountEl = document.getElementById('book-detail-discount');
-  
-  if (book.badge) {
-    badgeEl.textContent = book.badge;
-    badgeEl.style.display = 'inline-block';
-  } else {
-    badgeEl.style.display = 'none';
-  }
-  
-  const discount = book.originalPrice ? Math.round((1 - book.price / book.originalPrice) * 100) : 0;
-  if (discount > 0) {
-    discountEl.textContent = `-${discount}%`;
-    discountEl.style.display = 'inline-block';
-  } else {
-    discountEl.style.display = 'none';
-  }
-  
-  document.getElementById('book-detail-name').textContent = book.name;
-  document.getElementById('book-detail-author').textContent = `Tác giả: ${book.author}`;
-  document.getElementById('book-detail-rating').textContent = book.rating;
-  document.getElementById('book-detail-reviews').textContent = book.reviews;
-  document.getElementById('book-detail-price').textContent = formatPrice(book.price);
-  
-  const originalEl = document.getElementById('book-detail-original');
-  if (book.originalPrice) {
-    originalEl.textContent = formatPrice(book.originalPrice);
-    originalEl.style.display = 'inline';
-  } else {
-    originalEl.style.display = 'none';
-  }
-  
-  document.getElementById('book-detail-description').textContent = `Cuốn sách "${book.name}" của tác giả ${book.author}, thuộc thể loại ${book.category}. Đây là một cuốn sách rất đáng đọc với nội dung hấp dẫn và bổ ích.`;
-  document.getElementById('qty-input').value = 1;
-
-  document.getElementById('book-modal').classList.add('active');
-}
-
-function closeBookModal() {
-  document.getElementById('book-modal').classList.remove('active');
-  selectedBook = null;
-}
-
-// ==================== AUTH MODAL ====================
-function initAuthModal() {
+// ==================== AUTH ====================
+function initAuthButton() {
   const authBtn = document.getElementById('btn-login');
-  const authModal = document.getElementById('auth-modal');
-  const authClose = document.getElementById('auth-close');
-
-  authBtn.addEventListener('click', () => authModal.classList.add('active'));
-  authClose.addEventListener('click', () => authModal.classList.remove('active'));
-  authModal.addEventListener('click', (e) => {
-    if (e.target === authModal) authModal.classList.remove('active');
-  });
-
-  document.getElementById('auth-form').addEventListener('submit', (e) => {
-    e.preventDefault();
-    showToast('Đăng nhập thành công!');
-    authModal.classList.remove('active');
-  });
+  if (authBtn) {
+    authBtn.addEventListener('click', () => {
+      authModal.open('login');
+    });
+  }
 }
 
-// ==================== ADMIN VIEWS ====================
-const adminViews = {
-  overview: `
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon blue"><i class="fas fa-shopping-bag"></i></div>
-        <div class="stat-info">
-          <h4>1,234</h4>
-          <p>Đơn hàng hôm nay</p>
-          <span class="stat-change positive">+12.5%</span>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon green"><i class="fas fa-money-bill-wave"></i></div>
-        <div class="stat-info">
-          <h4>125.5M</h4>
-          <p>Doanh thu hôm nay</p>
-          <span class="stat-change positive">+8.2%</span>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon orange"><i class="fas fa-users"></i></div>
-        <div class="stat-info">
-          <h4>856</h4>
-          <p>Khách hàng mới</p>
-          <span class="stat-change positive">+15.3%</span>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon purple"><i class="fas fa-book"></i></div>
-        <div class="stat-info">
-          <h4>3,456</h4>
-          <p>Sản phẩm tồn kho</p>
-          <span class="stat-change negative">-2.1%</span>
-        </div>
-      </div>
-    </div>
-    <div class="admin-card">
-      <div class="admin-card-header">
-        <h3>Đơn hàng gần đây</h3>
-        <a href="#" class="view-all-btn">Xem tất cả</a>
-      </div>
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Mã đơn</th>
-            <th>Khách hàng</th>
-            <th>Sản phẩm</th>
-            <th>Tổng tiền</th>
-            <th>Trạng thái</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>#DH001</td><td>Nguyễn Văn A</td><td>Đắc Nhân Tâm</td><td>86,000đ</td><td><span class="status-badge success">Hoàn thành</span></td></tr>
-          <tr><td>#DH002</td><td>Trần Thị B</td><td>Nhà Giả Kim</td><td>79,000đ</td><td><span class="status-badge warning">Đang xử lý</span></td></tr>
-          <tr><td>#DH003</td><td>Lê Văn C</td><td>Atomic Habits</td><td>145,000đ</td><td><span class="status-badge danger">Chờ thanh toán</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  `,
-  
-  import: `
-    <div class="admin-card">
-      <div class="admin-card-header">
-        <h3>Quản lý nhập sách</h3>
-        <button class="submit-btn" style="width: auto; padding: 10px 20px;">+ Thêm đơn nhập</button>
-      </div>
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Mã phiếu</th>
-            <th>Ngày nhập</th>
-            <th>Nhà cung cấp</th>
-            <th>Số lượng</th>
-            <th>Tổng tiền</th>
-            <th>Trạng thái</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>#PN001</td><td>20/01/2024</td><td>Công ty ABC</td><td>500</td><td>50,000,000đ</td><td><span class="status-badge success">Hoàn thành</span></td></tr>
-          <tr><td>#PN002</td><td>22/01/2024</td><td>Công ty XYZ</td><td>300</td><td>30,000,000đ</td><td><span class="status-badge warning">Đang chờ</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  `,
-  
-  'book-info': `
-    <div class="admin-card">
-      <div class="admin-card-header">
-        <h3>Quản lý thông tin sách</h3>
-        <button class="submit-btn" style="width: auto; padding: 10px 20px;">+ Thêm sách mới</button>
-      </div>
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th>Mã sách</th>
-            <th>Tên sách</th>
-            <th>Tác giả</th>
-            <th>Thể loại</th>
-            <th>Giá bán</th>
-            <th>Tồn kho</th>
-            <th>Thao tác</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${featuredBooks.map(book => `
-            <tr>
-              <td>${book.id}</td>
-              <td>${book.name}</td>
-              <td>${book.author}</td>
-              <td>${book.category}</td>
-              <td>${formatPrice(book.price)}</td>
-              <td>${Math.floor(Math.random() * 100) + 10}</td>
-              <td>
-                <button style="color: var(--primary); background: none; margin-right: 8px;"><i class="fas fa-edit"></i></button>
-                <button style="color: var(--danger); background: none;"><i class="fas fa-trash"></i></button>
-              </td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-    </div>
-  `,
-  
-  revenue: `
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon green"><i class="fas fa-calendar-check"></i></div>
-        <div class="stat-info">
-          <h4>890.5M</h4>
-          <p>Doanh thu tháng này</p>
-          <span class="stat-change positive">+18.2%</span>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon blue"><i class="fas fa-chart-line"></i></div>
-        <div class="stat-info">
-          <h4>1.2M</h4>
-          <p>Trung bình/ngày</p>
-          <span class="stat-change positive">+5.4%</span>
-        </div>
-      </div>
-    </div>
-    <div class="admin-card">
-      <div class="admin-card-header"><h3>Doanh thu theo ngày</h3></div>
-      <table class="admin-table">
-        <thead><tr><th>Ngày</th><th>Số đơn</th><th>Doanh thu</th><th>Lợi nhuận</th></tr></thead>
-        <tbody>
-          <tr><td>20/01/2024</td><td>45</td><td>4,500,000đ</td><td>1,350,000đ</td></tr>
-          <tr><td>19/01/2024</td><td>52</td><td>5,200,000đ</td><td>1,560,000đ</td></tr>
-          <tr><td>18/01/2024</td><td>38</td><td>3,800,000đ</td><td>1,140,000đ</td></tr>
-        </tbody>
-      </table>
-    </div>
-  `,
-  
-  sales: `
-    <div class="admin-card">
-      <div class="admin-card-header"><h3>Quản lý bán hàng</h3></div>
-      <table class="admin-table">
-        <thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Sản phẩm</th><th>Số lượng</th><th>Tổng tiền</th><th>Ngày đặt</th><th>Trạng thái</th></tr></thead>
-        <tbody>
-          <tr><td>#DH001</td><td>Nguyễn Văn A</td><td>Đắc Nhân Tâm</td><td>2</td><td>172,000đ</td><td>20/01/2024</td><td><span class="status-badge success">Hoàn thành</span></td></tr>
-          <tr><td>#DH002</td><td>Trần Thị B</td><td>Nhà Giả Kim</td><td>1</td><td>79,000đ</td><td>20/01/2024</td><td><span class="status-badge warning">Đang xử lý</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  `,
-  
-  inventory: `
-    <div class="admin-card">
-      <div class="admin-card-header"><h3>Quản lý kho</h3></div>
-      <table class="admin-table">
-        <thead><tr><th>Mã sách</th><th>Tên sách</th><th>Tồn kho</th><th>Đã bán</th><th>Còn lại</th><th>Trạng thái</th></tr></thead>
-        <tbody>
-          ${featuredBooks.slice(0, 5).map(book => {
-            const sold = Math.floor(Math.random() * 50);
-            const stock = Math.floor(Math.random() * 100) + 20;
-            return `
-              <tr>
-                <td>${book.id}</td>
-                <td>${book.name}</td>
-                <td>${stock}</td>
-                <td>${sold}</td>
-                <td>${stock - sold}</td>
-                <td><span class="status-badge ${stock - sold < 20 ? 'danger' : 'success'}">${stock - sold < 20 ? 'Sắp hết' : 'Còn hàng'}</span></td>
-              </tr>
-            `;
-          }).join('')}
-        </tbody>
-      </table>
-    </div>
-  `,
-  
-  reports: `
-    <div class="admin-card">
-      <div class="admin-card-header"><h3>Báo cáo tổng hợp</h3></div>
-      <div style="padding: 40px; text-align: center; color: var(--gray-500);">
-        <i class="fas fa-chart-bar" style="font-size: 48px; margin-bottom: 16px;"></i>
-        <p>Biểu đồ và báo cáo chi tiết sẽ được hiển thị tại đây</p>
-      </div>
-    </div>
-  `,
-  
-  settings: `
-    <div class="admin-card">
-      <div class="admin-card-header"><h3>Cài đặt hệ thống</h3></div>
-      <div class="form-group"><label>Tên cửa hàng</label><input type="text" value="Book Sales Store"></div>
-      <div class="form-group"><label>Email liên hệ</label><input type="email" value="contact@booksales.vn"></div>
-      <div class="form-group"><label>Điện thoại</label><input type="tel" value="1900 xxxx"></div>
-      <div class="form-group"><label>Địa chỉ</label><input type="text" value="123 Đường ABC, Quận 1, TP.HCM"></div>
-      <button class="submit-btn">Lưu thay đổi</button>
-    </div>
-  `,
-  
-  contact: `
-    <div class="admin-card">
-      <div class="admin-card-header"><h3>Hỗ trợ & Liên hệ</h3></div>
-      <table class="admin-table">
-        <thead><tr><th>STT</th><th>Họ tên</th><th>Email</th><th>Tiêu đề</th><th>Nội dung</th><th>Ngày gửi</th><th>Trạng thái</th></tr></thead>
-        <tbody>
-          <tr><td>1</td><td>Nguyễn Văn A</td><td>a@gmail.com</td><td>Hỏi về sách</td><td>Tôi muốn hỏi về...</td><td>20/01/2024</td><td><span class="status-badge warning">Chưa đọc</span></td></tr>
-          <tr><td>2</td><td>Trần Thị B</td><td>b@gmail.com</td><td>Góp ý</td><td>Cửa hàng nên...</td><td>19/01/2024</td><td><span class="status-badge success">Đã trả lời</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  `
-};
+// ==================== ADMIN SIDEBAR ====================
+function initAdminSidebar() {
+  document.querySelectorAll('.nav-item[data-view]').forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      loadAdminView(item.dataset.view);
+    });
+  });
+
+  const logoutBtn = document.getElementById('btn-logout');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      logoutModal.open();
+    });
+  }
+
+  // Handle logout
+  logoutModal.onConfirm = () => {
+    document.getElementById('btn-customer').click();
+  };
+}
 
 function loadAdminView(view) {
   currentAdminView = view;
-  const adminContent = document.getElementById('admin-content');
+  
+  // Update title
   const viewTitle = document.getElementById('admin-view-title');
+  if (viewTitle) {
+    viewTitle.textContent = viewTitles[view] || 'Tổng quan';
+  }
   
-  const titles = {
-    overview: 'Tổng quan',
-    import: 'Quản lý nhập sách',
-    'book-info': 'Quản lý thông tin sách',
-    revenue: 'Quản lý doanh thu',
-    sales: 'Quản lý bán hàng',
-    inventory: 'Quản lý kho',
-    reports: 'Báo cáo',
-    settings: 'Cài đặt hệ thống',
-    contact: 'Hỗ trợ & Liên hệ'
-  };
-  
-  viewTitle.textContent = titles[view] || 'Tổng quan';
-  adminContent.innerHTML = adminViews[view] || adminViews.overview;
+  // Render view content
+  const adminContent = document.getElementById('admin-content');
+  if (adminContent && adminViews[view]) {
+    adminContent.innerHTML = adminViews[view].render();
+  }
   
   // Update active nav item
   document.querySelectorAll('.nav-item').forEach(item => {
@@ -709,73 +220,13 @@ function loadAdminView(view) {
   });
 }
 
-function initAdminSidebar() {
-  document.querySelectorAll('.nav-item[data-view]').forEach(item => {
-    item.addEventListener('click', (e) => {
-      e.preventDefault();
-      loadAdminView(item.dataset.view);
-    });
-  });
-
-  document.getElementById('btn-logout').addEventListener('click', (e) => {
-    e.preventDefault();
-    document.getElementById('btn-customer').click();
-  });
-}
-
 // ==================== CHATBOT ====================
 function initChatbot() {
-  const chatbotToggle = document.getElementById('chatbot-toggle');
-  const chatbot = document.getElementById('chatbot');
-  const chatbotClose = document.getElementById('chatbot-close');
-  const messagesContainer = document.getElementById('chatbot-messages');
-
-  chatbotToggle.addEventListener('click', () => chatbot.classList.toggle('active'));
-  chatbotClose.addEventListener('click', () => chatbot.classList.remove('active'));
-
-  function sendMessage() {
-    const input = document.getElementById('chatbot-input');
-    const message = input.value.trim();
-    if (!message) return;
-
-    const userMsg = document.createElement('div');
-    userMsg.className = 'chatbot-message user';
-    userMsg.innerHTML = `<p>${message}</p>`;
-    messagesContainer.appendChild(userMsg);
-    input.value = '';
-
-    setTimeout(() => {
-      const botMsg = document.createElement('div');
-      botMsg.className = 'chatbot-message bot';
-      const responses = [
-        'Cảm ơn bạn đã liên hệ! Tôi có thể giúp gì cho bạn?',
-        'Bạn có thể tìm kiếm sách theo tên, tác giả hoặc thể loại.',
-        'Để xem giỏ hàng, hãy nhấn vào biểu tượng giỏ hàng ở góc trên.',
-        'Chúng tôi có chương trình khuyến mãi đặc biệt vào cuối tuần này!',
-        'Bạn cần hỗ trợ về đơn hàng nào? Tôi sẽ giúp bạn kiểm tra.'
-      ];
-      botMsg.innerHTML = `<p>${responses[Math.floor(Math.random() * responses.length)]}</p>`;
-      messagesContainer.appendChild(botMsg);
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }, 1000);
-  }
-
-  document.getElementById('chatbot-send').addEventListener('click', sendMessage);
-  document.getElementById('chatbot-input').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage();
-  });
+  // Chatbot is already initialized in chatbot.js
 }
 
-// ==================== INITIALIZATION ====================
-document.addEventListener('DOMContentLoaded', () => {
-  initRoleToggle();
-  initHeroCarousel();
-  initFlashSaleTimer();
-  renderBooks();
-  initCart();
-  initBookModal();
-  initAuthModal();
-  initAdminSidebar();
-  initChatbot();
-});
+// ==================== EXPORTS ====================
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { booksData, newReleasesData };
+}
 
