@@ -3233,3 +3233,46 @@ input, textarea {
   width: 100%;
 }
 
+/* ==================== BOOK FORM MODAL SLIDE-OVER ==================== */
+.modal.book-form-modal {
+  position: fixed;
+  right: -100%;
+  top: 0;
+  height: 100vh;
+  width: 480px;
+  max-width: 100%;
+  border-radius: 0;
+  transition: right 0.3s ease-in-out;
+  margin: 0;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.modal-overlay#book-add-modal {
+  justify-content: flex-end;
+  padding: 0;
+  background: rgba(0, 0, 0, 0);
+}
+
+.modal-overlay#book-add-modal.active {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-overlay#book-add-modal.active .modal.book-form-modal {
+  right: 0;
+}
+
+/* Adjust modal close button position for slide-over */
+.modal.book-form-modal .modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.modal.book-form-modal h2 {
+  text-align: left;
+  margin-top: 8px;
+}
+

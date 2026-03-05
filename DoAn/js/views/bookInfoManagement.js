@@ -88,15 +88,15 @@ const bookInfoManagementView = {
       <tr>
         <td>
           <div class="book-cell">
-            <img src="${book.image}" alt="${book.name}" referrerPolicy="no-referrer">
+            <img src="${book.image}" alt="${escapeHtml(book.name)}" referrerPolicy="no-referrer">
             <div>
-              <p class="book-name">${book.name}</p>
+              <p class="book-name">${escapeHtml(book.name)}</p>
               <p class="book-isbn">ISBN: 978-604-${1000 + idx}</p>
             </div>
           </div>
         </td>
-        <td>${book.author}</td>
-        <td><span class="category-badge">${book.category}</span></td>
+        <td>${escapeHtml(book.author)}</td>
+        <td><span class="category-badge">${escapeHtml(book.category)}</span></td>
         <td>
           <div class="price-cell">
             <span class="current-price">${formatPrice(book.price)}</span>
@@ -111,7 +111,7 @@ const bookInfoManagementView = {
         </td>
         <td>
           <div class="action-buttons">
-            <button class="btn-icon" title="Tạo ảnh bìa AI" onclick="bookInfoManagementView.openImageGenerator('${book.name}')">
+            <button class="btn-icon" title="Tạo ảnh bìa AI" onclick="bookInfoManagementView.openImageGenerator('${escapeHtml(book.name)}')">
               <i class="fas fa-image"></i>
             </button>
             <button class="btn-icon" title="Sửa" onclick="bookInfoManagementView.editBook('${book.id}')">
