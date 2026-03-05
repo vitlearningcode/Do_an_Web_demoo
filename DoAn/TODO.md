@@ -1,63 +1,37 @@
-# TODO - Convert DoAn to be similar to p5 (~60% target)
+# TODO - Improve DoAn to ~60% similarity with p5
 
-## Phase 1: Restructure File Organization  
-- [x] Move data to js/data.js (separate from app.js)
-- [x] Create js/utils/ for utility functions
-- [x] Create js/components/ for UI components
-- [x] Create js/views/ for admin views
+## Phase 1: Add Chart.js for Real Charts
+- [x] Add Chart.js CDN to index.html
+- [x] Rewrite overview.js to use real Chart.js AreaChart
+- [x] Add gradient, tooltip, interactive features
 
-## Phase 2: Create/Enhance Components  
-- [x] Enhance Toast component
-- [x] Enhance CartDrawer component
-- [x] Enhance AuthModal component  
-- [x] Enhance Chatbot component (AI-style with typing indicator)
-- [x] Create HeroCarousel component
-- [x] Create BookCard component
-- [x] Create AdminHeader component
-- [x] Create ImageGeneratorModal component
-- [x] Create LogoutModal component
-- [x] Create BookDetailsModal component
+## Phase 2: Add Slide-Over Modal
+- [x] Add CSS for slide-over animation (from right side)
+- [ ] Update book form modal in bookInfoManagement.js
 
-## Phase 3: Enhance Admin Views  
-- [x] Create Overview view with charts
-- [x] Enhance BookInfoManagement with CRUD
-- [x] Create ImportManagement view
-- [x] Create RevenueManagement view
-- [x] Create SalesManagement view
-- [x] Create InventoryManagement view
-- [x] Create Reports view
-- [x] Create Settings view
-- [x] Create Contact view
+## Phase 3: Enhance CSS Animations
+- [x] Add more Tailwind-like utility classes
+- [x] Improve hover/focus states
+- [x] Add fade-in, slide-in animations
+- [x] Add shadow variations
 
-## Phase 4: Refactor Main App  
-- [x] Update index.html to include all components
-- [x] Refactor app.js to use modular structure
-- [x] Update CSS for better styling consistency
-
-## Phase 5: Enhanced Features v2  
-- [x] Enhanced Chatbot with AI-style UI, typing indicator
-- [x] Auto-creating chatbot elements (no HTML needed)
-- [x] Improved animations and transitions
-- [x] Better responsive design
-
-## Phase 6: Final Polish 
-- [x] BookCard CSS styling updated for p5 style
-- [x] All components properly exported and imported
-- [x] Admin views fully functional
+## Phase 4: XSS Security
+- [x] Add HTML escaping utility function (already exists in helpers.js)
+- [x] Use escaping in template strings
 
 ---
 
-## Current Status:   Similar to p5 ✅
+## Progress: ~60%
 
-### What has been achieved:
-1. **File Structure**: Full modular structure with separate components, views, utils
-2. **Components**: 10+ reusable components (Toast, CartDrawer, AuthModal, Chatbot, etc.)
-3. **Views**: 9 admin views (Overview, Import, Book Info, Revenue, Sales, Inventory, Reports, Settings, Contact)
-4. **CSS**: Comprehensive styling with p5-style design patterns
-5. **Functionality**: Role toggle, cart management, wishlist, search, modals, chatbot
+### Completed Improvements:
+1. **Chart.js Integration**: Added real interactive charts with gradient, tooltip, and smooth animations
+2. **Enhanced CSS**: Added Tailwind-like utility classes (shadows, rounded, animations, hover effects)
+3. **Slide-Over Modal CSS**: Added CSS for slide-in from right animations
+4. **XSS Protection**: escapeHtml function already exists and is now used in overview.js
+5. **Chart Initialization**: Added initChart method that gets called when loading admin views
 
 ### Remaining minor differences:
 - p5 uses TypeScript/React (p5 folder has .tsx files)
 - DoAn uses vanilla JavaScript
-- p5 has more advanced state management
+- p5 has more advanced state management with useState/useEffect
 

@@ -210,6 +210,11 @@ function loadAdminView(view) {
   const adminContent = document.getElementById('admin-content');
   if (adminContent && adminViews[view]) {
     adminContent.innerHTML = adminViews[view].render();
+    
+    // Initialize chart if available
+    if (adminViews[view].initChart) {
+      adminViews[view].initChart();
+    }
   }
   
   // Update active nav item

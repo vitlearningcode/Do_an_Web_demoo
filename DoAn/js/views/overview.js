@@ -2,6 +2,7 @@
 
 const overviewView = {
   title: 'Tổng quan',
+  chart: null,
   
   render: () => {
     const statsData = [
@@ -51,11 +52,11 @@ const overviewView = {
                 <i class="fas ${stat.icon}"></i>
               </div>
               <div class="stat-info">
-                <h4>${stat.value}</h4>
-                <p>${stat.title}</p>
+                <h4>${escapeHtml(stat.value)}</h4>
+                <p>${escapeHtml(stat.title)}</p>
                 <span class="stat-change ${stat.isUp ? 'positive' : 'negative'}">
                   <i class="fas fa-arrow-${stat.isUp ? 'up' : 'down'}"></i>
-                  ${stat.change}
+                  ${escapeHtml(stat.change)}
                 </span>
               </div>
             </div>
@@ -69,17 +70,8 @@ const overviewView = {
               <h3>Biểu đồ doanh thu</h3>
               <button class="card-action">Xem chi tiết</button>
             </div>
-            <div class="chart-placeholder">
-              <div class="chart-bars">
-                ${[40, 65, 45, 80, 55, 70, 90].map(height => `
-                  <div class="chart-bar" style="height: ${height}%">
-                    <span class="bar-tooltip">${height * 150000}₫</span>
-                  </div>
-                `).join('')}
-              </div>
-              <div class="chart-labels">
-                <span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span>
-              </div>
+            <div class="chart-container" style="height: 280px; position: relative;">
+              <canvas id="revenueChart"></canvas>
             </div>
           </div>
 
@@ -96,8 +88,8 @@ const overviewView = {
                 <div class="stock-item">
                   <div class="stock-indicator ${item.stock <= 5 ? 'danger' : 'warning'}"></div>
                   <div class="stock-info">
-                    <h4>${item.name}</h4>
-                    <p>${item.category}</p>
+                    <h4>${escapeHtml(item.name)}</h4>
+                    <p>${escapeHtml(item.category)}</p>
                   </div>
                   <div class="stock-count">
                     <span class="${item.stock <= 5 ? 'text-danger' : 'text-warning'}">${item.stock}</span>
@@ -131,10 +123,10 @@ const overviewView = {
             <tbody>
               ${recentOrders.map(order => `
                 <tr>
-                  <td>#${order.id}</td>
-                  <td>${order.customer}</td>
-                  <td>${order.product}</td>
-                  <td>${order.total}</td>
+                  <td>#${escapeHtml(order.id)}</td>
+                  <td>${escapeHtml(order.customer)}</td>
+                  <td>${escapeHtml(order.product)}</td>
+                  <td>${escapeHtml(order.total)}</td>
                   <td>
                     <span class="status-badge ${order.status}">
                       ${order.status === 'completed' ? 'Hoàn thành' : 
@@ -148,6 +140,110 @@ const overviewView = {
         </div>
       </div>
     `;
+  },
+  
+  // Initialize Chart.js after render
+  initChart: () => {
+    // Wait for DOM to be ready
+    setTimeout(() => {
+      const ctx = document.getElementById('revenueChart');
+      if (!ctx) return;
+      
+      // Destroy existing chart if any
+      if (overviewView.chart) {
+        overviewView.chart.destroy();
+      }
+      
+      const data = {
+        labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
+        datasets: [{
+          label: 'Doanh thu',
+          data: [4000000, 3000000, 2000000, 2780000, 1890000, 2390000, 3490000],
+          fill: true,
+          borderColor: '#3b82f6',
+          backgroundColor: (context) => {
+            const chart = context.chart;
+            const {ctx, chartArea} = chart;
+            if (!chartArea) return null;
+            const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+            gradient.addColorStop(0, 'rgba(59, 130, 246, 0)');
+            gradient.addColorStop(1, 'rgba(59, 130, 246, 0.3)');
+            return gradient;
+          },
+          borderWidth: 3,
+          tension: 0.4,
+          pointBackgroundColor: '#3b82f6',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }]
+      };
+      
+      overviewView.chart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            intersect: false,
+            mode: 'index'
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              backgroundColor: '#1f2937',
+              titleColor: '#fff',
+              bodyColor: '#fff',
+              padding: 12,
+              cornerRadius: 12,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  return new Intl.NumberFormat('vi-VN', { 
+                    style: 'currency', 
+                    currency: 'VND' 
+                  }).format(context.raw);
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: {
+                display: false
+              },
+              ticks: {
+                color: '#64748b',
+                font: {
+                  size: 12
+                }
+              }
+            },
+            y: {
+              grid: {
+                color: '#f1f5f9'
+              },
+              ticks: {
+                color: '#64748b',
+                font: {
+                  size: 12
+                },
+                callback: function(value) {
+                  if (value >= 1000000) {
+                    return (value / 1000000).toFixed(1) + 'M';
+                  }
+                  return value.toLocaleString();
+                }
+              }
+            }
+          }
+        }
+      });
+    }, 100);
   }
 };
 
