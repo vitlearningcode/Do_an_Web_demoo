@@ -1,131 +1,140 @@
-1.create table NguoiDung
-- maNd(khoa chinh)
-- tenNd
-- diachi
+1. create table NguoiDung
+- maND (khoa chinh)
+- tenND
 - sdt
 - email
+- ngayTao
 
-
-2.create table TaiKhoan
-- tenDN(khoa chinh)
+2. create table TaiKhoan
+- tenDN (khoa chinh)
 - matKhau
-- maNd(khoa ngoai)
-- mavt(khoa ngoai)
+- trangThai
+- maND (khoa ngoai)
+- maVT (khoa ngoai)
 
-3.create table vaiTro
-- mavt(khoa chinh)
-- tenvt
+3. create table VaiTro
+- maVT (khoa chinh)
+- tenVT
 
+4. create table DiaChiGiaoHang
+- maDC (khoa chinh)
+- diaChiChiTiet
+- laMacDinh
+- maND (khoa ngoai)
 
-4.create table Sach
-- maSach(khoa chinh)
-- tenSach
-- AnhSach
-- namSX
-- ngonNgu
-- moTaSach
-- loaiBiaSach (bia mem - bia cung)
-- soLuongTon
-- giaBan
-- khuyenMai
-- trangThai (NgungKD - DangKD) 
+5. create table TheLoai
+- maTL (khoa chinh)
+- tenTL
 
-5.create table Sach_TheLoai
-- maSach(khoa chinh)
-- maTheLoai(khoa chinh)
-
-6.create table Sach_TacGia
-- maSach(khoa chinh)
-- maTG(khoa chinh)
-
-7.create table Sach_NXB
-- maSach(khoa chinh)
-- maNXB(khoa chinh)
-
-8.create table NXB
-- maNXB(khoa chinh)
+6. create table NhaXuatBan
+- maNXB (khoa chinh)
 - tenNXB
-- diachi
+- diaChi
 
-9.Create table TacGia
-- maTG(khoa chinh)
+7. create table TacGia
+- maTG (khoa chinh)
 - tenTG
 - tieuSu
 
-10.Create table TheLoai
-- maTheLoai(khoa chinh)
-- tenTheLoai
+8. create table Sach
+- maSach (khoa chinh)
+- tenSach
+- namSX
+- loaiBia
+- giaBan
+- soLuongTon
+- moTa
+- trangThai
+- maNXB (khoa ngoai)
 
-11.create table ncc
-- mancc(khoa chinh)
-- tenNCC
-- diachi
-- sdt
-- email
-- mức Chiếc khấu 
+9. create table Sach_TheLoai
+- maSach (khoa chinh, khoa ngoai)
+- maTL (khoa chinh, khoa ngoai)
 
-12.create table PhieuNhap
-- maPn(khoa chinh)
-- tongLuongNhap
-- ngaylap
-- sotienDaThanhToan
-- tongtien
-- trangThai (Completed/Waiting/returned) 
-- mancc(khoa ngoai)
+10. create table Sach_TacGia
+- maSach (khoa chinh, khoa ngoai)
+- maTG (khoa chinh, khoa ngoai)
 
-13.create table chiTietPN
-- maPn(khoa chinh)
-- masach(khoa chinh)
-- soLuongNhap
-- giaNhap
-- mức Chiếc khấu 
-- thanhTien
+11. create table HinhAnhSach
+- maHA (khoa chinh)
+- urlAnh
+- maSach (khoa ngoai)
 
-14.create table PhieuXuat
-- maPX(khoa chinh)
-- ngaylap
-- tongLuongXuat
-- tongtien
+12. create table PhuongThucThanhToan
+- maPT (khoa chinh)
+- tenPT
 
+13. create table KhuyenMai
+- maKM (khoa chinh)
+- tenKM
+- ngayBatDau
+- ngayKetThuc
 
-15.create table chiTietPX
-- maPX(khoa chinh)
-- maNd(khoa ngoai)
-- masach(khoa ngoai)
+14. create table ChiTietKhuyenMai
+- maKM (khoa chinh, khoa ngoai)
+- maSach (khoa chinh, khoa ngoai)
+- phanTramGiam
+- soLuongKhuyenMai
+
+15. create table DonHang
+- maDH (khoa chinh)
+- ngayDat
+- tongTien
+- trangThai
+- maND (khoa ngoai)
+- maDC (khoa ngoai)
+- maPT (khoa ngoai)
+
+16. create table ChiTietDH
+- maDH (khoa chinh, khoa ngoai)
+- maSach (khoa chinh, khoa ngoai)
 - soLuong
 - giaBan
-- tiengiam float
+- thanhTien
+- maKM (khoa ngoai)
+
+17. create table DanhGiaSach
+- maDG (khoa chinh)
+- diemDG
+- nhanXet
+- ngayDG
+- maSach (khoa ngoai)
+- maND (khoa ngoai)
+
+18. create table NhaCungCap
+- maNCC (khoa chinh)
+- tenNCC
+- sdt
+- email
+- chietKhauMacDinh
+
+19. create table PhieuNhap
+- maPN (khoa chinh)
+- tongLuongNhap
+- ngayLap
+- soTienDaThanhToan
+- tongTien
+- trangThai
+- maNCC (khoa ngoai)
+
+20. create table ChiTietPN
+- maPN (khoa chinh, khoa ngoai)
+- maSach (khoa chinh, khoa ngoai)
+- soLuongNhap
+- giaNhap
+- chietKhau
 - thanhTien
 
-16.create table DoanhThu 
-- maDT(khoa chinh)
-- thoigian
-- lợi nhuận 
-- DoanhThu
-- soDon
+21. create table CongNo
+- maCN (khoa chinh)
+- tongNo
+- capNhatCuoi
+- maNCC (khoa ngoai)
 
-17.create table congno
-- maCn(khoa chinh)
-- tieno
-- thoihan
-
-18.create table CTCN
-- maCn(khoa chinh)
-- maPn(khoa chinh)
-- mancc(khoa chinh)
-- sotienchuathanhtoan
-- thoihanno
-
-19.create table DanhGiaSach
-- maDGS(khoa chinh)
-- diemDG(1*->5*)
-- nhanXet
-- maSach(khoa ngoai)
-- maNd(khoa ngoai)
-
-20.create table KhuyenMai
-- maKM(khoa chinh)
-- tenKhuyenMai
-- giatriKM
-
-
+22. create table LichSuThanhToanPN
+- maLSTT (khoa chinh)
+- ngayThanhToan
+- soTienTra
+- hinhThucTra
+- ghiChu
+- maPN (khoa ngoai)
