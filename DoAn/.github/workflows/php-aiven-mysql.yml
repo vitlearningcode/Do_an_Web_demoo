@@ -1,0 +1,39 @@
+name: DoAn-Web CI with Aiven MySQL
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo, pdo_mysql
+
+      - name: Lint PHP files
+        run: php -l config/db.php && php -l test_connect.php
+
+      - name: Prepare TLS CA Certificate
+        run: |
+          mkdir -p certs
+          echo "${{ secrets.AIVEN_SSL_CA_B64 }}" | base64 -d > certs/ca.pem
+
+      - name: Test Connection to Aiven MySQL
+        env:
+          AIVEN_DB_HOST: ${{ secrets.AIVEN_DB_HOST }}
+          AIVEN_DB_PORT: ${{ secrets.AIVEN_DB_PORT }}
+          AIVEN_DB_DATABASE: ${{ secrets.AIVEN_DB_DATABASE }}
+          AIVEN_DB_USER: ${{ secrets.AIVEN_DB_USER }}
+          AIVEN_DB_PASSWORD: ${{ secrets.AIVEN_DB_PASSWORD }}
+          AIVEN_SSL_CA: ${{ github.workspace }}/certs/ca.pem
+        run: php test_connect.php
