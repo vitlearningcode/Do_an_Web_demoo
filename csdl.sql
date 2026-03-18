@@ -238,7 +238,7 @@ INSERT INTO KhuyenMai (maKM, tenKM, ngayBatDau, ngayKetThuc) VALUES
 
 -- Giả lập thuật toán đã bốc 2 cuốn sách cũ đưa vào Flash Sale
 INSERT INTO ChiTietKhuyenMai (maKM, maSach, phanTramGiam, soLuongKhuyenMai) VALUES 
-('FS_TODAY', 'S003', 15, 50),  -- Sapiens giảm 15% (Giống file data.js)
+('FS_TODAY', 'S003', 22, 50),  -- Sapiens giảm 22% (Giống file data.js)
 ('FS_TODAY', 'S001', 10, 20);  -- Đắc Nhân Tâm giảm 10%
 
 -- ========================================================
