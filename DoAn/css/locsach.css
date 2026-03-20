@@ -1,0 +1,133 @@
+/* =========================================
+   GIAO DIỆN BỘ LỌC NẰM NGANG (PILL DESIGN)
+   ========================================= */
+
+.category-layout-vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+/* Khung trắng chứa toàn bộ khu vực lọc */
+.filter-top-bar {
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
+    width: 100%;
+    border: 1px solid #f0f0f0;
+}
+
+.filter-header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.filter-header-top h4 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Nút làm mới bộ lọc */
+.btn-reset-outline {
+    background: transparent;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    padding: 6px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.btn-reset-outline:hover {
+    background: #dc3545;
+    color: #fff;
+}
+
+.filter-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.filter-group-horizontal {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.filter-label {
+    min-width: 100px; /* Cố định chiều rộng cột tiêu đề */
+    margin: 0;
+    padding-top: 10px;
+    font-weight: 600;
+    color: #555;
+}
+
+/* Khu vực chứa các nút bấm */
+.filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    flex: 1;
+}
+
+/* Ẩn input checkbox/radio thật đi */
+.filter-pill-label input[type="checkbox"],
+.filter-pill-label input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Tạo hình dáng cho cái nhãn (label) thành dạng viên thuốc */
+.filter-pill-label span {
+    display: inline-block;
+    padding: 8px 18px;
+    background-color: #f8f9fa;
+    color: #444;
+    border: 1px solid #e9ecef;
+    border-radius: 25px; /* Bo tròn mạnh */
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    user-select: none;
+}
+
+/* Hiệu ứng khi lướt chuột */
+.filter-pill-label:hover span {
+    background-color: #e2e6ea;
+    border-color: #dae0e5;
+}
+
+/* HIỆU ỨNG KHI ĐƯỢC CLICK CHỌN */
+.filter-pill-label input:checked ~ span {
+    background-color: #007bff; /* Đổi màu này theo màu chủ đạo web bạn (vd: cam, xanh dương) */
+    color: #fff;
+    border-color: #007bff;
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+    font-weight: 500;
+}
+
+/* Khu vực hiển thị sách */
+.category-results-bottom {
+    width: 100%;
+}
+
+.results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+}
