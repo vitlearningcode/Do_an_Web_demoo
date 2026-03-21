@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Book Sales Management - Cửa hàng sách trực tuyến</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/locsach.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <!-- Chart.js for real charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
   <div id="app">
     <!-- Role Toggle -->
@@ -31,12 +34,15 @@
       </div>
 
       <!-- Header -->
-     <header class="header">
+      <header class="header">
         <div class="container">
           <div class="header-content">
             <div class="logo">
               <div class="logo-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open" aria-hidden="true"><path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open" aria-hidden="true">
+                  <path d="M12 7v14"></path>
+                  <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path>
+                </svg>
               </div>
               <div class="logo-text">
                 <h1>BOOK SALES</h1>
@@ -47,18 +53,28 @@
             <div class="search-box">
               <input type="text" placeholder="Tìm kiếm tựa sách, tác giả, nhà xuất bản...">
               <button>
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true">
+                  <path d="m21 21-4.34-4.34"></path>
+                  <circle cx="11" cy="11" r="8"></circle>
+                </svg>
               </button>
             </div>
 
             <div class="header-actions">
               <button class="action-btn" id="btn-login">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user" aria-hidden="true"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user" aria-hidden="true">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
                 <span>Đăng nhập</span>
               </button>
               <button class="action-btn" id="btn-cart">
                 <div class="cart-icon-wrapper">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart" aria-hidden="true"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart" aria-hidden="true">
+                    <circle cx="8" cy="21" r="1"></circle>
+                    <circle cx="19" cy="21" r="1"></circle>
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                  </svg>
                   <span class="cart-count hidden" id="cart-count">0</span>
                 </div>
                 <span>Giỏ hàng</span>
@@ -68,7 +84,11 @@
 
           <nav class="categories-nav">
             <button class="category-btn">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true">
+                <path d="M4 5h16"></path>
+                <path d="M4 12h16"></path>
+                <path d="M4 19h16"></path>
+              </svg>
               Danh mục sách
             </button>
             <a href="#">Sách Mới</a>
@@ -83,150 +103,219 @@
       </header>
 
       <main class="main-content container">
-        <!-- Hero Banner -->
-        <section class="hero-banner">
-          <div class="hero-slider" id="hero-slider">
-            <!-- Slide 1 -->
-            <div class="hero-slide active blue">
-              <div class="hero-slide-bg">
-                <img src="https://picsum.photos/seed/banner1/1200/400" alt="Banner">
-                <div class="gradient-overlay"></div>
+        <div id="home-content">
+          <!-- Hero Banner -->
+          <section class="hero-banner">
+            <div class="hero-slider" id="hero-slider">
+              <!-- Slide 1 -->
+              <div class="hero-slide active blue">
+                <div class="hero-slide-bg">
+                  <img src="https://picsum.photos/seed/banner1/1200/400" alt="Banner">
+                  <div class="gradient-overlay"></div>
+                </div>
+                <div class="hero-content">
+                  <span class="hero-badge">Khuyến mãi tháng 10</span>
+                  <h2>Hội Sách Mùa Thu<br>Giảm Giá Lên Đến 50%</h2>
+                  <p>Khám phá hàng ngàn tựa sách hấp dẫn với mức giá ưu đãi nhất trong năm. Miễn phí giao hàng toàn quốc.</p>
+                  <button class="hero-btn">Mua Ngay <i class="fas fa-arrow-right"></i></button>
+                </div>
               </div>
-              <div class="hero-content">
-                <span class="hero-badge">Khuyến mãi tháng 10</span>
-                <h2>Hội Sách Mùa Thu<br>Giảm Giá Lên Đến 50%</h2>
-                <p>Khám phá hàng ngàn tựa sách hấp dẫn với mức giá ưu đãi nhất trong năm. Miễn phí giao hàng toàn quốc.</p>
-                <button class="hero-btn">Mua Ngay <i class="fas fa-arrow-right"></i></button>
+              <!-- Slide 2 -->
+              <div class="hero-slide emerald">
+                <div class="hero-slide-bg">
+                  <img src="https://picsum.photos/seed/banner2/1200/400" alt="Banner">
+                  <div class="gradient-overlay"></div>
+                </div>
+                <div class="hero-content">
+                  <span class="hero-badge">Sách Mới</span>
+                  <h2>Tuần Lễ Sách Mới<br>Tặng Kèm Bookmark</h2>
+                  <p>Cập nhật những tựa sách mới nhất từ các nhà xuất bản hàng đầu. Quà tặng độc quyền cho 100 đơn hàng đầu tiên.</p>
+                  <button class="hero-btn">Khám Phá <i class="fas fa-arrow-right"></i></button>
+                </div>
+              </div>
+              <!-- Slide 3 -->
+              <div class="hero-slide purple">
+                <div class="hero-slide-bg">
+                  <img src="https://picsum.photos/seed/banner3/1200/400" alt="Banner">
+                  <div class="gradient-overlay"></div>
+                </div>
+                <div class="hero-content">
+                  <span class="hero-badge">Độc Quyền</span>
+                  <h2>Bộ Sách Kỹ Năng<br>Dành Cho Sinh Viên</h2>
+                  <p>Trang bị hành trang vững chắc cho tương lai với bộ sách kỹ năng thiết yếu. Giảm thêm 10% cho học sinh, sinh viên.</p>
+                  <button class="hero-btn">Xem Chi Tiết <i class="fas fa-arrow-right"></i></button>
+                </div>
               </div>
             </div>
-            <!-- Slide 2 -->
-            <div class="hero-slide emerald">
-              <div class="hero-slide-bg">
-                <img src="https://picsum.photos/seed/banner2/1200/400" alt="Banner">
-                <div class="gradient-overlay"></div>
-              </div>
-              <div class="hero-content">
-                <span class="hero-badge">Sách Mới</span>
-                <h2>Tuần Lễ Sách Mới<br>Tặng Kèm Bookmark</h2>
-                <p>Cập nhật những tựa sách mới nhất từ các nhà xuất bản hàng đầu. Quà tặng độc quyền cho 100 đơn hàng đầu tiên.</p>
-                <button class="hero-btn">Khám Phá <i class="fas fa-arrow-right"></i></button>
-              </div>
-            </div>
-            <!-- Slide 3 -->
-            <div class="hero-slide purple">
-              <div class="hero-slide-bg">
-                <img src="https://picsum.photos/seed/banner3/1200/400" alt="Banner">
-                <div class="gradient-overlay"></div>
-              </div>
-              <div class="hero-content">
-                <span class="hero-badge">Độc Quyền</span>
-                <h2>Bộ Sách Kỹ Năng<br>Dành Cho Sinh Viên</h2>
-                <p>Trang bị hành trang vững chắc cho tương lai với bộ sách kỹ năng thiết yếu. Giảm thêm 10% cho học sinh, sinh viên.</p>
-                <button class="hero-btn">Xem Chi Tiết <i class="fas fa-arrow-right"></i></button>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Navigation Arrows -->
-          <button class="hero-nav prev" id="hero-prev"><i class="fas fa-chevron-left"></i></button>
-          <button class="hero-nav next" id="hero-next"><i class="fas fa-chevron-right"></i></button>
-          
-          <!-- Indicators -->
-          <div class="hero-indicators" id="hero-indicators"></div>
-        </section>
 
-<!-- Flash Sale -->
-        <section class="flash-sale">
-          <div class="flash-sale-inner">
-            <div class="flash-sale-header">
-              <div class="flash-sale-title">
-                <div class="flash-icon">
-                  <i class="fas fa-fire"></i>
+            <!-- Navigation Arrows -->
+            <button class="hero-nav prev" id="hero-prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="hero-nav next" id="hero-next"><i class="fas fa-chevron-right"></i></button>
+
+            <!-- Indicators -->
+            <div class="hero-indicators" id="hero-indicators"></div>
+          </section>
+
+          <!-- Flash Sale -->
+          <section class="flash-sale">
+            <div class="flash-sale-inner">
+              <div class="flash-sale-header">
+                <div class="flash-sale-title">
+                  <div class="flash-icon">
+                    <i class="fas fa-fire"></i>
+                  </div>
+                  <div>
+                    <h3>Flash Sale <span>Giá Sốc</span></h3>
+                    <p>Kết thúc trong</p>
+                  </div>
                 </div>
-                <div>
-                  <h3>Flash Sale <span>Giá Sốc</span></h3>
-                  <p>Kết thúc trong</p>
+                <div class="flash-timer">
+                  <div class="timer-block">
+                    <div class="timer-value" id="hours">12</div>
+                    <span>Giờ</span>
+                  </div>
+                  <span class="timer-sep">:</span>
+                  <div class="timer-block">
+                    <div class="timer-value" id="minutes">45</div>
+                    <span>Phút</span>
+                  </div>
+                  <span class="timer-sep">:</span>
+                  <div class="timer-block">
+                    <div class="timer-value timer-seconds" id="seconds">30</div>
+                    <span>Giây</span>
+                  </div>
                 </div>
               </div>
-              <div class="flash-timer">
-                <div class="timer-block">
-                  <div class="timer-value" id="hours">12</div>
-                  <span>Giờ</span>
-                </div>
-                <span class="timer-sep">:</span>
-                <div class="timer-block">
-                  <div class="timer-value" id="minutes">45</div>
-                  <span>Phút</span>
-                </div>
-                <span class="timer-sep">:</span>
-                <div class="timer-block">
-                  <div class="timer-value timer-seconds" id="seconds">30</div>
-                  <span>Giây</span>
-                </div>
+              <div class="books-grid" id="flash-sale-books"></div>
+            </div>
+          </section>
+
+          <!-- Categories -->
+          <section class="categories-section">
+            <div class="section-header">
+              <h3>Khám Phá Theo Danh Mục</h3>
+              <a href="#">Xem tất cả <i class="fas fa-chevron-right"></i></a>
+            </div>
+            <div class="categories-grid">
+              <a href="#" class="category-card">
+                <div class="category-icon">📚</div>
+                <span>Văn học</span>
+              </a>
+              <a href="#" class="category-card">
+                <div class="category-icon">📈</div>
+                <span>Kinh tế</span>
+              </a>
+              <a href="#" class="category-card">
+                <div class="category-icon">🧠</div>
+                <span>Tâm lý</span>
+              </a>
+              <a href="#" class="category-card">
+                <div class="category-icon">🧸</div>
+                <span>Thiếu nhi</span>
+              </a>
+              <a href="#" class="category-card">
+                <div class="category-icon">🔬</div>
+                <span>Khoa học</span>
+              </a>
+              <a href="#" class="category-card">
+                <div class="category-icon">🌍</div>
+                <span>Ngoại ngữ</span>
+              </a>
+            </div>
+          </section>
+
+          <!-- Featured Books -->
+          <section class="featured-books">
+            <div class="section-header">
+              <div>
+                <h3><i class="fas fa-star"></i> Sách Bán Chạy Nhất</h3>
+                <p>Những tựa sách được độc giả yêu thích nhất tuần qua</p>
               </div>
+              <a href="#" class="view-all-btn">Xem tất cả <i class="fas fa-chevron-right"></i></a>
             </div>
-            <div class="books-grid" id="flash-sale-books"></div>
-          </div>
-        </section>
+            <div class="books-grid" id="featured-books"></div>
+          </section>
 
-        <!-- Categories -->
-        <section class="categories-section">
-          <div class="section-header">
-            <h3>Khám Phá Theo Danh Mục</h3>
-            <a href="#">Xem tất cả <i class="fas fa-chevron-right"></i></a>
-          </div>
-          <div class="categories-grid">
-            <a href="#" class="category-card">
-              <div class="category-icon">📚</div>
-              <span>Văn học</span>
-            </a>
-            <a href="#" class="category-card">
-              <div class="category-icon">📈</div>
-              <span>Kinh tế</span>
-            </a>
-            <a href="#" class="category-card">
-              <div class="category-icon">🧠</div>
-              <span>Tâm lý</span>
-            </a>
-            <a href="#" class="category-card">
-              <div class="category-icon">🧸</div>
-              <span>Thiếu nhi</span>
-            </a>
-            <a href="#" class="category-card">
-              <div class="category-icon">🔬</div>
-              <span>Khoa học</span>
-            </a>
-            <a href="#" class="category-card">
-              <div class="category-icon">🌍</div>
-              <span>Ngoại ngữ</span>
-            </a>
-          </div>
-        </section>
-
-        <!-- Featured Books -->
-        <section class="featured-books">
-          <div class="section-header">
-            <div>
-              <h3><i class="fas fa-star"></i> Sách Bán Chạy Nhất</h3>
-              <p>Những tựa sách được độc giả yêu thích nhất tuần qua</p>
+          <!-- New Releases -->
+          <section class="new-releases">
+            <div class="section-header">
+              <div>
+                <h3><i class="fas fa-sparkles"></i> Sách Mới Phát Hành</h3>
+                <p>Cập nhật những tựa sách mới nhất từ các nhà xuất bản</p>
+              </div>
+              <a href="#" class="view-all-btn light">Xem tất cả <i class="fas fa-chevron-right"></i></a>
             </div>
-            <a href="#" class="view-all-btn">Xem tất cả <i class="fas fa-chevron-right"></i></a>
-          </div>
-          <div class="books-grid" id="featured-books"></div>
-        </section>
+            <div class="books-grid" id="new-releases"></div>
+          </section>
+        </div>
+        <div id="category-page" style="display: none;">
+        <div class="category-layout-vertical">
+            
+            <div class="filter-top-bar" id="filter-sidebar">
+                <div class="filter-header-top">
+                    <h4><i class="fas fa-filter"></i> Bộ lọc tìm kiếm</h4>
+                    <button id="btn-reset-filter" class="btn-reset-outline">
+                        <i class="fas fa-sync-alt"></i> Bỏ chọn tất cả
+                    </button>
+                </div>
 
-        <!-- New Releases -->
-        <section class="new-releases">
-          <div class="section-header">
-            <div>
-              <h3><i class="fas fa-sparkles"></i> Sách Mới Phát Hành</h3>
-              <p>Cập nhật những tựa sách mới nhất từ các nhà xuất bản</p>
+                <div class="filter-sections">
+                    <div class="filter-group-horizontal">
+                        <h5 class="filter-label">Thể Loại:</h5>
+                        <div id="theloai-filter-list" class="filter-pills">
+                            <p class="loading-text" style="color:#888;">Đang tải...</p>
+                        </div>
+                    </div>
+
+                    <div class="filter-group-horizontal">
+                        <h5 class="filter-label">Mức Giá:</h5>
+                        <div class="filter-pills" id="price-filter-list">
+                            <label class="filter-pill-label">
+                                <input type="radio" name="giatien" value="" checked>
+                                <span>Tất cả giá</span>
+                            </label>
+                            <label class="filter-pill-label">
+                                <input type="radio" name="giatien" value="duoi_100">
+                                <span>Dưới 100k</span>
+                            </label>
+                            <label class="filter-pill-label">
+                                <input type="radio" name="giatien" value="100_500">
+                                <span>100k - 500k</span>
+                            </label>
+                            <label class="filter-pill-label">
+                                <input type="radio" name="giatien" value="500_1000">
+                                <span>500k - 1 Triệu</span>
+                            </label>
+                            <label class="filter-pill-label">
+                                <input type="radio" name="giatien" value="tren_1000">
+                                <span>Trên 1 Triệu</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <a href="#" class="view-all-btn light">Xem tất cả <i class="fas fa-chevron-right"></i></a>
-          </div>
-          <div class="books-grid" id="new-releases"></div>
-        </section>
+
+            <section class="category-results-bottom">
+                <div class="results-header">
+                    <h3 id="category-title">Tất cả sản phẩm</h3>
+                    <div class="sort-options">
+                        <span>Sắp xếp theo:</span>
+                        <select id="sort-select">
+                            <option value="newest">Mới nhất</option>
+                            <option value="price-asc">Giá thấp đến cao</option>
+                            <option value="price-desc">Giá cao đến thấp</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="books-grid" id="book-list-container">
+                </div>
+            </section>
+
+        </div>
+    </div>
       </main>
+
 
       <!-- Footer -->
       <footer class="footer">
@@ -470,8 +559,8 @@
   <script src="js/components/adminHeader.js"></script>
   <script src="js/components/imageGeneratorModal.js"></script>
   <script src="js/components/logoutModal.js"></script>
-  
-<!-- Views -->
+
+  <!-- Views-->
   <script src="js/views/overview.js"></script>
   <script src="js/views/bookInfoManagement.js"></script>
   <script src="js/views/importManagement.js"></script>
@@ -480,9 +569,21 @@
   <script src="js/views/inventoryManagement.js"></script>
   <script src="js/views/reports.js"></script>
   <script src="js/views/settings.js"></script>
-  <script src="js/views/contact.js"></script>
+  <script src="js/views/contact.js"></script> 
+
+  
+
+  <!-- ===========================Tự động tìm tất cả các file .js trong thư mục js/views/================================ -->
+  <!-- <?php
+  $js_files = glob("js/views/*.js");
+  foreach ($js_files as $file) {
+    echo '<script src="' . $file . '"></script>' . "\n";
+  }
+  ?> -->
   
   <!-- Main App -->
+  <script src="js/btnDanhMuc.js"></script>
+  <script src="js/btnThemGiohang.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

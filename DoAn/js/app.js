@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAuthButton();
   initAdminSidebar();
   initChatbot();
+  loadTheLoaiFilter();
   
   console.log('✅ Application initialized successfully');
 });
