@@ -1,0 +1,595 @@
+<?php
+// Nhúng kết nối từ cấu trúc thư mục mới
+require_once "KetNoi/config/db.php"; 
+
+?>
+
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Sales Management - Cửa hàng sách trực tuyến</title>
+  <link rel="stylesheet" href="GiaoDien/style.css">
+  <!-- <link rel="stylesheet" href="css/locsach.css"> -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Chart.js for real charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <!-- Role Toggle -->
+    <div class="role-toggle">
+      <button id="btn-customer" class="role-btn active">Cửa hàng</button>
+      <button id="btn-admin" class="role-btn">Admin</button>
+    </div>
+
+    <!-- Storefront View -->
+    <div id="storefront-view">
+      <!-- Top Bar -->
+      <div class="top-bar">
+        <div class="container">
+          <p>Miễn phí vận chuyển cho đơn hàng từ 250.000đ</p>
+          <div class="top-bar-links">
+            <a href="#">Theo dõi đơn hàng</a>
+            <a href="#">Hỗ trợ khách hàng</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <header class="header">
+        <div class="container">
+          <div class="header-content">
+            <div class="logo">
+              <div class="logo-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open" aria-hidden="true">
+                  <path d="M12 7v14"></path>
+                  <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path>
+                </svg>
+              </div>
+              <div class="logo-text">
+                <h1>BOOK SALES</h1>
+                <p>STOREFRONT</p>
+              </div>
+            </div>
+
+            <div class="search-box">
+              <input type="text" placeholder="Tìm kiếm tựa sách, tác giả, nhà xuất bản...">
+              <button>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search" aria-hidden="true">
+                  <path d="m21 21-4.34-4.34"></path>
+                  <circle cx="11" cy="11" r="8"></circle>
+                </svg>
+              </button>
+            </div>
+
+            <div class="header-actions">
+              <button class="action-btn" id="btn-login">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user" aria-hidden="true">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Đăng nhập</span>
+              </button>
+              <button class="action-btn" id="btn-cart">
+                <div class="cart-icon-wrapper">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart" aria-hidden="true">
+                    <circle cx="8" cy="21" r="1"></circle>
+                    <circle cx="19" cy="21" r="1"></circle>
+                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path>
+                  </svg>
+                  <span class="cart-count hidden" id="cart-count">0</span>
+                </div>
+                <span>Giỏ hàng</span>
+              </button>
+            </div>
+          </div>
+
+          <nav class="categories-nav">
+            <button class="category-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu" aria-hidden="true">
+                <path d="M4 5h16"></path>
+                <path d="M4 12h16"></path>
+                <path d="M4 19h16"></path>
+              </svg>
+              Danh mục sách
+            </button>
+            <a href="#">Sách Mới</a>
+            <a href="#">Bán Chạy</a>
+            <a href="#">Văn Học</a>
+            <a href="#">Kinh Tế</a>
+            <a href="#">Tâm Lý - Kỹ Năng</a>
+            <a href="#">Thiếu Nhi</a>
+            <a href="#" class="promo-link">Khuyến Mãi</a>
+          </nav>
+        </div>
+      </header>
+
+      <main class="main-content container">
+        <div id="home-content">
+          <!-- Hero Banner -->
+          <section class="hero-banner">
+            <div class="hero-slider" id="hero-slider">
+              <!-- Slide 1 -->
+              <div class="hero-slide active blue">
+                <div class="hero-slide-bg">
+                  <img src="https://picsum.photos/seed/banner1/1200/400" alt="Banner">
+                  <div class="gradient-overlay"></div>
+                </div>
+                <div class="hero-content">
+                  <span class="hero-badge">Khuyến mãi tháng 10</span>
+                  <h2>Hội Sách Mùa Thu<br>Giảm Giá Lên Đến 50%</h2>
+                  <p>Khám phá hàng ngàn tựa sách hấp dẫn với mức giá ưu đãi nhất trong năm. Miễn phí giao hàng toàn quốc.</p>
+                  <button class="hero-btn">Mua Ngay <i class="fas fa-arrow-right"></i></button>
+                </div>
+              </div>
+              <!-- Slide 2 -->
+              <div class="hero-slide emerald">
+                <div class="hero-slide-bg">
+                  <img src="https://picsum.photos/seed/banner2/1200/400" alt="Banner">
+                  <div class="gradient-overlay"></div>
+                </div>
+                <div class="hero-content">
+                  <span class="hero-badge">Sách Mới</span>
+                  <h2>Tuần Lễ Sách Mới<br>Tặng Kèm Bookmark</h2>
+                  <p>Cập nhật những tựa sách mới nhất từ các nhà xuất bản hàng đầu. Quà tặng độc quyền cho 100 đơn hàng đầu tiên.</p>
+                  <button class="hero-btn">Khám Phá <i class="fas fa-arrow-right"></i></button>
+                </div>
+              </div>
+              <!-- Slide 3 -->
+              <div class="hero-slide purple">
+                <div class="hero-slide-bg">
+                  <img src="https://picsum.photos/seed/banner3/1200/400" alt="Banner">
+                  <div class="gradient-overlay"></div>
+                </div>
+                <div class="hero-content">
+                  <span class="hero-badge">Độc Quyền</span>
+                  <h2>Bộ Sách Kỹ Năng<br>Dành Cho Sinh Viên</h2>
+                  <p>Trang bị hành trang vững chắc cho tương lai với bộ sách kỹ năng thiết yếu. Giảm thêm 10% cho học sinh, sinh viên.</p>
+                  <button class="hero-btn">Xem Chi Tiết <i class="fas fa-arrow-right"></i></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Navigation Arrows -->
+            <button class="hero-nav prev" id="hero-prev"><i class="fas fa-chevron-left"></i></button>
+            <button class="hero-nav next" id="hero-next"><i class="fas fa-chevron-right"></i></button>
+
+            <!-- Indicators -->
+            <div class="hero-indicators" id="hero-indicators"></div>
+          </section>
+
+          <!-- Flash Sale -->
+          <section class="flash-sale">
+            <div class="flash-sale-inner">
+              <div class="flash-sale-header">
+                <div class="flash-sale-title">
+                  <div class="flash-icon">
+                    <i class="fas fa-fire"></i>
+                  </div>
+                  <div>
+                    <h3>Flash Sale <span>Giá Sốc</span></h3>
+                    <p>Kết thúc trong</p>
+                  </div>
+                </div>
+                <div class="flash-timer">
+                  <div class="timer-block">
+                    <div class="timer-value" id="hours">12</div>
+                    <span>Giờ</span>
+                  </div>
+                  <span class="timer-sep">:</span>
+                  <div class="timer-block">
+                    <div class="timer-value" id="minutes">45</div>
+                    <span>Phút</span>
+                  </div>
+                  <span class="timer-sep">:</span>
+                  <div class="timer-block">
+                    <div class="timer-value timer-seconds" id="seconds">30</div>
+                    <span>Giây</span>
+                  </div>
+                </div>
+              </div>
+              <div class="books-grid" id="flash-sale-books"></div>
+            </div>
+          </section>
+
+          <!-- Categories -->
+          <section class="categories-section">
+            <div class="section-header">
+              <h3>Khám Phá Theo Danh Mục</h3>
+              <a href="#">Xem tất cả <i class="fas fa-chevron-right"></i></a>
+            </div>
+            <div class="categories-grid">
+              <a href="#" class="category-card">
+                <div class="category-icon">📚</div>
+                <span>Văn học</span>
+              </a>
+              <a href="#" class="category-card">
+                <div class="category-icon">📈</div>
+                <span>Kinh tế</span>
+              </a>
+              <a href="#" class="category-card">
+                <div class="category-icon">🧠</div>
+                <span>Tâm lý</span>
+              </a>
+              <a href="#" class="category-card">
+                <div class="category-icon">🧸</div>
+                <span>Thiếu nhi</span>
+              </a>
+              <a href="#" class="category-card">
+                <div class="category-icon">🔬</div>
+                <span>Khoa học</span>
+              </a>
+              <a href="#" class="category-card">
+                <div class="category-icon">🌍</div>
+                <span>Ngoại ngữ</span>
+              </a>
+            </div>
+          </section>
+
+          <!-- Featured Books -->
+          <section class="featured-books">
+            <div class="section-header">
+              <div>
+                <h3><i class="fas fa-star"></i> Sách Bán Chạy Nhất</h3>
+                <p>Những tựa sách được độc giả yêu thích nhất tuần qua</p>
+              </div>
+              <a href="#" class="view-all-btn">Xem tất cả <i class="fas fa-chevron-right"></i></a>
+            </div>
+            <div class="books-grid" id="featured-books"></div>
+          </section>
+
+          <!-- New Releases -->
+          <section class="new-releases">
+            <div class="section-header">
+              <div>
+                <h3><i class="fas fa-sparkles"></i> Sách Mới Phát Hành</h3>
+                <p>Cập nhật những tựa sách mới nhất từ các nhà xuất bản</p>
+              </div>
+              <a href="#" class="view-all-btn light">Xem tất cả <i class="fas fa-chevron-right"></i></a>
+            </div>
+            <div class="books-grid" id="new-releases"></div>
+          </section>
+        </div>
+        <div id="category-page" style="display: none;">
+        <div class="category-layout-vertical">
+            
+            <div class="filter-top-bar" id="filter-sidebar">
+                <div class="filter-header-top">
+                    <h4><i class="fas fa-filter"></i> Bộ lọc tìm kiếm</h4>
+                    <button id="btn-reset-filter" class="btn-reset-outline">
+                        <i class="fas fa-sync-alt"></i> Bỏ chọn tất cả
+                    </button>
+                </div>
+
+                <div class="filter-sections">
+                    <div class="filter-group-horizontal">
+                        <h5 class="filter-label">Thể Loại:</h5>
+                        <div id="theloai-filter-list" class="filter-pills">
+                            <p class="loading-text" style="color:#888;">Đang tải...</p>
+                        </div>
+                    </div>
+
+                    <div class="filter-group-horizontal">
+                        <h5 class="filter-label">Mức Giá:</h5>
+                        <div class="filter-pills" id="price-filter-list">
+                            <label class="filter-pill-label">
+                                <input type="radio" name="giatien" value="" checked>
+                                <span>Tất cả giá</span>
+                            </label>
+                            <label class="filter-pill-label">
+                                <input type="radio" name="giatien" value="duoi_100">
+                                <span>Dưới 100k</span>
+                            </label>
+                            <label class="filter-pill-label">
+                                <input type="radio" name="giatien" value="100_500">
+                                <span>100k - 500k</span>
+                            </label>
+                            <label class="filter-pill-label">
+                                <input type="radio" name="giatien" value="500_1000">
+                                <span>500k - 1 Triệu</span>
+                            </label>
+                            <label class="filter-pill-label">
+                                <input type="radio" name="giatien" value="tren_1000">
+                                <span>Trên 1 Triệu</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <section class="category-results-bottom">
+                <div class="results-header">
+                    <h3 id="category-title">Tất cả sản phẩm</h3>
+                    <div class="sort-options">
+                        <span>Sắp xếp theo:</span>
+                        <select id="sort-select">
+                            <option value="newest">Mới nhất</option>
+                            <option value="price-asc">Giá thấp đến cao</option>
+                            <option value="price-desc">Giá cao đến thấp</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="books-grid" id="book-list-container">
+                </div>
+            </section>
+
+        </div>
+    </div>
+      </main>
+
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="container">
+          <div class="footer-grid">
+            <div class="footer-about">
+              <div class="logo">
+                <div class="logo-icon">
+                  <i class="fas fa-book"></i>
+                </div>
+                <div class="logo-text">
+                  <h1>BOOK SALES</h1>
+                  <p>MANAGEMENT</p>
+                </div>
+              </div>
+              <p>Hệ thống bán sách trực tuyến hàng đầu với hàng ngàn tựa sách đa dạng, cam kết chất lượng và dịch vụ tốt nhất.</p>
+            </div>
+            <div class="footer-links">
+              <h4>Hỗ Trợ Khách Hàng</h4>
+              <ul>
+                <li><a href="#">Chính sách đổi trả</a></li>
+                <li><a href="#">Phương thức vận chuyển</a></li>
+                <li><a href="#">Phương thức thanh toán</a></li>
+                <li><a href="#">Câu hỏi thường gặp</a></li>
+              </ul>
+            </div>
+            <div class="footer-links">
+              <h4>Về Chúng Tôi</h4>
+              <ul>
+                <li><a href="#">Giới thiệu</a></li>
+                <li><a href="#">Tuyển dụng</a></li>
+                <li><a href="#">Điều khoản sử dụng</a></li>
+                <li><a href="#">Chính sách bảo mật</a></li>
+              </ul>
+            </div>
+            <div class="footer-newsletter">
+              <h4>Đăng Ký Nhận Tin</h4>
+              <p>Nhận thông tin về các chương trình khuyến mãi mới nhất.</p>
+              <div class="newsletter-form">
+                <input type="email" placeholder="Email của bạn">
+                <button>Gửi</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Admin Dashboard View -->
+    <div id="admin-view" style="display: none;">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="logo">
+            <div class="logo-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="logo-text">
+              <h1>BOOK SALES</h1>
+              <p>MANAGEMENT</p>
+            </div>
+          </div>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="#" class="nav-item active" data-view="overview">
+            <i class="fas fa-layer-group"></i>
+            <span>Tổng quan</span>
+          </a>
+          <a href="#" class="nav-item" data-view="import">
+            <i class="fas fa-book-medical"></i>
+            <span>Quản lý nhập sách</span>
+          </a>
+          <a href="#" class="nav-item" data-view="book-info">
+            <i class="fas fa-book-open"></i>
+            <span>Quản lý thông tin sách</span>
+          </a>
+          <a href="#" class="nav-item" data-view="revenue">
+            <i class="fas fa-chart-line"></i>
+            <span>Quản lý doanh thu</span>
+          </a>
+          <a href="#" class="nav-item" data-view="sales">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Quản lý bán hàng</span>
+          </a>
+          <a href="#" class="nav-item" data-view="inventory">
+            <i class="fas fa-boxes-stacked"></i>
+            <span>Quản lý kho</span>
+          </a>
+          <a href="#" class="nav-item" data-view="reports">
+            <i class="fas fa-file-alt"></i>
+            <span>Báo cáo</span>
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <a href="#" class="nav-item" data-view="settings">
+            <i class="fas fa-cog"></i>
+            <span>Cài đặt hệ thống</span>
+          </a>
+          <a href="#" class="nav-item" data-view="contact">
+            <i class="fas fa-headset"></i>
+            <span>Hỗ trợ & Liên hệ</span>
+          </a>
+          <a href="#" class="nav-item" id="btn-logout">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Đăng xuất</span>
+          </a>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="admin-main">
+        <!-- Admin Header -->
+        <header class="admin-header">
+          <h2 id="admin-view-title">Tổng quan</h2>
+          <div class="admin-header-actions">
+            <div class="admin-search">
+              <i class="fas fa-search"></i>
+              <input type="text" placeholder="Tìm kiếm nhanh (Ctrl+K)...">
+            </div>
+            <button class="admin-notification-btn">
+              <i class="fas fa-bell"></i>
+              <span class="notification-badge"></span>
+            </button>
+            <div class="admin-user">
+              <div class="admin-user-info">
+                <span class="admin-user-name">Admin User</span>
+                <span class="admin-user-role">Quản lý cửa hàng</span>
+              </div>
+              <div class="admin-user-avatar">
+                <i class="fas fa-user"></i>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Admin Content -->
+        <div class="admin-content" id="admin-content">
+          <!-- Content will be dynamically loaded here -->
+        </div>
+      </main>
+    </div>
+
+    <!-- Cart Drawer -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div class="cart-drawer" id="cart-drawer">
+      <div class="cart-header">
+        <h3><i class="fas fa-shopping-cart"></i> Giỏ hàng</h3>
+        <button id="cart-close"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="cart-items" id="cart-items">
+        <p class="cart-empty">Giỏ hàng trống</p>
+      </div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Tổng cộng:</span>
+          <span id="cart-total">0đ</span>
+        </div>
+        <button class="checkout-btn">Thanh toán</button>
+      </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal-overlay" id="auth-modal">
+      <div class="modal">
+        <button class="modal-close" id="auth-close"><i class="fas fa-times"></i></button>
+        <h2>Đăng nhập</h2>
+        <form id="auth-form">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="Nhập email của bạn" required>
+          </div>
+          <div class="form-group">
+            <label>Mật khẩu</label>
+            <input type="password" placeholder="Nhập mật khẩu" required>
+          </div>
+          <button type="submit" class="submit-btn">Đăng nhập</button>
+        </form>
+        <p class="modal-footer-text">Chưa có tài khoản? <a href="#">Đăng ký ngay</a></p>
+      </div>
+    </div>
+
+    <!-- Book Details Modal -->
+    <div class="modal-overlay" id="book-modal">
+      <div class="modal book-modal" id="book-modal-content">
+        <button class="modal-close" id="book-close"><i class="fas fa-times"></i></button>
+        <div class="book-modal-content">
+          <div class="book-modal-image">
+            <img id="book-detail-image" src="" alt="">
+          </div>
+          <div class="book-modal-info">
+            <span class="book-badge" id="book-detail-badge"></span>
+            <span class="book-badge discount" id="book-detail-discount"></span>
+            <h2 id="book-detail-name"></h2>
+            <p class="book-author" id="book-detail-author"></p>
+            <div class="book-rating-modal">
+              <i class="fas fa-star"></i>
+              <span id="book-detail-rating"></span>
+              <span class="review-count">(<span id="book-detail-reviews"></span> đánh giá)</span>
+            </div>
+            <div class="book-price-modal">
+              <span class="current-price" id="book-detail-price"></span>
+              <span class="original-price" id="book-detail-original"></span>
+            </div>
+            <p class="book-description" id="book-detail-description"></p>
+            <div class="book-quantity">
+              <label>Số lượng:</label>
+              <div class="quantity-controls">
+                <button class="qty-btn" id="qty-minus">-</button>
+                <input type="number" id="qty-input" value="1" min="1">
+                <button class="qty-btn" id="qty-plus">+</button>
+              </div>
+            </div>
+            <div class="book-actions">
+              <button class="add-to-cart-btn" id="btn-add-to-cart">
+                <i class="fas fa-shopping-cart"></i> Thêm vào giỏ
+              </button>
+              <button class="buy-now-btn">Mua ngay</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+      <i class="fas fa-check-circle"></i>
+      <span id="toast-message"></span>
+    </div>
+  </div>
+
+  <script src="PhuongThuc/data.js"></script>
+  <script src="PhuongThuc/global-data.js"></script>
+  <script src="PhuongThuc/utils/helpers.js"></script>
+  <script src="PhuongThuc/components/toast.js"></script>
+  <script src="PhuongThuc/components/heroCarousel.js"></script>
+  <script src="PhuongThuc/components/bookCard.js"></script>
+  <script src="PhuongThuc/components/cartDrawer.js"></script>
+  <script src="PhuongThuc/components/authModal.js"></script>
+  <script src="PhuongThuc/components/chatbot.js"></script>
+  <script src="PhuongThuc/components/bookDetailsModal.js"></script>
+  <script src="PhuongThuc/components/adminHeader.js"></script>
+  <script src="PhuongThuc/components/imageGeneratorModal.js"></script>
+  <script src="PhuongThuc/components/logoutModal.js"></script>
+
+  <!-- Views-->
+  <script src="PhuongThuc/views/overview.js"></script>
+  <script src="PhuongThuc/views/bookInfoManagement.js"></script>
+  <script src="PhuongThuc/views/importManagement.js"></script>
+  <script src="PhuongThuc/views/revenueManagement.js"></script>
+  <script src="PhuongThuc/views/salesManagement.js"></script>
+  <script src="PhuongThuc/views/inventoryManagement.js"></script>
+  <script src="PhuongThuc/views/reports.js"></script>
+  <script src="PhuongThuc/views/settings.js"></script>
+  <script src="PhuongThuc/views/contact.js"></script> 
+
+  
+
+  <!-- ===========================Tự động tìm tất cả các file .js trong thư mục js/views/================================ -->
+  <!-- <?php
+  $js_files = glob("PhuongThuc/views/*.js");
+  foreach ($js_files as $file) {
+    echo '<script src="' . $file . '"></script>' . "\n";
+  }
+  ?> -->
+  
+  <!-- Main App -->
+  <script src="PhuongThuc/btnDanhMuc.js"></script>
+  <script src="PhuongThuc/btnThemGiohang.js"></script>
+  <script src="PhuongThuc/app.js"></script>
+</body>
+</html>
