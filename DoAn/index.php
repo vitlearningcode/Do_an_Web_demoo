@@ -315,7 +315,6 @@ $ds_sachmoi = $pdo->query("
                 echo renderBookCard($sach, $badges);
             endforeach; ?>
         </div>
-      
     </section>
 
     <!-- ===== SÁCH MỚI PHÁT HÀNH ===== -->
