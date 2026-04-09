@@ -5,7 +5,7 @@
 /* ==================== FLASH SALE WRAPPER ==================== */
 .flash-sale {
   margin: 48px 0;
-  background: linear-gradient(to right, #f97316, #ef4444);
+  background: linear-gradient(to right, #ff6900, #fb2c36);
   padding: 4px;
   border-radius: 28px;
 }
@@ -34,7 +34,7 @@
   display: flex; align-items: center; justify-content: center;
   box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
 }
-.timer-value.timer-seconds { background: #ef4444; animation: timer-pulse 1s infinite; }
+.timer-value.timer-seconds { background: #ef4444; animation: timer-pulse 2s infinite; }
 @keyframes timer-pulse { 0%,100%{opacity:1} 50%{opacity:.7} }
 .timer-block span { font-size: 10px; font-weight: 700; color: #6b7280; text-transform: uppercase; }
 .timer-sep { font-size: 24px; font-weight: 700; color: #9ca3af; margin-bottom: 16px; }
