@@ -235,7 +235,8 @@
     nutThemGio.addEventListener('click', function () {
       if (!sachHienTai) return;
 
-      // Kiểm tra đăng nhập
+      // Kiểm tra đăng nhập (TẠM TẮT ĐỂ DEV GIỎ HÀNG)
+      /*
       if (typeof dangDangNhap !== 'undefined' && !dangDangNhap) {
         if (typeof hienThiThongBao !== 'undefined') {
           hienThiThongBao('Vui lòng đăng nhập để thêm sách vào giỏ!');
@@ -245,6 +246,7 @@
         }
         return;
       }
+      */
 
       var thongTin = {
         maSach : sachHienTai.maSach,
@@ -256,9 +258,6 @@
 
       if (typeof cartDrawer !== 'undefined') {
         cartDrawer.addItem(thongTin, soLuong);
-        if (typeof toast !== 'undefined') {
-          toast.success('Đã thêm "' + thongTin.tenSach + '" vào giỏ hàng');
-        }
         dongModal();
       } else {
         console.warn('[xemNhanhSach] cartDrawer chưa khởi tạo.');

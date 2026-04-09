@@ -41,23 +41,7 @@
         </div>
     </footer>
 
-    <div class="cart-overlay" id="cart-overlay"></div>
-    <div class="cart-drawer" id="cart-drawer">
-        <div class="cart-header">
-            <h3><i class="fas fa-shopping-cart"></i> Giỏ hàng</h3>
-            <button id="cart-close"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="cart-items" id="cart-items">
-            <p class="cart-empty">Giỏ hàng trống</p>
-        </div>
-        <div class="cart-footer">
-            <div class="cart-total">
-                <span>Tổng cộng:</span>
-                <span id="cart-total">0đ</span>
-            </div>
-            <button class="checkout-btn">Thanh toán</button>
-        </div>
-    </div>
+    <!-- Đã tách Giỏ Hàng sang file formGioHang.php -->
 
     <div class="modal-overlay" id="auth-modal">
         <div class="modal">
@@ -126,14 +110,4 @@
         <span id="toast-message"></span>
     </div>
 
-</div> <script src="PhuongThuc/thongBao.js"></script>
-<script src="PhuongThuc/trinhChieuBanner.js"></script>
-<script src="PhuongThuc/bookCard.js"></script>
-<script src="PhuongThuc/cart.js"></script>
-<script src="PhuongThuc/xacThuc.js"></script>
-<script src="PhuongThuc/xacNhanDangXuat.js"></script>
-<script src="PhuongThuc/chatbot.js"></script>
-
-<script src="PhuongThuc/btnDanhMuc.js"></script>
-<script src="PhuongThuc/btnThemGiohang.js"></script>
-<script src="PhuongThuc/app.js"></script>
+</div>

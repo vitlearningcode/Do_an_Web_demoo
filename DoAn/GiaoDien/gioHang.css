@@ -1,0 +1,411 @@
+/* ==========================================================
+   CSS CHO FORM GIỎ HÀNG (DRAWER)
+========================================================== */
+
+/* 1. Mờ nền đằng sau */
+.cart-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 9990;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.cart-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 2. Ngăn kéo (Drawer) bên phải */
+.cart-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    max-width: 450px;
+    background: #fff;
+    box-shadow: -10px 0 25px rgba(0,0,0,0.1);
+    z-index: 9999;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-drawer.active {
+    transform: translateX(0);
+}
+
+/* 3. Header Giỏ hàng */
+.cart-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+}
+
+.cart-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.cart-icon-wrapper {
+    padding: 0.5rem;
+    background: #eff6ff;
+    color: #2563eb;
+    border-radius: 0.75rem;
+}
+
+.cart-icon-wrapper svg {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.cart-title h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+.cart-title p {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+}
+
+.cart-close-btn {
+    padding: 0.5rem;
+    color: #9ca3af;
+    background: transparent;
+    border: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.cart-close-btn:hover {
+    background: #f3f4f6;
+    color: #1f2937;
+}
+
+/* 4. Form và danh sách item */
+.cart-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+.cart-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.cart-empty-msg {
+    text-align: center;
+    color: #6b7280;
+    margin-top: 2rem;
+    font-size: 0.95rem;
+}
+
+/* 5. Cart Item */
+.cart-item {
+    display: flex;
+    gap: 1rem;
+    background: #fff;
+    padding: 1rem;
+    border-radius: 1rem;
+    border: 1px solid #f3f4f6;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    position: relative;
+    transition: border-color 0.2s;
+}
+
+.cart-item:hover {
+    border-color: #2563eb;
+}
+
+.cart-item-img-wrapper {
+    width: 5rem;
+    height: 7rem;
+    min-width: 5rem;
+    min-height: 7rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-item-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.cart-item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-item-title {
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 0.25rem 0;
+    font-size: 0.95rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    padding-right: 1.5rem;
+}
+
+.cart-item-author {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0 0 0.5rem 0;
+}
+
+.cart-item-bottom {
+    margin-top: auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.cart-item-price {
+    font-weight: 700;
+    color: #ea580c; /* Orange 600 */
+    display: block;
+}
+
+.cart-item-qty {
+    display: flex;
+    align-items: center;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background: #fff;
+}
+
+.qty-btn {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7280;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+    font-size: 1.1rem;
+}
+
+.qty-btn:hover {
+    color: #2563eb;
+}
+
+.qty-value {
+    width: 2rem;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #1f2937;
+}
+
+.cart-item-remove {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.375rem;
+    color: #d1d5db;
+    background: transparent;
+    border: none;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0;
+}
+
+.cart-item:hover .cart-item-remove {
+    opacity: 1;
+}
+
+.cart-item-remove:hover {
+    color: #ef4444;
+    background: #fef2f2;
+}
+
+.cart-item-remove svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+/* 6. Footer Checkout */
+.cart-footer {
+    padding: 1.5rem;
+    background: #f9fafb;
+    border-top: 1px solid #f3f4f6;
+}
+
+.cart-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    color: #4b5563;
+    font-size: 0.875rem;
+}
+
+.summary-row .font-medium {
+    font-weight: 500;
+}
+
+.summary-row .text-green {
+    color: #16a34a;
+    font-weight: 500;
+}
+
+.total-row {
+    color: #1f2937;
+    font-size: 1.125rem;
+    font-weight: 700;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.total-row .text-orange {
+    color: #ea580c;
+}
+
+.checkout-btn {
+    width: 100%;
+    padding: 1rem;
+    background: #2563eb;
+    color: #fff;
+    font-weight: 700;
+    border-radius: 0.75rem;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 10px 15px -3px rgba(37,99,235,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+}
+
+.checkout-btn:hover {
+    background: #1d4ed8;
+}
+
+.checkout-btn:active {
+    transform: translateY(2px);
+}
+
+.checkout-btn svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.checkout-btn:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* 7. Toast Notification */
+.cart-toast {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+}
+
+.cart-toast.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast-content {
+    background: #111827;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 9999px;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border: 1px solid #1f2937;
+}
+
+.toast-icon-wrapper {
+    background: rgba(34, 197, 94, 0.2);
+    padding: 0.25rem;
+    border-radius: 9999px;
+    display: flex;
+}
+
+.toast-icon-wrapper svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #4ade80;
+}
+
+.toast-message {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.toast-close-btn {
+    margin-left: 0.5rem;
+    padding: 0.25rem;
+    color: #9ca3af;
+    background: transparent;
+    border: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    display: flex;
+}
+
+.toast-close-btn:hover {
+    color: #fff;
+    background: #1f2937;
+}
+
+.toast-close-btn svg {
+    width: 1rem;
+    height: 1rem;
+}

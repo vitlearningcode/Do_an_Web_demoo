@@ -147,7 +147,7 @@ function khoiTaoNutGioHang() {
     nutGioHang.addEventListener("click", () => {
       // Gọi file xử lý giỏ hàng riêng
       if (typeof cartDrawer !== "undefined") {
-        cartDrawer.toggle();
+        cartDrawer.open();
       }
     });
   }

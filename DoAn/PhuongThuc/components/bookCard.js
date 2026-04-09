@@ -19,7 +19,7 @@ class XuLyTheSach {
   // Hàm này đi tìm các nút bấm (do PHP in ra) để gài sự kiện Click
   ganSuKien() {
     // 1. Xử lý nút Yêu thích (Trái tim)
-    document.querySelectorAll(".book-quick-btn.wishlist").forEach((nutBam) => {
+    document.querySelectorAll(".btn-wishlist").forEach((nutBam) => {
       nutBam.addEventListener("click", (suKien) => {
         suKien.stopPropagation(); // Ngăn click lan ra thẻ cha
         suKien.preventDefault();
@@ -31,7 +31,7 @@ class XuLyTheSach {
 
     // 2. Xử lý nút Xem Nhanh (Con mắt)
     document
-      .querySelectorAll('.book-quick-btn[title="Xem nhanh"]')
+      .querySelectorAll('.btn-quickview')
       .forEach((nutBam) => {
         nutBam.addEventListener("click", (suKien) => {
           suKien.stopPropagation();
@@ -44,15 +44,7 @@ class XuLyTheSach {
         });
       });
 
-    // 3. Click vào toàn bộ thẻ Sách cũng chuyển sang trang chi tiết
-    document.querySelectorAll(".book-card").forEach((theSach) => {
-      theSach.addEventListener("click", () => {
-        const maSach = theSach.getAttribute("data-id");
-        if (maSach) {
-          window.location.href = `ChucNang/CuaHang/ChiTietSach/index.php?id=${maSach}`;
-        }
-      });
-    });
+    // 3. (Đã gỡ bỏ) Click thẻ Sách chuyển sang trang chi tiết vì yêu cầu mới là bật Xem Nhanh Modal (được xử lý trong xemNhanhSach.js)
   }
 
   // Logic đổi màu trái tim khi nhấn Yêu thích
