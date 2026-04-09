@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "../../KetNoi/config/db.php";
+require_once "../../../KetNoi/config/db.php";
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_SESSION['cart_temp'])) {
     die("Lỗi: Dữ liệu không hợp lệ.");

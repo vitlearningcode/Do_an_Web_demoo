@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once "../../KetNoi/config/db.php";
+require_once "../../../KetNoi/config/db.php";
 
 $maDH = $_GET['maDH'] ?? '';
 $isTimeout = isset($_GET['timeout']) && $_GET['timeout'] == '1';
