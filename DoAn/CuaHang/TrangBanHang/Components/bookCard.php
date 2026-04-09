@@ -113,7 +113,7 @@ function hienThiTheSach(array $sach, array $nhanHieu = []): string
 
         <!-- Nút dưới: Thêm Nhanh — ẩn, slide-up khi hover -->
         <div class=\"book-add-quick\">
-            <button class=\"btn-add-quick\" onclick=\"themVaoGioHang(this)\">
+            <button class=\"btn-add-quick\" onclick=\"themVaoGioHang(event, this)\">
                 <i class=\"fas fa-shopping-cart\"></i> Thêm Nhanh
             </button>
         </div>
@@ -129,7 +129,7 @@ function hienThiTheSach(array $sach, array $nhanHieu = []): string
                 <span class=\"current-price\">{$giaHienThi} ₫</span>
                 {$giaGocHtml}
             </div>
-            <button class=\"btn-add-to-cart\" onclick=\"themVaoGioHang(this)\" title=\"Thêm vào giỏ\">
+            <button class=\"btn-add-to-cart\" onclick=\"themVaoGioHang(event, this)\" title=\"Thêm vào giỏ\">
                 <i class=\"fas fa-shopping-cart\"></i>
             </button>
         </div>

@@ -2,7 +2,11 @@
 // XỬ LÝ THÊM VÀO GIỎ HÀNG (CÓ KIỂM TRA ĐĂNG NHẬP)
 // ==========================================
 
-window.themVaoGioHang = function (nutBam) {
+window.themVaoGioHang = function (event, nutBam) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
   // RÀO CHẮN: Kiểm tra xem PHP có báo là đã đăng nhập chưa?
   /* --- TẠM TẮT BẮT LOGIN ---
   if (typeof dangDangNhap === "undefined" || !dangDangNhap) {

@@ -141,11 +141,16 @@
 .cart-item-img-wrapper {
     width: 5rem;
     height: 7rem;
+    min-width: 5rem;
+    min-height: 7rem;
     border-radius: 0.5rem;
     overflow: hidden;
     flex-shrink: 0;
     background: #f9fafb;
     border: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .cart-item-img {
