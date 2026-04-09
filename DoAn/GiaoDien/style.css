@@ -463,3 +463,295 @@
       .logout-actions .confirm-btn:hover {
         background: #dc2626;
       }
+
+      /* ============================================================================================================================
+   CSS CHO CÁC MODAL (ĐĂNG NHẬP, ĐĂNG KÝ, ĐĂNG XUẤT)
+   ========================================================================== */
+
+/* 1. Nền mờ (Overlay) */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+}
+
+/* 2. Định dạng chung cho tất cả các Modal */
+.auth-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 1000;
+    padding: 20px 30px;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    color: #000;
+}
+
+/* 3. Kích thước riêng cho từng loại Form theo yêu cầu */
+.login-size {
+    width: 403px;
+    height: 393px;
+}
+
+.register-size {
+    width: 403px;
+    height: 603px;
+}
+
+.logout-size {
+    width: 403px;
+    height: 230px; 
+}
+
+/* 4. Phần Header của Modal */
+.modal-header h2 { 
+    margin: 0 0 5px 0; 
+    font-size: 20px; 
+    text-align: center; 
+}
+.modal-header p { 
+    margin: 0 0 20px 0; 
+    font-size: 12px; 
+    text-align: center; 
+    color: #666; 
+}
+.close-btn { 
+    position: absolute; 
+    top: 15px; 
+    right: 20px; 
+    font-size: 24px; 
+    cursor: pointer; 
+    color: #999; 
+}
+.close-btn:hover {
+    color: #333;
+}
+
+/* 5. Định dạng các Input nhập liệu */
+.input-group {
+    margin-bottom: 18px; /* Khoảng cách giữa các input theo yêu cầu */
+}
+.input-group label {
+    display: block;
+    font-size: 12px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.input-group input {
+    width: 343px;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    outline: none;
+}
+.input-group input:focus {
+    border-color: #0d6efd;
+}
+
+/* 6. Định dạng nút bấm chính (Đăng nhập / Đăng ký) */
+.btn-primary {
+    width: 343px;
+    height: 44px;
+    background-color: #0d6efd; /* Xanh dương chủ đạo */
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+}
+.btn-primary:hover {
+    background-color: #0b5ed7;
+}
+
+/* 7. Nút bấm trong form Đăng xuất */
+.btn-cancel {
+    width: 164px;
+    height: 44px;
+    background-color: #f1f1f1;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.btn-cancel:hover {
+    background-color: #e2e2e2;
+}
+
+.btn-confirm {
+    width: 164px;
+    height: 44px;
+    background-color: #ef4444; /* Màu đỏ cảnh báo */
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    line-height: 44px; /* Giúp chữ căn giữa theo chiều dọc */
+}
+.btn-confirm:hover {
+    background-color: #dc2626; 
+}
+
+/* 8. Phần Footer của Modal (Chuyển đổi Đăng nhập / Đăng ký) */
+.modal-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 13px;
+}
+.modal-footer a {
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: bold;
+}
+.modal-footer a:hover {
+    text-decoration: underline;
+}
+/* ==============================================================menu dropdown============================================= */
+/* Container chứa cả icon và menu */
+.user-dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* 1. Vòng bao quanh icon (Avatar ring) */
+.profile-ring-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+.profile-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid #0d6efd; /* Vòng màu xanh dương báo hiệu đã đăng nhập */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+    color: #0d6efd;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+.profile-ring-btn:hover .profile-avatar {
+    background-color: #e9ecef;
+}
+
+/* 2. Menu thả xuống (Mặc định ẩn) */
+.user-dropdown-menu {
+    display: none; /* Ẩn menu */
+    position: absolute;
+    top: 120%; 
+    right: 0;
+    width: 260px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    border: 1px solid #eaeaea;
+    overflow: hidden;
+}
+
+/* Lớp này dùng JS để bật/tắt */
+.user-dropdown-menu.show {
+    display: block; 
+    animation: fadeIn 0.2s ease-out; /* Hiệu ứng mượt */
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 3. Trang trí phần đầu của Menu */
+.dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #eee;
+}
+.dropdown-header .dropdown-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background-color: #0d6efd;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+.dropdown-user-info strong {
+    display: block;
+    font-size: 15px;
+    color: #333;
+}
+.dropdown-user-info p {
+    margin: 2px 0 0 0;
+    font-size: 13px;
+    color: #666;
+}
+
+/* 4. Danh sách các chức năng (Sửa TT, Đơn Hàng, Đăng xuất) */
+.dropdown-list {
+    list-style: none;
+    padding: 8px 0;
+    margin: 0;
+}
+.dropdown-list li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    color: #444;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+.dropdown-list li a:hover {
+    background-color: #f1f5f9;
+}
+.dropdown-list li a i {
+    width: 20px;
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+}
+
+/* Đường gạch ngang phân cách */
+.dropdown-list li.divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 4px 0;
+}
+
+/* Style riêng cho nút Đăng xuất */
+.dropdown-list li a.text-danger, .dropdown-list li a.text-danger i {
+    color: #ef4444;
+}
+.dropdown-list li a.text-danger:hover {
+    background-color: #fef2f2; /* Nền đỏ nhạt khi di chuột */
+}

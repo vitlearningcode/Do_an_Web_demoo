@@ -222,3 +222,82 @@ function taiGiaoDienQuanTri(tenGiaoDien) {
 function khoiTaoChatbot() {
   // Logic chatbot nếu có
 }
+// ============================================đăng nhập , đăng ký , đăng xuất============================================
+// Hàm mở form Đăng nhập
+function openLogin() {
+    let overlay = document.getElementById('modal-overlay');
+    let loginModal = document.getElementById('login-modal');
+    let registerModal = document.getElementById('register-modal');
+    let logoutModal = document.getElementById('logout-modal');
+
+    // Hiện nền và form đăng nhập, ẩn các form khác
+    if (overlay) overlay.style.display = 'block';
+    if (loginModal) loginModal.style.display = 'block';
+    if (registerModal) registerModal.style.display = 'none';
+    if (logoutModal) logoutModal.style.display = 'none';
+}
+
+// Hàm mở form Đăng ký
+function openRegister() {
+    let overlay = document.getElementById('modal-overlay');
+    let loginModal = document.getElementById('login-modal');
+    let registerModal = document.getElementById('register-modal');
+    let logoutModal = document.getElementById('logout-modal');
+
+    // Hiện nền và form đăng ký, ẩn các form khác
+    if (overlay) overlay.style.display = 'block';
+    if (loginModal) loginModal.style.display = 'none';
+    if (registerModal) registerModal.style.display = 'block';
+    if (logoutModal) logoutModal.style.display = 'none';
+}
+
+// Hàm mở form Đăng xuất
+function openLogout() {
+    let overlay = document.getElementById('modal-overlay');
+    let loginModal = document.getElementById('login-modal');
+    let registerModal = document.getElementById('register-modal');
+    let logoutModal = document.getElementById('logout-modal');
+
+    // Hiện nền và form đăng xuất, ẩn các form khác
+    if (overlay) overlay.style.display = 'block';
+    if (loginModal) loginModal.style.display = 'none';
+    if (registerModal) registerModal.style.display = 'none';
+    if (logoutModal) logoutModal.style.display = 'block';
+}
+
+// Hàm đóng tất cả các Modal
+function closeModal() {
+    let overlay = document.getElementById('modal-overlay');
+    let loginModal = document.getElementById('login-modal');
+    let registerModal = document.getElementById('register-modal');
+    let logoutModal = document.getElementById('logout-modal');
+
+    // Ẩn tất cả
+    if (overlay) overlay.style.display = 'none';
+    if (loginModal) loginModal.style.display = 'none';
+    if (registerModal) registerModal.style.display = 'none';
+    if (logoutModal) logoutModal.style.display = 'none';
+}
+// ===================================================menu dropdown nút đăng nhập  =============================================
+// Hàm bật/tắt menu dropdown người dùng
+function toggleUserMenu(event) {
+    // Ngăn chặn sự kiện click lan truyền ra ngoài
+    event.stopPropagation();
+    let menu = document.getElementById('userDropdown');
+    if (menu) {
+        menu.classList.toggle('show');
+    }
+}
+
+// Bắt sự kiện click toàn trang để đóng menu nếu click ra ngoài vùng menu
+document.addEventListener('click', function(event) {
+    let menu = document.getElementById('userDropdown');
+    let btn = document.getElementById('btn-user-profile');
+    
+    // Nếu menu đang mở và vùng click chuột KHÔNG nằm trong menu hoặc nút bấm
+    if (menu && menu.classList.contains('show')) {
+        if (btn && !btn.contains(event.target) && !menu.contains(event.target)) {
+            menu.classList.remove('show');
+        }
+    }
+});
