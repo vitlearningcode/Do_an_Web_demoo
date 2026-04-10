@@ -47,17 +47,45 @@
         <div class="modal">
             <button class="modal-close" id="auth-close"><i class="fas fa-times"></i></button>
             <h2>Đăng nhập</h2>
-            <form id="auth-form" action="ChucNang/CuaHang/XacThuc/xu_ly.php" method="POST">
+
+            <!-- FORM ĐĂNG NHẬP (mặc định hiển thị) -->
+            <form id="auth-form" action="xuly_dangnhap.php" method="POST">
                 <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="email" placeholder="Nhập email của bạn" required>
+                    <label>Tên đăng nhập</label>
+                    <input type="text" name="tendangnhap" placeholder="Nhập tên đăng nhập" required autocomplete="username">
                 </div>
                 <div class="form-group">
                     <label>Mật khẩu</label>
-                    <input type="password" name="password" placeholder="Nhập mật khẩu" required>
+                    <input type="password" name="matkhau" placeholder="Nhập mật khẩu" required autocomplete="current-password">
                 </div>
-                <button type="submit" class="submit-btn">Xác nhận</button>
+                <button type="submit" name="btn_dangnhap" class="submit-btn">Đăng nhập</button>
             </form>
+
+            <!-- FORM ĐĂNG KÝ (ẩn mặc định, JS toggle) -->
+            <form id="auth-form-dk" action="xuly_dangky.php" method="POST" style="display:none">
+                <div class="form-group">
+                    <label>Họ và tên</label>
+                    <input type="text" name="hoten" placeholder="Nhập họ và tên" required>
+                </div>
+                <div class="form-group">
+                    <label>Tên đăng nhập</label>
+                    <input type="text" name="tendangnhap" placeholder="Nhập tên đăng nhập" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="Nhập email" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label>Số điện thoại</label>
+                    <input type="tel" name="sodienthoai" placeholder="Nhập số điện thoại" required>
+                </div>
+                <div class="form-group">
+                    <label>Mật khẩu</label>
+                    <input type="password" name="matkhau" placeholder="Nhập mật khẩu" required autocomplete="new-password">
+                </div>
+                <button type="submit" name="btn_dangky" class="submit-btn">Đăng ký</button>
+            </form>
+
             <p class="modal-footer-text">Chưa có tài khoản? <a href="#" onclick="authModal.chuyenCheDo(); return false;">Đăng ký ngay</a></p>
         </div>
     </div>
@@ -100,7 +128,7 @@
             <p>Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?</p>
             <div class="logout-actions">
                 <button class="cancel-btn" id="logout-cancel">Hủy</button>
-                <button class="confirm-btn" id="logout-confirm">Đăng xuất</button>
+                <a href="xuly_dangxuat.php" class="confirm-btn" id="logout-confirm">Đăng xuất</a>
             </div>
         </div>
     </div>

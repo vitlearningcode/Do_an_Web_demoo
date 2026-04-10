@@ -73,9 +73,8 @@ class XacNhanDangXuat {
     // 1. Gọi hàm callback nếu có
     this.khiXacNhan();
 
-    // 2. CHUẨN PHP: Chuyển hướng tới file xử lý đăng xuất của PHP để xóa Session
-    // Ông tạo file này để chạy session_destroy() nhé
-    window.location.href = "ChucNang/CuaHang/XacThuc/dang_xuat.php";
+    // Chuyển hướng tới xuly_dangxuat.php để xóa session và redirect
+    window.location.href = "xuly_dangxuat.php";
   }
 }
 
