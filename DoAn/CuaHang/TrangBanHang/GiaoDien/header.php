@@ -1,3 +1,4 @@
+<div id="dau-trang-co-dinh">
 <div id="app">
     <div class="top-bar">
         <div class="container">
@@ -5,8 +6,12 @@
     <p style="font-size: 11pt;">Sách không tự mất đi, nó chỉ chuyển từ chỗ này sang chỗ khác (nếu có chúng tôi)</p>
 </marquee>
             <div class="top-bar-links">
-                <a href="#">Theo dõi đơn hàng</a>
-                <a href="#">Hỗ trợ khách hàng</a>
+                <a href="javascript:void(0)" onclick="moTraCuuDonHang()">
+                    <i class="fas fa-box-open" style="margin-right:4px;"></i>Theo dõi đơn hàng
+                </a>
+                <a href="javascript:void(0)" onclick="moHoTro()">
+                    <i class="fas fa-headset" style="margin-right:4px;"></i>Hỗ trợ khách hàng
+                </a>
             </div>
         </div>
     </div>
@@ -96,6 +101,93 @@
         </nav>
 </div>
 </header>
+</div><!-- /app -->
+</div><!-- /dau-trang-co-dinh -->
+
+<!-- ===================================================== Modal tra cứu đơn hàng (không cần đăng nhập) ===================================================== -->
+<div id="overlay-tra-cuu" class="overlay-tra-cuu" onclick="dongTraCuuDonHang()"></div>
+<div id="panel-tra-cuu-don-hang" class="panel-tra-cuu">
+    <button class="panel-tra-cuu__dong" onclick="dongTraCuuDonHang()" aria-label="Đóng">&times;</button>
+    <div class="panel-tra-cuu__dau">
+        <i class="fas fa-box-open"></i>
+        <h3>Theo Dõi Đơn Hàng</h3>
+        <p>Nhập mã đơn hàng hoặc số điện thoại để tra cứu.</p>
+    </div>
+    <form class="panel-tra-cuu__form" action="CuaHang/TrangBanHang/donHang/traDoc.php" method="POST">
+        <div class="panel-tra-cuu__nhom">
+            <label for="tra-cuu-ma-don">Mã đơn hàng</label>
+            <input type="text" id="tra-cuu-ma-don" name="ma_don_hang" placeholder="VD: DH1745000012" autocomplete="off">
+        </div>
+        <div class="panel-tra-cuu__phan-cach">hoặc</div>
+        <div class="panel-tra-cuu__nhom">
+            <label for="tra-cuu-sdt">Số điện thoại</label>
+            <input type="tel" id="tra-cuu-sdt" name="so_dien_thoai" placeholder="VD: 0901234567" autocomplete="off">
+        </div>
+        <button type="submit" class="panel-tra-cuu__nut-tim">
+            <i class="fas fa-search"></i> Tra cứu ngay
+        </button>
+    </form>
+</div>
+
+<!-- ===================================================== Panel hỗ trợ khách hàng ===================================================== -->
+<div id="overlay-ho-tro" class="overlay-tra-cuu" onclick="dongHoTro()"></div>
+<div id="panel-ho-tro-khach-hang" class="panel-ho-tro">
+    <button class="panel-tra-cuu__dong" onclick="dongHoTro()" aria-label="Đóng">&times;</button>
+    <div class="panel-tra-cuu__dau" style="background:linear-gradient(135deg,#0f766e,#0d9488);">
+        <i class="fas fa-headset"></i>
+        <h3>Hỗ Trợ Khách Hàng</h3>
+        <p>Chúng tôi luôn sẵn sàng hỗ trợ bạn!</p>
+    </div>
+    <div class="panel-ho-tro__noi-dung">
+        <!-- Liên hệ nhanh -->
+        <div class="ho-tro__lien-he">
+            <a href="tel:1900636467" class="ho-tro__the">
+                <span class="ho-tro__bieu-tuong" style="background:#fee2e2;color:#dc2626;"><i class="fas fa-phone-alt"></i></span>
+                <div>
+                    <strong>Hotline miễn phí</strong>
+                    <span>1900 636 467 &mdash; 8h–21h mỗi ngày</span>
+                </div>
+            </a>
+            <a href="mailto:hotro@booksales.vn" class="ho-tro__the">
+                <span class="ho-tro__bieu-tuong" style="background:#dbeafe;color:#2563eb;"><i class="fas fa-envelope"></i></span>
+                <div>
+                    <strong>Email hỗ trợ</strong>
+                    <span>hotro@booksales.vn</span>
+                </div>
+            </a>
+            <a href="https://zalo.me/0901234567" target="_blank" rel="noopener" class="ho-tro__the">
+                <span class="ho-tro__bieu-tuong" style="background:#dcfce7;color:#16a34a;"><i class="fas fa-comment-dots"></i></span>
+                <div>
+                    <strong>Chat Zalo</strong>
+                    <span>Phản hồi trong vòng 5 phút</span>
+                </div>
+            </a>
+        </div>
+        <!-- FAQ -->
+        <p class="ho-tro__tieu-de-faq"><i class="fas fa-question-circle"></i> Câu hỏi thường gặp</p>
+        <details class="ho-tro__faq">
+            <summary>Thời gian giao hàng bao lâu?</summary>
+            <p>Nội thành: 1–2 ngày. Ngoại tỉnh: 3–5 ngày làm việc.</p>
+        </details>
+        <details class="ho-tro__faq">
+            <summary>Tôi có thể đổi/trả sách không?</summary>
+            <p>Chấp nhận đổi trả trong 7 ngày nếu sách lỗi từ nhà xuất bản hoặc giao nhầm.</p>
+        </details>
+        <details class="ho-tro__faq">
+            <summary>Phí vận chuyển tính thế nào?</summary>
+            <p>Miễn phí vận chuyển cho đơn hàng từ 150.000đ. Dưới mức này phí 25.000đ.</p>
+        </details>
+        <details class="ho-tro__faq">
+            <summary>Tôi quên mật khẩu thì làm thế nào?</summary>
+            <p>Liên hệ Hotline hoặc email để được hỗ trợ đặt lại mật khẩu thủ công.</p>
+        </details>
+        <details class="ho-tro__faq">
+            <summary>Thanh toán chuyển khoản có an toàn không?</summary>
+            <p>Hoàn toàn an toàn. Bạn sẽ nhận mã QR của tài khoản chính thức và giữ kho trong 7 phút.</p>
+        </details>
+    </div>
+</div>
+
 <!-- =====================================================================from đăng nhập ===========================================-->
 <div id="modal-overlay" class="modal-overlay" onclick="closeModal()"></div>
 
@@ -174,3 +266,27 @@
     </div>
 </div>
 </div>
+<script>
+/* ── Panel tra cứu đơn hàng ─────────────────────────────────────── */
+function moTraCuuDonHang() {
+    document.getElementById('panel-tra-cuu-don-hang').classList.add('hien');
+    document.getElementById('overlay-tra-cuu').classList.add('hien');
+    document.body.style.overflow = 'hidden';
+}
+function dongTraCuuDonHang() {
+    document.getElementById('panel-tra-cuu-don-hang').classList.remove('hien');
+    document.getElementById('overlay-tra-cuu').classList.remove('hien');
+    document.body.style.overflow = '';
+}
+/* ── Panel hỗ trợ khách hàng ─────────────────────────────────────── */
+function moHoTro() {
+    document.getElementById('panel-ho-tro-khach-hang').classList.add('hien');
+    document.getElementById('overlay-ho-tro').classList.add('hien');
+    document.body.style.overflow = 'hidden';
+}
+function dongHoTro() {
+    document.getElementById('panel-ho-tro-khach-hang').classList.remove('hien');
+    document.getElementById('overlay-ho-tro').classList.remove('hien');
+    document.body.style.overflow = '';
+}
+</script>

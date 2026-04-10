@@ -264,6 +264,122 @@ INSERT INTO DonHang (maDH, maND, maDC, maPT, ngayDat, tongTien, trangThai) VALUE
 INSERT INTO ChiTietDH (maDH, maSach, soLuong, giaBan, maKM, thanhTien) VALUES 
 ('DH_0002', 'S001', 1, 77400, 'FS_TODAY', 77400);
 
+-- CHỌN DATABASE
+USE BookSM;
+
+-- ========================================================
+-- 1. BỔ SUNG NHÀ XUẤT BẢN (Dùng INSERT IGNORE để không lỗi nếu đã có)
+-- Sách cũ của ông đang dùng maNXB 1, 2, 3 nên ta phải đảm bảo chúng tồn tại
+-- ========================================================
+INSERT IGNORE INTO NhaXuatBan (maNXB, tenNXB, diaChi) VALUES
+(1, 'NXB Trẻ', '161B Lý Chính Thắng, Quận 3, TP.HCM'),
+(2, 'NXB Kim Đồng', '55 Quang Trung, Hai Bà Trưng, Hà Nội'),
+(3, 'NXB Tổng Hợp TP.HCM', '62 Nguyễn Thị Minh Khai, Q1, TP.HCM'),
+(4, 'NXB Nhã Nam', '59 Đỗ Quang, Cầu Giấy, Hà Nội');
+
+-- ========================================================
+-- 2. BỔ SUNG TÁC GIẢ MỚI (Từ ID 4 trở đi, 1-3 của ông đã có)
+-- ========================================================
+INSERT IGNORE INTO TacGia (maTG, tenTG, tieuSu) VALUES
+(4, 'Nguyễn Nhật Ánh', 'Nhà văn chuyên viết truyện tuổi thơ và tuổi mới lớn.'),
+(5, 'Fujiko F. Fujio', 'Tác giả bộ truyện tranh Doraemon huyền thoại.'),
+(6, 'Mario Puzo', 'Nhà văn người Mỹ, nổi tiếng với tiểu thuyết Bố Già.'),
+(7, 'Nam Cao', 'Nhà văn hiện thực xuất sắc của Việt Nam.'),
+(8, 'Stephen Hawking', 'Nhà vật lý lý thuyết, vũ trụ học nổi tiếng.'),
+(9, 'Daniel Kahneman', 'Nhà tâm lý học, đoạt giải Nobel Kinh tế.'),
+(10, 'Tô Hoài', 'Nhà văn lớn của Việt Nam, nổi tiếng với Dế Mèn Phiêu Lưu Ký.'),
+(11, 'Gosho Aoyama', 'Tác giả bộ truyện Thám tử lừng danh Conan.');
+
+-- ========================================================
+-- 3. BỔ SUNG THỂ LOẠI (Từ ID 6 trở đi, 1-5 của ông đã có)
+-- ========================================================
+INSERT IGNORE INTO TheLoai (maTL, tenTL) VALUES
+(6, 'Thiếu nhi'), 
+(7, 'Truyện tranh');
+
+-- ========================================================
+-- 4. THÊM 20 CUỐN SÁCH MỚI (Từ S004 -> S023)
+-- ========================================================
+INSERT INTO Sach (maSach, tenSach, maNXB, namSX, loaiBia, giaBan, soLuongTon, moTa, trangThai) VALUES
+('S004', 'Mắt Biếc', 1, 2019, 'Bìa Cứng', 110000.00, 120, 'Câu chuyện tình yêu buồn nhưng đẹp của Ngạn và Hà Lan.', 'DangKD'),
+('S005', 'Doraemon Tập 1', 2, 2022, 'Bìa Mềm', 20000.00, 500, 'Tập đầu tiên của chú mèo máy đến từ tương lai.', 'DangKD'),
+('S006', 'Bố Già', 3, 2018, 'Bìa Cứng', 150000.00, 80, 'Tiểu thuyết kinh điển về thế giới Mafia ở Mỹ.', 'DangKD'),
+('S007', 'Chí Phèo', 1, 2015, 'Bìa Mềm', 45000.00, 300, 'Tác phẩm văn học hiện thực xuất sắc của Nam Cao.', 'DangKD'),
+('S008', 'Lược Sử Thời Gian', 3, 2021, 'Bìa Cứng', 180000.00, 60, 'Cuốn sách khoa học phổ thông về vũ trụ.', 'DangKD'),
+('S009', 'Tư Duy Nhanh Và Chậm', 4, 2019, 'Bìa Mềm', 210000.00, 90, 'Cuốn sách tâm lý học kinh tế học hành vi.', 'DangKD'),
+('S010', 'Tôi Thấy Hoa Vàng Trên Cỏ Xanh', 1, 2020, 'Bìa Mềm', 95000.00, 130, 'Truyện dài về tuổi thơ ở một làng quê nghèo.', 'DangKD'),
+('S011', 'Dế Mèn Phiêu Lưu Ký', 2, 2023, 'Bìa Cứng', 120000.00, 180, 'Tác phẩm văn học thiếu nhi nổi tiếng của Tô Hoài.', 'DangKD'),
+('S012', 'Quẳng Gánh Lo Đi Và Vui Sống', 1, 2021, 'Bìa Mềm', 75000.00, 110, 'Sách kỹ năng giúp vượt qua sự lo âu trong cuộc sống.', 'DangKD'),
+('S013', 'Cho Tôi Xin Một Vé Đi Tuổi Thơ', 1, 2018, 'Bìa Mềm', 88000.00, 140, 'Một chuyến tàu đưa độc giả về với tuổi thơ tinh nghịch.', 'DangKD'),
+('S014', 'Chiến Tranh Tiền Tệ', 4, 2020, 'Bìa Cứng', 165000.00, 70, 'Bức tranh toàn cảnh về những cuộc chiến tài chính khốc liệt.', 'DangKD'),
+('S015', 'Vũ Trụ Trong Vỏ Hạt Dẻ', 3, 2022, 'Bìa Cứng', 195000.00, 45, 'Tiếp nối của Lược Sử Thời Gian, khám phá sâu hơn về vũ trụ.', 'DangKD'),
+('S016', 'Shin Cậu Bé Bút Chì Tập 1', 2, 2021, 'Bìa Mềm', 22000.00, 400, 'Câu chuyện hài hước về cậu nhóc Shinnosuke.', 'DangKD'),
+('S017', 'Tâm Lý Học Đám Đông', 3, 2019, 'Bìa Mềm', 115000.00, 85, 'Nghiên cứu về tâm lý và hành vi của con người khi ở trong đám đông.', 'DangKD'),
+('S018', 'Conan Tập 100', 2, 2023, 'Bìa Mềm', 25000.00, 600, 'Tập thứ 100 của bộ truyện Thám tử lừng danh Conan.', 'DangKD'),
+('S019', 'Nhà Đầu Tư Thông Minh', 4, 2021, 'Bìa Cứng', 250000.00, 50, 'Cuốn sách nền tảng về đầu tư giá trị.', 'DangKD'),
+('S020', 'Hai Số Phận', 1, 2017, 'Bìa Cứng', 135000.00, 95, 'Tiểu thuyết về cuộc đời của hai con người có xuất thân trái ngược.', 'DangKD'),
+('S021', 'Đảo Mộng Mơ', 1, 2020, 'Bìa Mềm', 82000.00, 160, 'Câu chuyện về trí tưởng tượng phong phú của tuổi thơ.', 'DangKD'),
+('S022', 'Tuổi Trẻ Đáng Giá Bao Nhiêu', 4, 2018, 'Bìa Mềm', 80000.00, 200, 'Những chia sẻ chân thành về việc tận dụng tuổi thanh xuân.', 'DangKD'),
+('S023', 'Khởi Nghiệp Tinh Gọn', 3, 2021, 'Bìa Mềm', 145000.00, 80, 'Cách tiếp cận mới để đổi mới liên tục trong kinh doanh.', 'DangKD');
+
+-- ========================================================
+-- 5. NỐI SÁCH VỚI TÁC GIẢ (Bảng Sach_TacGia)
+-- ========================================================
+INSERT INTO Sach_TacGia (maSach, maTG) VALUES
+('S004', 4), ('S010', 4), ('S013', 4), ('S021', 4), -- Nguyễn Nhật Ánh
+('S005', 5), -- Fujiko
+('S006', 6), -- Mario Puzo
+('S007', 7), -- Nam Cao
+('S008', 8), ('S015', 8), -- Stephen Hawking
+('S009', 9), -- Daniel Kahneman
+('S011', 10), -- Tô Hoài
+('S012', 1), -- Dale Carnegie (ID = 1 từ dữ liệu cũ của ông)
+('S016', 5), -- Shin (Mượn tạm tác giả Fujiko cho đủ data test)
+('S018', 11); -- Gosho Aoyama
+
+-- ========================================================
+-- 6. NỐI SÁCH VỚI THỂ LOẠI (Bảng Sach_TheLoai)
+-- (Sử dụng lại ID 1-5 của ông và 6-7 mới thêm)
+-- ========================================================
+INSERT INTO Sach_TheLoai (maSach, maTL) VALUES
+('S004', 2), ('S006', 2), ('S007', 2), ('S010', 2), ('S013', 2), ('S020', 2), ('S021', 2), -- Văn học (2)
+('S005', 7), ('S016', 7), ('S018', 7), -- Truyện tranh (7)
+('S008', 4), ('S015', 4), -- Khoa học (4)
+('S009', 5), ('S017', 5), -- Tâm lý học (5)
+('S011', 6), -- Thiếu nhi (6)
+('S012', 1), ('S022', 1), -- Kỹ năng sống (1)
+('S014', 3), ('S019', 3), ('S023', 3); -- Kinh tế (3)
+
+-- ========================================================
+-- 7. THÊM HÌNH ẢNH SÁCH
+-- ========================================================
+INSERT INTO HinhAnhSach (maSach, urlAnh) VALUES
+('S004', 'https://picsum.photos/seed/s004/300/400'),
+('S005', 'https://picsum.photos/seed/s005/300/400'),
+('S006', 'https://picsum.photos/seed/s006/300/400'),
+('S007', 'https://picsum.photos/seed/s007/300/400'),
+('S008', 'https://picsum.photos/seed/s008/300/400'),
+('S009', 'https://picsum.photos/seed/s009/300/400'),
+('S010', 'https://picsum.photos/seed/s010/300/400'),
+('S011', 'https://picsum.photos/seed/s011/300/400'),
+('S012', 'https://picsum.photos/seed/s012/300/400'),
+('S013', 'https://picsum.photos/seed/s013/300/400'),
+('S014', 'https://picsum.photos/seed/s014/300/400'),
+('S015', 'https://picsum.photos/seed/s015/300/400'),
+('S016', 'https://picsum.photos/seed/s016/300/400'),
+('S017', 'https://picsum.photos/seed/s017/300/400'),
+('S018', 'https://picsum.photos/seed/s018/300/400'),
+('S019', 'https://picsum.photos/seed/s019/300/400'),
+('S020', 'https://picsum.photos/seed/s020/300/400'),
+('S021', 'https://picsum.photos/seed/s021/300/400'),
+('S022', 'https://picsum.photos/seed/s022/300/400'),
+('S023', 'https://picsum.photos/seed/s023/300/400');
+
+INSERT INTO BookSM.QuangCao (hinhAnh,nhan,tieuDe,moTa,chuNut,mauNen,trangThai) VALUES
+	 ('https://picsum.photos/seed/banner1/1200/400','Khuyến mãi tháng 10','Hội Sách Mùa Thu<br>Giảm Giá Lên Đến 50%','Khám phá hàng ngàn tựa sách hấp dẫn với mức giá ưu đãi nhất trong năm. Miễn phí giao hàng toàn quốc.','Mua Ngay','blue',1),
+	 ('https://picsum.photos/seed/banner2/1200/400','Sách Mới','Tuần Lễ Sách Mới<br>Tặng Kèm Bookmark','Cập nhật những tựa sách mới nhất từ các nhà xuất bản hàng đầu. Quà tặng độc quyền cho 100 đơn hàng đầu tiên.','Khám Phá','emerald',1),
+	 ('https://picsum.photos/seed/banner3/1200/400','Độc Quyền','Bộ Sách Kỹ Năng<br>Dành Cho Sinh Viên','Trang bị hành trang vững chắc cho tương lai với bộ sách kỹ năng thiết yếu. Giảm thêm 10% cho học sinh, sinh viên.','Xem Chi Tiết','purple',1);
+
 
 -- BookSM.KhuyenMai definition
 
@@ -553,6 +669,20 @@ CREATE TABLE "DanhGiaSach" (
 );
 
 
+-- BookSM.GioHang definition
+
+CREATE TABLE "GioHang" (
+  "maND" int NOT NULL,
+  "maSach" varchar(20) NOT NULL,
+  "soLuong" int NOT NULL DEFAULT '1',
+  PRIMARY KEY ("maND","maSach"),
+  KEY "fk_gh_sach" ("maSach"),
+  CONSTRAINT "fk_gh_nd" FOREIGN KEY ("maND") REFERENCES "NguoiDung" ("maND") ON DELETE CASCADE,
+  CONSTRAINT "fk_gh_sach" FOREIGN KEY ("maSach") REFERENCES "Sach" ("maSach") ON DELETE CASCADE,
+  CONSTRAINT "chk_gh_sl" CHECK ((`soLuong` > 0))
+);
+
+
 -- BookSM.HinhAnhSach definition
 
 CREATE TABLE "HinhAnhSach" (
@@ -578,116 +708,3 @@ CREATE TABLE "LichSuThanhToanPN" (
   KEY "maPN" ("maPN"),
   CONSTRAINT "LichSuThanhToanPN_ibfk_1" FOREIGN KEY ("maPN") REFERENCES "PhieuNhap" ("maPN") ON DELETE CASCADE
 );
-
-
-
--- CHỌN DATABASE
-USE BookSM;
-
--- ========================================================
--- 1. BỔ SUNG NHÀ XUẤT BẢN (Dùng INSERT IGNORE để không lỗi nếu đã có)
--- Sách cũ của ông đang dùng maNXB 1, 2, 3 nên ta phải đảm bảo chúng tồn tại
--- ========================================================
-INSERT IGNORE INTO NhaXuatBan (maNXB, tenNXB, diaChi) VALUES
-(1, 'NXB Trẻ', '161B Lý Chính Thắng, Quận 3, TP.HCM'),
-(2, 'NXB Kim Đồng', '55 Quang Trung, Hai Bà Trưng, Hà Nội'),
-(3, 'NXB Tổng Hợp TP.HCM', '62 Nguyễn Thị Minh Khai, Q1, TP.HCM'),
-(4, 'NXB Nhã Nam', '59 Đỗ Quang, Cầu Giấy, Hà Nội');
-
--- ========================================================
--- 2. BỔ SUNG TÁC GIẢ MỚI (Từ ID 4 trở đi, 1-3 của ông đã có)
--- ========================================================
-INSERT IGNORE INTO TacGia (maTG, tenTG, tieuSu) VALUES
-(4, 'Nguyễn Nhật Ánh', 'Nhà văn chuyên viết truyện tuổi thơ và tuổi mới lớn.'),
-(5, 'Fujiko F. Fujio', 'Tác giả bộ truyện tranh Doraemon huyền thoại.'),
-(6, 'Mario Puzo', 'Nhà văn người Mỹ, nổi tiếng với tiểu thuyết Bố Già.'),
-(7, 'Nam Cao', 'Nhà văn hiện thực xuất sắc của Việt Nam.'),
-(8, 'Stephen Hawking', 'Nhà vật lý lý thuyết, vũ trụ học nổi tiếng.'),
-(9, 'Daniel Kahneman', 'Nhà tâm lý học, đoạt giải Nobel Kinh tế.'),
-(10, 'Tô Hoài', 'Nhà văn lớn của Việt Nam, nổi tiếng với Dế Mèn Phiêu Lưu Ký.'),
-(11, 'Gosho Aoyama', 'Tác giả bộ truyện Thám tử lừng danh Conan.');
-
--- ========================================================
--- 3. BỔ SUNG THỂ LOẠI (Từ ID 6 trở đi, 1-5 của ông đã có)
--- ========================================================
-INSERT IGNORE INTO TheLoai (maTL, tenTL) VALUES
-(6, 'Thiếu nhi'), 
-(7, 'Truyện tranh');
-
--- ========================================================
--- 4. THÊM 20 CUỐN SÁCH MỚI (Từ S004 -> S023)
--- ========================================================
-INSERT INTO Sach (maSach, tenSach, maNXB, namSX, loaiBia, giaBan, soLuongTon, moTa, trangThai) VALUES
-('S004', 'Mắt Biếc', 1, 2019, 'Bìa Cứng', 110000.00, 120, 'Câu chuyện tình yêu buồn nhưng đẹp của Ngạn và Hà Lan.', 'DangKD'),
-('S005', 'Doraemon Tập 1', 2, 2022, 'Bìa Mềm', 20000.00, 500, 'Tập đầu tiên của chú mèo máy đến từ tương lai.', 'DangKD'),
-('S006', 'Bố Già', 3, 2018, 'Bìa Cứng', 150000.00, 80, 'Tiểu thuyết kinh điển về thế giới Mafia ở Mỹ.', 'DangKD'),
-('S007', 'Chí Phèo', 1, 2015, 'Bìa Mềm', 45000.00, 300, 'Tác phẩm văn học hiện thực xuất sắc của Nam Cao.', 'DangKD'),
-('S008', 'Lược Sử Thời Gian', 3, 2021, 'Bìa Cứng', 180000.00, 60, 'Cuốn sách khoa học phổ thông về vũ trụ.', 'DangKD'),
-('S009', 'Tư Duy Nhanh Và Chậm', 4, 2019, 'Bìa Mềm', 210000.00, 90, 'Cuốn sách tâm lý học kinh tế học hành vi.', 'DangKD'),
-('S010', 'Tôi Thấy Hoa Vàng Trên Cỏ Xanh', 1, 2020, 'Bìa Mềm', 95000.00, 130, 'Truyện dài về tuổi thơ ở một làng quê nghèo.', 'DangKD'),
-('S011', 'Dế Mèn Phiêu Lưu Ký', 2, 2023, 'Bìa Cứng', 120000.00, 180, 'Tác phẩm văn học thiếu nhi nổi tiếng của Tô Hoài.', 'DangKD'),
-('S012', 'Quẳng Gánh Lo Đi Và Vui Sống', 1, 2021, 'Bìa Mềm', 75000.00, 110, 'Sách kỹ năng giúp vượt qua sự lo âu trong cuộc sống.', 'DangKD'),
-('S013', 'Cho Tôi Xin Một Vé Đi Tuổi Thơ', 1, 2018, 'Bìa Mềm', 88000.00, 140, 'Một chuyến tàu đưa độc giả về với tuổi thơ tinh nghịch.', 'DangKD'),
-('S014', 'Chiến Tranh Tiền Tệ', 4, 2020, 'Bìa Cứng', 165000.00, 70, 'Bức tranh toàn cảnh về những cuộc chiến tài chính khốc liệt.', 'DangKD'),
-('S015', 'Vũ Trụ Trong Vỏ Hạt Dẻ', 3, 2022, 'Bìa Cứng', 195000.00, 45, 'Tiếp nối của Lược Sử Thời Gian, khám phá sâu hơn về vũ trụ.', 'DangKD'),
-('S016', 'Shin Cậu Bé Bút Chì Tập 1', 2, 2021, 'Bìa Mềm', 22000.00, 400, 'Câu chuyện hài hước về cậu nhóc Shinnosuke.', 'DangKD'),
-('S017', 'Tâm Lý Học Đám Đông', 3, 2019, 'Bìa Mềm', 115000.00, 85, 'Nghiên cứu về tâm lý và hành vi của con người khi ở trong đám đông.', 'DangKD'),
-('S018', 'Conan Tập 100', 2, 2023, 'Bìa Mềm', 25000.00, 600, 'Tập thứ 100 của bộ truyện Thám tử lừng danh Conan.', 'DangKD'),
-('S019', 'Nhà Đầu Tư Thông Minh', 4, 2021, 'Bìa Cứng', 250000.00, 50, 'Cuốn sách nền tảng về đầu tư giá trị.', 'DangKD'),
-('S020', 'Hai Số Phận', 1, 2017, 'Bìa Cứng', 135000.00, 95, 'Tiểu thuyết về cuộc đời của hai con người có xuất thân trái ngược.', 'DangKD'),
-('S021', 'Đảo Mộng Mơ', 1, 2020, 'Bìa Mềm', 82000.00, 160, 'Câu chuyện về trí tưởng tượng phong phú của tuổi thơ.', 'DangKD'),
-('S022', 'Tuổi Trẻ Đáng Giá Bao Nhiêu', 4, 2018, 'Bìa Mềm', 80000.00, 200, 'Những chia sẻ chân thành về việc tận dụng tuổi thanh xuân.', 'DangKD'),
-('S023', 'Khởi Nghiệp Tinh Gọn', 3, 2021, 'Bìa Mềm', 145000.00, 80, 'Cách tiếp cận mới để đổi mới liên tục trong kinh doanh.', 'DangKD');
-
--- ========================================================
--- 5. NỐI SÁCH VỚI TÁC GIẢ (Bảng Sach_TacGia)
--- ========================================================
-INSERT INTO Sach_TacGia (maSach, maTG) VALUES
-('S004', 4), ('S010', 4), ('S013', 4), ('S021', 4), -- Nguyễn Nhật Ánh
-('S005', 5), -- Fujiko
-('S006', 6), -- Mario Puzo
-('S007', 7), -- Nam Cao
-('S008', 8), ('S015', 8), -- Stephen Hawking
-('S009', 9), -- Daniel Kahneman
-('S011', 10), -- Tô Hoài
-('S012', 1), -- Dale Carnegie (ID = 1 từ dữ liệu cũ của ông)
-('S016', 5), -- Shin (Mượn tạm tác giả Fujiko cho đủ data test)
-('S018', 11); -- Gosho Aoyama
-
--- ========================================================
--- 6. NỐI SÁCH VỚI THỂ LOẠI (Bảng Sach_TheLoai)
--- (Sử dụng lại ID 1-5 của ông và 6-7 mới thêm)
--- ========================================================
-INSERT INTO Sach_TheLoai (maSach, maTL) VALUES
-('S004', 2), ('S006', 2), ('S007', 2), ('S010', 2), ('S013', 2), ('S020', 2), ('S021', 2), -- Văn học (2)
-('S005', 7), ('S016', 7), ('S018', 7), -- Truyện tranh (7)
-('S008', 4), ('S015', 4), -- Khoa học (4)
-('S009', 5), ('S017', 5), -- Tâm lý học (5)
-('S011', 6), -- Thiếu nhi (6)
-('S012', 1), ('S022', 1), -- Kỹ năng sống (1)
-('S014', 3), ('S019', 3), ('S023', 3); -- Kinh tế (3)
-
--- ========================================================
--- 7. THÊM HÌNH ẢNH SÁCH
--- ========================================================
-INSERT INTO HinhAnhSach (maSach, urlAnh) VALUES
-('S004', 'https://picsum.photos/seed/s004/300/400'),
-('S005', 'https://picsum.photos/seed/s005/300/400'),
-('S006', 'https://picsum.photos/seed/s006/300/400'),
-('S007', 'https://picsum.photos/seed/s007/300/400'),
-('S008', 'https://picsum.photos/seed/s008/300/400'),
-('S009', 'https://picsum.photos/seed/s009/300/400'),
-('S010', 'https://picsum.photos/seed/s010/300/400'),
-('S011', 'https://picsum.photos/seed/s011/300/400'),
-('S012', 'https://picsum.photos/seed/s012/300/400'),
-('S013', 'https://picsum.photos/seed/s013/300/400'),
-('S014', 'https://picsum.photos/seed/s014/300/400'),
-('S015', 'https://picsum.photos/seed/s015/300/400'),
-('S016', 'https://picsum.photos/seed/s016/300/400'),
-('S017', 'https://picsum.photos/seed/s017/300/400'),
-('S018', 'https://picsum.photos/seed/s018/300/400'),
-('S019', 'https://picsum.photos/seed/s019/300/400'),
-('S020', 'https://picsum.photos/seed/s020/300/400'),
-('S021', 'https://picsum.photos/seed/s021/300/400'),
-('S022', 'https://picsum.photos/seed/s022/300/400'),
-('S023', 'https://picsum.photos/seed/s023/300/400');
