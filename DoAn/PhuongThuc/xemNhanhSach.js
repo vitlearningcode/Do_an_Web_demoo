@@ -235,18 +235,15 @@
     nutThemGio.addEventListener('click', function () {
       if (!sachHienTai) return;
 
-      // Kiểm tra đăng nhập (TẠM TẮT ĐỂ DEV GIỎ HÀNG)
-      /*
-      if (typeof dangDangNhap !== 'undefined' && !dangDangNhap) {
-        if (typeof hienThiThongBao !== 'undefined') {
-          hienThiThongBao('Vui lòng đăng nhập để thêm sách vào giỏ!');
-        }
-        if (typeof authModal !== 'undefined') {
-          authModal.mo('dang_nhap');
+      // Kiểm tra đăng nhập bắt buộc
+      if (typeof dangDangNhap === 'undefined' || !dangDangNhap) {
+        alert('Bạn cần đăng nhập để thêm sách vào giỏ hàng!');
+        dongModal();
+        if (typeof openLogin === 'function') {
+          openLogin();
         }
         return;
       }
-      */
 
       var thongTin = {
         maSach : sachHienTai.maSach,
@@ -293,7 +290,47 @@
     });
   }
 
-  // ── Helpers (không innerHTML) ─────────────────────────────────────────
+  // ── Panel Đánh Giá (click số review → hiện iframe PHP) ──────────────────────
+  // JS chỉ gán src iframe + toggle display — KHÔNG innerHTML, KHÔNG fetch/AJAX
+  var nutSoReview  = document.getElementById('mn-so-review');
+  var panelDanhGia = document.getElementById('mn-panel-danh-gia');
+  var iframeDG     = document.getElementById('mn-iframe-danh-gia');
+  var nutDongPanel = document.getElementById('mn-dong-panel');
+
+  if (nutSoReview && panelDanhGia && iframeDG) {
+    function moPanel() {
+      if (!sachHienTai || !sachHienTai.maSach) return;
+      // Gán src iframe → PHP layDanhGia.php render HTML danh sách review
+      iframeDG.setAttribute(
+        'src',
+        'CuaHang/TrangBanHang/ChiTietSach/layDanhGia.php?maSach=' + encodeURIComponent(sachHienTai.maSach)
+      );
+      panelDanhGia.style.display = '';
+    }
+
+    nutSoReview.addEventListener('click', moPanel);
+    nutSoReview.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); moPanel(); }
+    });
+
+    // Nút đóng panel
+    if (nutDongPanel) {
+      nutDongPanel.addEventListener('click', function() {
+        panelDanhGia.style.display = 'none';
+        iframeDG.setAttribute('src', 'about:blank');
+      });
+    }
+
+    // Khi đóng modal chính → đóng cả panel và reset iframe
+    var _dongModalGoc = dongModal;
+    dongModal = function() {
+      panelDanhGia.style.display = 'none';
+      iframeDG.setAttribute('src', 'about:blank');
+      _dongModalGoc();
+    };
+  }
+
+  // ── Helpers (không innerHTML) ───────────────────────────────────
 
   /** Gán textContent */
   function datVan(id, van) {

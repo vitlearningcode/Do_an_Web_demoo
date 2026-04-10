@@ -102,9 +102,34 @@
           </div>
           <!-- Các dấu · (chấm tách) — ẩn/hiện tuỳ theo data -->
           <span id="mn-dg-sep-1" class="mn-dg-dot" style="display:none"></span>
-          <span id="mn-so-review"  class="mn-so-review"></span>
+          <span id="mn-so-review"
+                class="mn-so-review mn-so-review-link"
+                role="button"
+                tabindex="0"
+                title="Xem tất cả đánh giá"
+                style="cursor:pointer;text-decoration:underline;text-underline-offset:3px"></span>
           <span id="mn-dg-sep-2" class="mn-dg-dot"   style="display:none"></span>
           <span id="mn-tong-ban"   class="mn-tong-ban"></span>
+        </div>
+
+        <!-- ═══ PANEL ĐÁNH GIÁ (ẩn mặc định, JS toggle display) ═══ -->
+        <!-- PHP render sẵn toàn bộ cấu trúc — JS chỉ set src iframe + toggle display -->
+        <div id="mn-panel-danh-gia" class="mn-panel-danh-gia" style="display:none">
+          <div class="mn-panel-header">
+            <span class="mn-panel-title"><i class="fas fa-star" style="color:#f59e0b"></i> Đánh giá từ độc giả</span>
+            <button id="mn-dong-panel" class="mn-dong-panel" type="button" aria-label="Đóng panel đánh giá">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <!-- iframe tải trang PHP layDanhGia.php — src do JS gán, không innerHTML -->
+          <iframe id="mn-iframe-danh-gia"
+                  name="mn-iframe-danh-gia"
+                  class="mn-iframe-danh-gia"
+                  src="about:blank"
+                  title="Danh sách đánh giá"
+                  frameborder="0"
+                  scrolling="yes">
+          </iframe>
         </div>
 
         <!-- Khu vực giá — p-6 bg-gray-50 rounded-2xl -->

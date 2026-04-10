@@ -22,6 +22,22 @@ require_once "CuaHang/TrangBanHang/LoadDuLieu/taiQuangCao.php";
     <link rel="stylesheet" href="GiaoDien/gioHang.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script>const dangDangNhap = <?= $isLoggedIn ? 'true' : 'false' ?>;</script>
+    <?php if ($isLoggedIn): ?>
+    <script>
+      // PHP render giỏ hàng từ Session vào biến JS (không AJAX, không fetch)
+      var cartServerData = <?= json_encode($_SESSION['cart'] ?? [], JSON_UNESCAPED_UNICODE) ?>;
+    </script>
+    <?php else: ?>
+    <script>var cartServerData = null;</script>
+    <?php endif; ?>
+    <?php
+    // Xóa cờ session (từ thanh toán thành công)
+    $phai_xoa_cart = !empty($_SESSION['xoa_cart_local']) || !empty($_COOKIE['xoa_cart_local']);
+    if (!empty($_SESSION['xoa_cart_local'])) unset($_SESSION['xoa_cart_local']);
+    if (!empty($_COOKIE['xoa_cart_local']))  setcookie('xoa_cart_local', '', time() - 1, '/');
+    if ($phai_xoa_cart): ?>
+    <script>localStorage.removeItem('book_cart');</script>
+    <?php endif; ?>
 </head>
 <body>
 

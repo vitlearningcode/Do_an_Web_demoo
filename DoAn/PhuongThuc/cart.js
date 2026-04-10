@@ -47,14 +47,20 @@ var cartDrawer = (function () {
   
       if (!overlay || !drawer) return; // Cart HTML chưa được load
   
-      // Load from LocalStorage
-      var stored = localStorage.getItem('book_cart');
-      if (stored) {
-        try {
-          cartArr = JSON.parse(stored);
-          if (!Array.isArray(cartArr)) cartArr = [];
-        } catch (e) {
-          cartArr = [];
+      // Ưu tiên lấy giỏ hàng từ PHP Session (cartServerData do PHP render sẵn)
+      // cartServerData = null nếu chưa đăng nhập, [] nếu đầy đủ là mảng
+      if (typeof cartServerData !== 'undefined' && cartServerData !== null && Array.isArray(cartServerData)) {
+        cartArr = cartServerData; // Dùng dữ liệu từ server (PHP session)
+      } else {
+        // Fallback: localStorage khi chưa đăng nhập
+        var stored = localStorage.getItem('book_cart');
+        if (stored) {
+          try {
+            cartArr = JSON.parse(stored);
+            if (!Array.isArray(cartArr)) cartArr = [];
+          } catch (e) {
+            cartArr = [];
+          }
         }
       }
   
@@ -105,10 +111,22 @@ var cartDrawer = (function () {
     }
   
     function saveCart() {
+      // 1. Luôn lưu localStorage (fallback + dùng cho form checkout)
       localStorage.setItem('book_cart', JSON.stringify(cartArr));
       updateHeaderIcon();
-      // Ghi mảng vào hidden input để PHP serialize
+      // Ghi mảng vào hidden input để PHP serialize khi checkout
       if (dataInput) dataInput.value = JSON.stringify(cartArr);
+
+      // 2. Nếu đã đăng nhập → đồng bộ lên PHP Session qua hidden form + iframe
+      // (thuần PHP, không AJAX, không fetch)
+      if (typeof dangDangNhap !== 'undefined' && dangDangNhap) {
+        var syncForm = document.getElementById('cart-sync-form');
+        var syncJson = document.getElementById('cart-sync-json');
+        if (syncForm && syncJson) {
+          syncJson.value = JSON.stringify(cartArr);
+          syncForm.submit();
+        }
+      }
     }
   
     function updateHeaderIcon() {

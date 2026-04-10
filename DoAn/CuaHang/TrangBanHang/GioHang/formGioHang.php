@@ -91,3 +91,14 @@
         </button>
     </div>
 </div>
+</div>
+
+<!-- ═══ HIDDEN FORM: Đồng bộ giỏ hàng vào bảng GioHang (DB) qua PHP form POST (không AJAX) ═══ -->
+<iframe id="cart-sync-frame" name="cart-sync-frame" style="display:none" aria-hidden="true"></iframe>
+<form id="cart-sync-form"
+      action="CuaHang/TrangBanHang/GioHang/luuGioHang.php"
+      method="POST"
+      target="cart-sync-frame"
+      style="display:none">
+    <input type="hidden" name="cart_json" id="cart-sync-json" value="">
+</form>

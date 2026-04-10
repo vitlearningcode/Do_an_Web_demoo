@@ -301,3 +301,9 @@ document.addEventListener('click', function(event) {
         }
     }
 });
+
+// ==================== CAP NHAT THONG TIN ====================
+function moCapNhatThongTin(event) {
+    if (event) event.preventDefault();
+    window.location.href = 'CuaHang/TrangBanHang/taiKhoan/capNhat.php';
+}

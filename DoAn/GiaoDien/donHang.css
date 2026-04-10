@@ -1,0 +1,373 @@
+/* ================================================================
+   donHang.css — Trang theo dõi đơn hàng kiểu Shopee
+   Import trong donHang/index.php
+   ================================================================ */
+
+:root {
+  --dh-primary:    #ee4d2d;   /* Màu chủ đạo Shopee */
+  --dh-primary-lt: #fff3f0;
+  --dh-orange:     #f97316;
+  --dh-green:      #16a34a;
+  --dh-gray:       #6b7280;
+  --dh-border:     #e5e7eb;
+  --dh-bg:         #f5f5f5;
+  --dh-white:      #ffffff;
+  --dh-shadow:     0 1px 4px rgba(0,0,0,.08);
+  --dh-radius:     10px;
+  --dh-font:       'Inter', 'Segoe UI', sans-serif;
+}
+
+/* Layout tổng */
+.dh-page {
+  background: var(--dh-bg);
+  min-height: 100vh;
+  font-family: var(--dh-font);
+  padding-bottom: 60px;
+}
+
+.dh-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.dh-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dh-title i { color: var(--dh-primary); }
+
+/* ── Tabs ─────────────────────────────────────────────────────── */
+.dh-tabs {
+  display: flex;
+  background: var(--dh-white);
+  border-radius: var(--dh-radius) var(--dh-radius) 0 0;
+  box-shadow: var(--dh-shadow);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dh-tabs::-webkit-scrollbar { height: 0; }
+
+.dh-tab {
+  flex: 1;
+  min-width: 110px;
+  padding: 14px 8px;
+  font-size: .875rem;
+  font-weight: 500;
+  color: var(--dh-gray);
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  text-align: center;
+  transition: color .2s, border-color .2s;
+}
+
+.dh-tab:hover { color: var(--dh-primary); }
+
+.dh-tab.active {
+  color: var(--dh-primary);
+  border-bottom-color: var(--dh-primary);
+  font-weight: 700;
+}
+
+/* ── Nội dung tab ─────────────────────────────────────────────── */
+.dh-content {
+  background: transparent;
+}
+
+.dh-panel { display: none; }
+.dh-panel.active { display: block; }
+
+/* ── Card đơn hàng ────────────────────────────────────────────── */
+.dh-order-card {
+  background: var(--dh-white);
+  border-radius: 0 0 var(--dh-radius) var(--dh-radius);
+  box-shadow: var(--dh-shadow);
+  margin-bottom: 16px;
+  overflow: hidden;
+  border: 1px solid var(--dh-border);
+}
+
+.dh-order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--dh-border);
+  background: #fafafa;
+}
+
+.dh-order-id {
+  font-size: .875rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.dh-order-id span { color: var(--dh-gray); font-weight: 400; }
+
+.dh-status-badge {
+  font-size: .78rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.dh-status-badge.cho-duyet  { background: #fef3c7; color: #d97706; }
+.dh-status-badge.dang-giao  { background: #dbeafe; color: #2563eb; }
+.dh-status-badge.hoan-thanh { background: #dcfce7; color: #16a34a; }
+.dh-status-badge.da-huy     { background: #fee2e2; color: #dc2626; }
+
+/* ── Items trong đơn ─────────────────────────────────────────── */
+.dh-order-items { padding: 0 20px; }
+
+.dh-order-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px dashed var(--dh-border);
+}
+
+.dh-order-item:last-child { border-bottom: none; }
+
+.dh-item-img {
+  width: 70px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--dh-border);
+  flex-shrink: 0;
+}
+
+.dh-item-info { flex: 1; min-width: 0; }
+.dh-item-info h4 {
+  font-size: .935rem;
+  font-weight: 600;
+  color: #111;
+  margin: 0 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dh-item-info p { font-size: .82rem; color: var(--dh-gray); margin: 0; }
+
+.dh-item-price-col { text-align: right; flex-shrink: 0; }
+.dh-item-price { font-size: .95rem; font-weight: 700; color: var(--dh-primary); }
+.dh-item-qty   { font-size: .8rem; color: var(--dh-gray); margin-top: 2px; }
+
+/* Nút đánh giá */
+.dh-btn-review {
+  margin-top: 8px;
+  padding: 5px 14px;
+  font-size: .8rem;
+  background: var(--dh-primary);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .2s;
+}
+.dh-btn-review:hover { background: #c73e20; }
+
+.dh-reviewed-tag {
+  margin-top: 6px;
+  font-size: .78rem;
+  color: var(--dh-green);
+  font-weight: 600;
+}
+
+/* ── Footer card ─────────────────────────────────────────────── */
+.dh-order-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  border-top: 1px solid var(--dh-border);
+  background: #fafafa;
+}
+
+.dh-order-date { font-size: .82rem; color: var(--dh-gray); }
+
+.dh-order-total {
+  font-size: .9rem;
+  font-weight: 500;
+  color: #333;
+}
+.dh-order-total strong {
+  color: var(--dh-primary);
+  font-size: 1.05rem;
+  margin-left: 6px;
+}
+
+/* ── Giỏ rỗng ─────────────────────────────────────────────────── */
+.dh-empty {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--dh-white);
+  border-radius: 0 0 var(--dh-radius) var(--dh-radius);
+  box-shadow: var(--dh-shadow);
+  color: var(--dh-gray);
+  font-size: .95rem;
+}
+.dh-empty i { font-size: 3rem; margin-bottom: 12px; display: block; opacity: .3; }
+
+/* ── Modal đánh giá ──────────────────────────────────────────── */
+.dh-review-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 9000;
+  justify-content: center;
+  align-items: center;
+}
+.dh-review-overlay.active { display: flex; }
+
+.dh-review-modal {
+  background: var(--dh-white);
+  border-radius: 14px;
+  width: 90%;
+  max-width: 500px;
+  padding: 28px 28px 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+  position: relative;
+  animation: dh-slide-up .25s ease;
+}
+
+@keyframes dh-slide-up {
+  from { transform: translateY(30px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.dh-review-modal h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 6px;
+  color: #111;
+}
+.dh-review-modal .dh-book-name {
+  font-size: .9rem;
+  color: var(--dh-gray);
+  margin-bottom: 18px;
+  font-style: italic;
+}
+
+/* Sao rating */
+.dh-star-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.dh-star {
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #d1d5db;
+  transition: color .15s, transform .15s;
+  user-select: none;
+}
+.dh-star:hover,
+.dh-star.selected { color: #f59e0b; transform: scale(1.1); }
+
+.dh-review-textarea {
+  width: 100%;
+  min-height: 100px;
+  border: 1.5px solid var(--dh-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: .9rem;
+  font-family: var(--dh-font);
+  resize: vertical;
+  outline: none;
+  transition: border-color .2s;
+  box-sizing: border-box;
+}
+.dh-review-textarea:focus { border-color: var(--dh-primary); }
+
+.dh-review-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+.dh-btn-cancel-review {
+  padding: 8px 20px;
+  border: 1.5px solid var(--dh-border);
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: .9rem;
+  color: var(--dh-gray);
+}
+.dh-btn-submit-review {
+  padding: 8px 20px;
+  background: var(--dh-primary);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: .9rem;
+  font-weight: 600;
+  transition: background .2s;
+}
+.dh-btn-submit-review:hover { background: #c73e20; }
+
+.dh-modal-close {
+  position: absolute;
+  top: 14px; right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: var(--dh-gray);
+}
+
+/* ── Back link ──────────────────────────────────────────────── */
+.dh-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--dh-gray);
+  font-size: .875rem;
+  margin-bottom: 18px;
+  text-decoration: none;
+}
+.dh-back-link:hover { color: var(--dh-primary); }
+
+/* ── Thông báo nhỏ ──────────────────────────────────────────── */
+.dh-toast {
+  display: none;
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111;
+  color: #fff;
+  padding: 10px 22px;
+  border-radius: 24px;
+  font-size: .88rem;
+  z-index: 9999;
+  box-shadow: 0 4px 20px rgba(0,0,0,.2);
+  animation: dh-toast-in .3s ease;
+}
+.dh-toast.show { display: block; }
+@keyframes dh-toast-in {
+  from { opacity: 0; bottom: 10px; }
+  to   { opacity: 1; bottom: 30px; }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .dh-order-header { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .dh-order-footer { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .dh-review-modal { padding: 20px 16px; }
+}

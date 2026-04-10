@@ -81,8 +81,14 @@ try {
     
     // Dọn dẹp
     unset($_SESSION['cart_temp']);
+    unset($_SESSION['cart']);
+    // Xóa giỏ hàng trong DB sau khi đặt hàng thành công
+    if (isset($_SESSION['nguoi_dung_id'])) {
+        $stmtXoaGio = $pdo->prepare("DELETE FROM GioHang WHERE maND = ?");
+        $stmtXoaGio->execute([(int)$_SESSION['nguoi_dung_id']]);
+    }
     // Cần 1 cờ để JS xóa localstorage khi quay lại trang chủ.
-    $_SESSION['xoa_cart_local'] = true; 
+    $_SESSION['xoa_cart_local'] = true;
     
     // XỬ LÝ CHUYỂN HƯỚNG
     if ($phuongThuc === 2) { // QR Bank
