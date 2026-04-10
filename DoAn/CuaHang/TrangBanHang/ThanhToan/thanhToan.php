@@ -4,11 +4,12 @@ session_start();
 $isLoggedIn = isset($_SESSION['nguoi_dung_id']);
 
 $cart = [];
-// Ưu tiên đọc dữ liệu POST từ Giỏ Hàng
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['cart_data'])) {
-    $cart = json_decode($_POST['cart_data'], true);
-} else if (isset($_SESSION['cart_temp'])) {
-    $cart = $_SESSION['cart_temp']; // Tránh việc user reload F5 làm mất giỏ hàng
+// Đọc giỏ hàng từ Session (đã được luuGioHang.php đồng bộ — không dùng json_decode từ POST)
+if (!empty($_SESSION['cart'])) {
+    $cart = $_SESSION['cart'];
+} elseif (!empty($_SESSION['cart_temp'])) {
+    // Fallback: tránh mất giỏ hàng khi F5
+    $cart = $_SESSION['cart_temp'];
 }
 
 if (empty($cart)) {

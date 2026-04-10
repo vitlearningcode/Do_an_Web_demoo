@@ -86,7 +86,13 @@
                 <button type="submit" name="btn_dangky" class="submit-btn">Đăng ký</button>
             </form>
 
-            <p class="modal-footer-text">Chưa có tài khoản? <a href="#" onclick="authModal.chuyenCheDo(); return false;">Đăng ký ngay</a></p>
+            <!-- 2 dòng footer render sẵn; JS chỉ toggle display, KHÔNG innerHTML -->
+            <p class="modal-footer-text" id="footer-text-dn">
+                Chưa có tài khoản? <a href="#" onclick="authModal.chuyenCheDo(); return false;">Đăng ký ngay</a>
+            </p>
+            <p class="modal-footer-text" id="footer-text-dk" style="display:none">
+                Đã có tài khoản? <a href="#" onclick="authModal.chuyenCheDo(); return false;">Đăng nhập ngay</a>
+            </p>
         </div>
     </div>
 

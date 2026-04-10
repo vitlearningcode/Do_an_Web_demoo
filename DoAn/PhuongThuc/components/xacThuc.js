@@ -98,16 +98,11 @@ class HopThoaiXacThuc {
     if (formDN) formDN.style.display = this.cheDo === "dang_nhap" ? "" : "none";
     if (formDK) formDK.style.display = this.cheDo === "dang_ky"  ? "" : "none";
 
-    // Đổi dòng chữ "Chưa có tài khoản..." ở dưới
-    if (this.thanhPhan.chuChuyenDoi) {
-      if (this.cheDo === "dang_nhap") {
-        this.thanhPhan.chuChuyenDoi.innerHTML =
-          'Chưa có tài khoản? <a href="#" onclick="authModal.chuyenCheDo(); return false;">Đăng ký ngay</a>';
-      } else {
-        this.thanhPhan.chuChuyenDoi.innerHTML =
-          'Đã có tài khoản? <a href="#" onclick="authModal.chuyenCheDo(); return false;">Đăng nhập ngay</a>';
-      }
-    }
+    // Toggle 2 dòng footer đã render sẵn từ PHP (KHÔNG innerHTML)
+    const footerDN = document.getElementById("footer-text-dn");
+    const footerDK = document.getElementById("footer-text-dk");
+    if (footerDN) footerDN.style.display = this.cheDo === "dang_nhap" ? "" : "none";
+    if (footerDK) footerDK.style.display = this.cheDo === "dang_ky"  ? "" : "none";
   }
 
   xuLyGuiForm(suKien) {

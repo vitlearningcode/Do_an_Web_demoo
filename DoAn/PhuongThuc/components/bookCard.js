@@ -48,24 +48,32 @@ class XuLyTheSach {
   }
 
   // Logic đổi màu trái tim khi nhấn Yêu thích
+  // Dùng className toggle trên thẻ <i> — KHÔNG dùng innerHTML
   xuLyYeuThich(maSach, nutBam) {
     if (!maSach) return;
 
+    // Tìm thẻ <i> bên trong nút (PHP đã render sẵn: <i class="far fa-heart">)
+    const iconTim = nutBam.querySelector('i');
+
     if (this.danhSachYeuThich.has(maSach)) {
-      // Đang thích -> Bỏ thích
+      // Đang thích → Bỏ thích: chuyển về tim rỗng
       this.danhSachYeuThich.delete(maSach);
       nutBam.classList.remove("active");
-      nutBam.innerHTML = '<i class="far fa-heart"></i>'; // Tim rỗng
-
+      if (iconTim) {
+        iconTim.classList.remove("fas");
+        iconTim.classList.add("far");
+      }
       if (typeof hienThiThongBao !== "undefined") {
         hienThiThongBao("Đã xóa khỏi danh sách yêu thích");
       }
     } else {
-      // Chưa thích -> Thêm vào thích
+      // Chưa thích → Thêm vào thích: chuyển về tim đặc
       this.danhSachYeuThich.add(maSach);
       nutBam.classList.add("active");
-      nutBam.innerHTML = '<i class="fas fa-heart"></i>'; // Tim đặc
-
+      if (iconTim) {
+        iconTim.classList.remove("far");
+        iconTim.classList.add("fas");
+      }
       if (typeof hienThiThongBao !== "undefined") {
         hienThiThongBao("Đã thêm vào danh sách yêu thích");
       }
