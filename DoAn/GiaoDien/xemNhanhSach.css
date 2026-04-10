@@ -421,3 +421,41 @@
   .mn-thong-tin { grid-template-columns: 1fr; gap: 10px; }
   .mn-hanh-dong { margin-top: 20px; }
 }
+
+/* =====================================
+   PANEL DANH GIA trong modal Xem Nhanh
+   ===================================== */
+.mn-so-review-link { color: #2563eb; }
+.mn-so-review-link:hover { color: #1d4ed8; }
+
+.mn-panel-danh-gia {
+  margin: 16px 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 1px 6px rgba(0,0,0,.06);
+  animation: mn-panel-in .2s ease;
+}
+@keyframes mn-panel-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.mn-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+.mn-panel-title { font-size: .88rem; font-weight: 600; color: #374151; }
+.mn-dong-panel {
+  background: none; border: none; cursor: pointer;
+  color: #9ca3af; font-size: 1rem; padding: 2px 6px;
+  border-radius: 4px; transition: color .15s, background .15s; font-family: inherit;
+}
+.mn-dong-panel:hover { color: #ef4444; background: #fee2e2; }
+.mn-iframe-danh-gia {
+  width: 100%; height: 280px; border: none; display: block; background: transparent;
+}

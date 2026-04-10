@@ -48,8 +48,8 @@
                 </div>
             </div>
             <ul class="dropdown-list">
-                <li><a href="#"><i class="fas fa-user-edit"></i> Sửa thông tin</a></li>
-                <li><a href="#"><i class="fas fa-box"></i> Theo dõi đơn hàng</a></li>
+                <li><a href="#" onclick="moCapNhatThongTin(event)"><i class="fas fa-user-edit"></i> Cập nhật thông tin</a></li>
+                <li><a href="CuaHang/TrangBanHang/donHang/index.php"><i class="fas fa-box"></i> Theo dõi đơn hàng</a></li>
                 <li class="divider"></li>
                 <li><a href="javascript:void(0)" onclick="openLogout()" class="text-danger"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
             </ul>

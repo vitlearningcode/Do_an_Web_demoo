@@ -85,48 +85,29 @@ class HopThoaiXacThuc {
   }
 
   capNhatGiaoDien() {
+    const formDN = document.getElementById("auth-form");
+    const formDK = document.getElementById("auth-form-dk");
+
     // Đổi chữ Tiêu đề
     if (this.thanhPhan.tieuDe) {
       this.thanhPhan.tieuDe.textContent =
         this.cheDo === "dang_nhap" ? "Đăng nhập" : "Đăng ký";
     }
 
-    // Đổi chữ Nút bấm
-    if (this.thanhPhan.nutXacNhan) {
-      this.thanhPhan.nutXacNhan.textContent =
-        this.cheDo === "dang_nhap" ? "Đăng nhập" : "Đăng ký";
-    }
+    // Toggle: chỉ hiện form phù hợp
+    if (formDN) formDN.style.display = this.cheDo === "dang_nhap" ? "" : "none";
+    if (formDK) formDK.style.display = this.cheDo === "dang_ky"  ? "" : "none";
 
-    // Đổi dòng chữ "Chưa có tài khoản..." ở dưới
-    if (this.thanhPhan.chuChuyenDoi) {
-      if (this.cheDo === "dang_nhap") {
-        this.thanhPhan.chuChuyenDoi.innerHTML =
-          'Chưa có tài khoản? <a href="#" onclick="authModal.chuyenCheDo(); return false;">Đăng ký ngay</a>';
-      } else {
-        this.thanhPhan.chuChuyenDoi.innerHTML =
-          'Đã có tài khoản? <a href="#" onclick="authModal.chuyenCheDo(); return false;">Đăng nhập ngay</a>';
-      }
-    }
+    // Toggle 2 dòng footer đã render sẵn từ PHP (KHÔNG innerHTML)
+    const footerDN = document.getElementById("footer-text-dn");
+    const footerDK = document.getElementById("footer-text-dk");
+    if (footerDN) footerDN.style.display = this.cheDo === "dang_nhap" ? "" : "none";
+    if (footerDK) footerDK.style.display = this.cheDo === "dang_ky"  ? "" : "none";
   }
 
   xuLyGuiForm(suKien) {
-    // LƯU Ý QUAN TRỌNG VỚI PHP:
-    // Nếu ông đã gắn thẻ <form action="file_php_cua_ong.php" method="POST">
-    // thì HÃY XÓA DÒNG `suKien.preventDefault();` dưới đây đi để PHP tự chuyển trang.
-
-    // Tạm thời giữ lại để test giao diện không bị load lại trang:
-    suKien.preventDefault();
-
-    // Nếu gọi thông báo từ utils.js
-    if (typeof hienThiThongBao !== "undefined") {
-      hienThiThongBao(
-        this.cheDo === "dang_nhap"
-          ? "Đang gửi yêu cầu đăng nhập..."
-          : "Đang gửi yêu cầu đăng ký...",
-      );
-    }
-
-    // Sau khi nộp form thì đóng bảng
+    // Form submit thật → PHP xử lý, KHÔNG preventDefault
+    // (Để PHP chuyển trang sau khi xử lý đăng nhập/đăng ký)
     this.dong();
   }
 }
