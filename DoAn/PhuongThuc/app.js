@@ -125,3 +125,50 @@ function moCapNhatThongTin(event) {
     if (event) event.preventDefault();
     window.location.href = 'CuaHang/TrangBanHang/taiKhoan/capNhat.php';
 }
+//==========================================================gợi ý tìm kiếm==========================================================
+// ========================================================
+// CHỨC NĂNG: THANH TÌM KIẾM THÔNG MINH (Không dùng JSON)
+// ========================================================
+
+function timKiemNhanh(tuKhoa) {
+    let khungKetQua = document.getElementById('danh-sach-ket-qua');
+    
+    // Nếu xóa hết chữ thì ẩn khung đi
+    if (tuKhoa.trim() === '') {
+        khungKetQua.style.display = 'none';
+        khungKetQua.innerHTML = '';
+        return;
+    }
+    
+    // Gói dữ liệu để gửi đi
+    let duLieuGuiDi = new FormData();
+    duLieuGuiDi.append('tu_khoa', tuKhoa);
+
+    // CẬP NHẬT ĐƯỜNG DẪN MỚI TRỎ VÀO THƯ MỤC GIAO DIỆN
+    fetch('CuaHang/TrangBanHang/GiaoDien/xuly_timkiem_nhanh.php', {
+        method: 'POST',
+        body: duLieuGuiDi
+    })
+    .then(phanHoi => phanHoi.text()) // Lấy dữ liệu dưới dạng text thuần (HTML)
+    .then(htmlMoi => {
+        if (htmlMoi.trim() !== '') {
+            // Thay thế nội dung HTML cũ bằng HTML mới và hiện khung lên
+            khungKetQua.innerHTML = htmlMoi;
+            khungKetQua.style.display = 'block';
+        }
+    })
+    .catch(loi => {
+        console.log('Đã xảy ra lỗi khi tìm kiếm:', loi);
+    });
+}
+
+// Chức năng phụ: Click ra ngoài vùng tìm kiếm thì tự động ẩn danh sách
+document.addEventListener('click', function(suKien) {
+    let khungTimKiem = document.getElementById('khung-tim-kiem');
+    let khungKetQua = document.getElementById('danh-sach-ket-qua');
+    
+    // Nếu click không nằm trong khung tìm kiếm
+    if (khungTimKiem && !khungTimKiem.contains(suKien.target)) {
+        if (khungKetQua) khungKetQua.style.display = 'none';
+    }
+}); 
