@@ -117,7 +117,7 @@ $thongBaoSauDanhGia = $_GET['tb'] ?? '';
         <?php else: ?>
 
         <?php foreach ($dsDonHang as $dh):
-            [$badgeClass, $badgeLabel] = badgeInfo($dh['trangThai']);
+            [$badgeClass, $badgeLabel] = thongTinBadge($dh['trangThai']);
             $items = $chiTietDH[$dh['maDH']] ?? [];
         ?>
         <div class="dh-order-card">
