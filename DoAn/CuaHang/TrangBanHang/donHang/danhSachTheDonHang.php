@@ -82,8 +82,20 @@
                 <i class="fas fa-map-marker-alt"></i>
                 <?= htmlspecialchars(mb_strimwidth($donHang['diaChiChiTiet'], 0, 40, '…')) ?>
             </div>
-            <div class="dh-order-total">
-                Tổng cộng: <strong><?= number_format($donHang['tongTien'], 0, ',', '.') ?>đ</strong>
+            <div class="dh-order-actions">
+                <div class="dh-order-total">
+                    Tổng cộng: <strong><?= number_format($donHang['tongTien'], 0, ',', '.') ?>đ</strong>
+                </div>
+                <?php if ($donHang['trangThai'] === 'ChoDuyet'): ?>
+                <!-- Nút Hủy đơn: chỉ hiện khi đơn đang Chờ Duyệt -->
+                <form method="POST" action="xuly_huyDon.php"
+                      onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng <?= htmlspecialchars($donHang['maDH']) ?> không?')">
+                    <input type="hidden" name="maDH" value="<?= htmlspecialchars($donHang['maDH']) ?>">
+                    <button type="submit" class="dh-btn-cancel-order">
+                        <i class="fas fa-times"></i> Hủy đơn
+                    </button>
+                </form>
+                <?php endif; ?>
             </div>
         </div>
     </div>
