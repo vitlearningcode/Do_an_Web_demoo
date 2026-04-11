@@ -1,9 +1,22 @@
+<?php
+// Khai báo đường dẫn gốc của dự án để dùng cho mọi link trong header
+// Đảm bảo không bị lỗi đường dẫn khi ở các trang con
+$duong_dan_goc = '/DoAn-Web/DoAn/'; 
+?>
+<script>
+    // Khai báo biến toàn cục cho JavaScript để sửa lỗi sai đường dẫn fetch
+    const DUONG_DAN_GOC_JS = '<?= $duong_dan_goc ?>';
+</script>
+<link rel="stylesheet" href="<?= $duong_dan_goc ?>GiaoDien/gioHang.css">
+<link rel="stylesheet" href="<?= $duong_dan_goc ?>GiaoDien/xemNhanhSach.css">
+
+
 <div id="dau-trang-co-dinh">
 <div id="app">
     <div class="top-bar">
         <div class="container">
             <marquee width="100%" behavior="alternate" scrollamount="2">  
-    <p style="font-size: 11pt;">Sách không tự mất đi, nó chỉ chuyển từ chỗ này sang chỗ khác (nếu có chúng tôi)</p>
+    <p style="font-size: 11pt;">Sách không tự mất đi, nó chỉ chuyển từ chỗ này sang chỗ khác (nếu chúng tôi có)</p>
 </marquee>
             <div class="top-bar-links">
                 <a href="javascript:void(0)" onclick="moTraCuuDonHang()">
@@ -24,7 +37,7 @@
                         <i class="fas fa-book-open"></i>
                     </div>
                     <div class="logo-text">
-                        <h1>BOOK SALES</h1>
+                        <a href="<?= $duong_dan_goc ?>index.php" style="text-decoration:none; color:inherit;"><h1>BOOK SALES</h1></a>
                         <p>STOREFRONT</p>
                     </div>
                 </div>
@@ -42,31 +55,37 @@
             <!-- =====================================================================nút đăng nhập =========================================== -->
             <div class="header-actions">
                 <?php if ($isLoggedIn): ?>
-                    <div class="user-dropdown-container">
-                        <button class="action-btn profile-ring-btn" id="btn-user-profile" onclick="toggleUserMenu(event)">
-                            <div class="profile-avatar">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <span><?= htmlspecialchars($_SESSION['ten_nguoi_dung'] ?? 'Tài khoản') ?></span>
-                        </button>
+    <div class="user-dropdown-container">
+        <button class="action-btn profile-ring-btn" id="btn-user-profile" onclick="toggleUserMenu(event)">
+            <div class="profile-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+            <span><?= htmlspecialchars($_SESSION['ten_nguoi_dung'] ?? 'Tài khoản') ?></span>
+        </button>
 
-                        <div class="user-dropdown-menu" id="userDropdown">
-                            <div class="dropdown-header">
-                                <div class="dropdown-avatar"><i class="fas fa-user"></i></div>
-                                <div class="dropdown-user-info">
-                                    <strong><?= htmlspecialchars($_SESSION['ten_nguoi_dung'] ?? 'Khách hàng') ?></strong>
-                                    <p><?= htmlspecialchars($_SESSION['vaitro'] ?? 'Khách hàng') ?></p>
-                                </div>
-                            </div>
-                            <ul class="dropdown-list">
-                                <li><a href="#" onclick="moCapNhatThongTin(event)"><i class="fas fa-user-edit"></i> Cập nhật thông tin</a></li>
-                                <li><a href="CuaHang/TrangBanHang/donHang/index.php"><i class="fas fa-box"></i> Theo dõi đơn hàng</a></li>
-                                <li class="divider"></li>
-                                <li><a href="javascript:void(0)" onclick="openLogout()" class="text-danger"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                <?php else: ?>
+        <div class="user-dropdown-menu" id="userDropdown">
+            <div class="dropdown-header">
+                <div class="dropdown-avatar"><i class="fas fa-user"></i></div>
+                <div class="dropdown-user-info">
+                    <strong><?= htmlspecialchars($_SESSION['ten_nguoi_dung'] ?? 'Khách hàng') ?></strong>
+                    <p><?= htmlspecialchars($_SESSION['vaitro'] ?? 'Khách hàng') ?></p>
+                </div>
+            </div>
+            <ul class="dropdown-list">
+                <li><a href="<?= $duong_dan_goc ?>CuaHang/TrangBanHang/taiKhoan/capNhat.php"><i class="fas fa-user-edit"></i> Sửa thông tin</a></li>
+                <li><a href="<?= $duong_dan_goc ?>CuaHang/TrangBanHang/donHang/index.php"><i class="fas fa-box"></i> Theo dõi đơn hàng</a></li>
+
+                <li>
+                    <a href="<?= $duong_dan_goc ?>CuaHang/TrangBanHang/taiKhoan/sachYeuThich.php">
+                        <i class="fas fa-heart" style="color: #ef4444;"></i> Sách yêu thích
+                    </a>
+                </li>
+                <li class="divider"></li>
+                <li><a href="javascript:void(0)" onclick="openLogout()" class="text-danger"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+            </ul>
+        </div>
+    </div>
+<?php else: ?>
                     <button class="action-btn" onclick="openLogin()">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                             <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>

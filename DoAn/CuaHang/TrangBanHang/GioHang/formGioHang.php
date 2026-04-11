@@ -18,7 +18,7 @@
     </div>
 
     <!-- Body (Items List) bọc trong Form -->
-    <form action="CuaHang/TrangBanHang/ThanhToan/thanhToan.php" method="POST" id="cart-form" class="cart-form">
+    <form action="<?= $duong_dan_goc ?>CuaHang/TrangBanHang/ThanhToan/thanhToan.php" method="POST" id="cart-form" class="cart-form">
         <!-- Dữ liệu ẩn chứa JSON giỏ hàng để mang sang thanh toán -->
         <input type="hidden" name="cart_data" id="cart-data-input" value="">
         
@@ -96,7 +96,7 @@
 <!-- ═══ HIDDEN FORM: Đồng bộ giỏ hàng vào bảng GioHang (DB) qua PHP form POST (không AJAX) ═══ -->
 <iframe id="cart-sync-frame" name="cart-sync-frame" style="display:none" aria-hidden="true"></iframe>
 <form id="cart-sync-form"
-      action="CuaHang/TrangBanHang/GioHang/luuGioHang.php"
+      action="<?= $duong_dan_goc ?>CuaHang/TrangBanHang/GioHang/luuGioHang.php"
       method="POST"
       target="cart-sync-frame"
       style="display:none">

@@ -103,7 +103,7 @@ function hienThiTheSach(array $sach, array $nhanHieu = []): string
 
         <!-- Nút phải: tim + mắt — ẩn, slide-in khi hover -->
         <div class=\"book-actions-right\">
-            <button class=\"btn-action-icon btn-wishlist\" title=\"Yêu thích\">
+            <button class=\"btn-action-icon btn-wishlist\" title=\"Yêu thích\" onclick=\"thayDoiYeuThich(event, this)\">
                 <i class=\"far fa-heart\"></i>
             </button>
             <button class=\"btn-action-icon btn-quickview\" title=\"Xem nhanh\">

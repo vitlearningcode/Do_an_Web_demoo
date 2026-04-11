@@ -145,7 +145,7 @@ function timKiemNhanh(tuKhoa) {
     duLieuGuiDi.append('tu_khoa', tuKhoa);
 
     // CẬP NHẬT ĐƯỜNG DẪN MỚI TRỎ VÀO THƯ MỤC GIAO DIỆN
-    fetch('CuaHang/TrangBanHang/GiaoDien/xuly_timkiem_nhanh.php', {
+    fetch(DUONG_DAN_GOC_JS + 'CuaHang/TrangBanHang/GiaoDien/xuly_timkiem_nhanh.php', {
         method: 'POST',
         body: duLieuGuiDi
     })
@@ -172,3 +172,49 @@ document.addEventListener('click', function(suKien) {
         if (khungKetQua) khungKetQua.style.display = 'none';
     }
 }); 
+// =========================================================chức năng sách yêu thích ==========================================================
+// ========================================================
+// CHỨC NĂNG: CẬP NHẬT TRẠNG THÁI YÊU THÍCH (PDO + PHP THUẦN)
+// ========================================================
+
+function thayDoiYeuThich(su_kien, nut_bam) {
+    if (su_kien) {
+        su_kien.stopPropagation();
+        su_kien.preventDefault();
+    }
+
+    let the_sach = nut_bam.closest('.book-card');
+    if (!the_sach) return;
+    
+    let ma_sach = the_sach.dataset.id;
+    let bieu_tuong_trai_tim = nut_bam.querySelector('i');
+
+    let du_lieu_gui_di = new FormData();
+    du_lieu_gui_di.append('ma_sach', ma_sach);
+
+    // CẬP NHẬT ĐƯỜNG DẪN MỚI TẠI ĐÂY
+    fetch(DUONG_DAN_GOC_JS + 'CuaHang/TrangBanHang/GiaoDien/xuly_yeuthich.php', {
+        method: 'POST',
+        body: du_lieu_gui_di
+    })
+    .then(phan_hoi => phan_hoi.text())
+    .then(ket_qua_tra_ve => {
+        let trang_thai = ket_qua_tra_ve.trim();
+        
+        if (trang_thai === 'CHUA_DANG_NHAP') {
+            alert('Bạn vui lòng đăng nhập để sử dụng tính năng yêu thích!');
+            if (typeof openLogin === "function") openLogin();
+        } 
+        else if (trang_thai === 'DA_THEM') {
+            bieu_tuong_trai_tim.className = 'fas fa-heart';
+            bieu_tuong_trai_tim.style.color = '#ef4444'; // Hiện màu đỏ
+        } 
+        else if (trang_thai === 'DA_XOA') {
+            bieu_tuong_trai_tim.className = 'far fa-heart';
+            bieu_tuong_trai_tim.style.color = ''; // Trở về mặc định
+        }
+    })
+    .catch(loi => {
+        console.error('Lỗi khi cập nhật danh sách yêu thích:', loi);
+    });
+}

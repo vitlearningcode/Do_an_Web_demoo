@@ -81,7 +81,8 @@ class TroLyAo {
     if (this.thanhPhan.nutMo) this.thanhPhan.nutMo.style.display = "flex";
   }
 
-  guiTinNhan() {
+  // Sửa hàm guiTinNhan thành async để đợi API trả về
+  async guiTinNhan() {
     const noiDung = this.thanhPhan.oNhapLieu?.value.trim();
     if (!noiDung || this.dangGoPhim) return;
 
@@ -89,14 +90,33 @@ class TroLyAo {
     this.thanhPhan.oNhapLieu.value = "";
     this.hienHieuUngGoPhim();
 
-    setTimeout(
-      () => {
-        this.anHieuUngGoPhim();
-        const cauTraLoi = this.timCauTraLoi(noiDung);
-        this.themTinNhanVaoKhung(cauTraLoi, "bot");
-      },
-      1000 + Math.random() * 1000,
-    );
+    try {
+      // Sửa thành đường dẫn tuyệt đối từ thư mục gốc localhost
+      const response = await fetch('/DoAn-Web/DoAn/CuaHang/TrangBanHang/GiaoDien/xuly_chatbot.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: noiDung })
+      });
+
+      if (!response.ok) throw new Error("Lỗi mạng HTTP");
+
+      const data = await response.json();
+      this.anHieuUngGoPhim();
+
+      // Kiểm tra nếu PHP trả về lỗi (bao gồm lỗi từ Google)
+      if (data.error) {
+         this.themTinNhanVaoKhung("⚠️ Hệ thống báo: " + data.error, "bot");
+         return;
+      }
+
+      const cauTraLoi = data.candidates[0]?.content?.parts[0]?.text || "Xin lỗi, tôi gặp chút trục trặc.";
+      this.themTinNhanVaoKhung(cauTraLoi, "bot");
+
+    } catch (error) {
+      console.error("Lỗi:", error);
+      this.anHieuUngGoPhim();
+      this.themTinNhanVaoKhung("Hệ thống trợ lý ảo đang bảo trì, bạn vui lòng thử lại sau!", "bot");
+    }
   }
 
   hienHieuUngGoPhim() {
@@ -136,15 +156,6 @@ class TroLyAo {
       this.thanhPhan.khuVucTinNhan.scrollHeight;
   }
 
-  timCauTraLoi(tinNhanCuaUser) {
-    const chuThuong = tinNhanCuaUser.toLowerCase();
-    for (const phanTu of this.nganHangTraLoi) {
-      for (const tuKhoa of phanTu.tuKhoa) {
-        if (chuThuong.includes(tuKhoa)) return phanTu.cauTraLoi;
-      }
-    }
-    return "Xin lỗi, tôi chưa hiểu ý bạn. Bạn có thể hỏi về đơn hàng, sách hoặc khuyến mãi nhé!";
-  }
 }
 
 const chatbot = new TroLyAo();
