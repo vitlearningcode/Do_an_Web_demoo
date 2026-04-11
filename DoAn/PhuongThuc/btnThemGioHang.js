@@ -108,4 +108,24 @@ window.themVaoGioHang = function (suKien, nutBam) {
   } else {
     console.error("Lỗi: Không tìm thấy hệ thống quản lý giỏ hàng (cartDrawer).");
   }
+
+  // 5. CẢNH BÁO TỒN KHO THẤP (đọc data-ton-kho từ PHP bookCard render sẵn)
+  var tonKho = parseInt(theSach.dataset.tonKho, 10);
+  if (!isNaN(tonKho) && tonKho <= 5 && tonKho > 0) {
+    // Hiển thị toast cảnh báo vàng sau 400ms (để toast "Đã thêm" hiện trước)
+    setTimeout(function () {
+      var toastEl  = document.getElementById('cart-toast');
+      var toastMsg = document.getElementById('toast-message');
+      if (toastEl && toastMsg) {
+        toastMsg.textContent = '⚠️ Chỉ còn ' + tonKho + ' cuốn — đặt hàng ngay!';
+        toastEl.classList.remove('toast-success', 'toast-warning');
+        toastEl.classList.add('active', 'toast-warning');
+        // Tự ẩn sau 3 giây
+        clearTimeout(toastEl._warnTimer);
+        toastEl._warnTimer = setTimeout(function () {
+          toastEl.classList.remove('active');
+        }, 3000);
+      }
+    }, 800);
+  }
 };

@@ -2,7 +2,8 @@
 // ══════════════════════════════════════════════════════
 //  capNhatTaiKhoan.php — Bật / tắt tài khoản người dùng
 // ══════════════════════════════════════════════════════
-session_start();
+// [BẢO MẬT] Kiểm tra quyền Admin trước tiên
+require_once __DIR__ . '/../../_kiemTraQuyen.php';
 require_once '../../../KetNoi/config/db.php';
 
 function redirectTK(string $msg, string $loai = 'success'): never {

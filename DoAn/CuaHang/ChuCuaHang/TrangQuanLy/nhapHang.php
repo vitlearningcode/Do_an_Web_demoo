@@ -2,6 +2,9 @@
 // ══════════════════════════════════════════════════════
 //  nhapHang.php — Quản lý phiếu nhập & công nợ NCC
 // ══════════════════════════════════════════════════════
+
+// [BẢO MẬT] Kiểm tra quyền Admin — chặn truy cập trực tiếp
+require_once __DIR__ . '/../_kiemTraQuyen.php';
 $tab = $_GET['tab'] ?? 'phieu';
 
 try {
@@ -225,52 +228,202 @@ try {
 
 <!-- ═══ POPUP: TẠO PHIẾU NHẬP MỚI ═══ -->
 <?php if (isset($_GET['tao'])): ?>
+<?php
+// Tự sinh maPN: PN + YYYYmm + 3 chữ số thứ tự tháng này
+$thangNay  = date('Ym');
+$stmtLast  = $pdo->prepare("
+    SELECT MAX(CAST(SUBSTRING(maPN, 9) AS UNSIGNED))
+    FROM PhieuNhap
+    WHERE maPN LIKE ?
+");
+$stmtLast->execute(["PN{$thangNay}%"]);
+$soLast    = (int)($stmtLast->fetchColumn() ?? 0);
+$maPN_sinh = 'PN' . $thangNay . str_pad($soLast + 1, 3, '0', STR_PAD_LEFT);
+
+// Lấy NCC kèm chiết khấu mặc định
+$dsNCC_ck = $pdo->query("SELECT maNCC, tenNCC, chietKhauMacDinh FROM NhaCungCap ORDER BY tenNCC")->fetchAll(PDO::FETCH_ASSOC);
+?>
 <div style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto">
-<div style="background:#fff;border-radius:16px;width:100%;max-width:640px;box-shadow:0 20px 60px rgba(0,0,0,0.2);max-height:90vh;overflow-y:auto">
-    <div style="padding:20px 24px;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff">
-        <h3 style="font-size:16px;font-weight:700">Tạo phiếu nhập hàng mới</h3>
+<div style="background:#fff;border-radius:16px;width:100%;max-width:800px;box-shadow:0 20px 60px rgba(0,0,0,0.2);max-height:92vh;overflow-y:auto">
+    <div style="padding:20px 24px;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:1">
+        <div>
+            <h3 style="font-size:16px;font-weight:700">Tạo phiếu nhập hàng mới</h3>
+            <div style="font-size:12px;color:#94a3b8;margin-top:2px">Mã phiếu tự sinh: <strong style="color:#2563eb"><?= htmlspecialchars($maPN_sinh) ?></strong></div>
+        </div>
         <a href="<?= $baseUrl ?>&tab=phieu" style="color:#94a3b8;font-size:20px;text-decoration:none"><i class="fas fa-times"></i></a>
     </div>
-    <form method="POST" action="XuLy/taoPhieuNhap.php" style="padding:24px">
-        <div class="adm-form-group" style="margin-bottom:14px">
-            <label style="font-size:13px;font-weight:600">Mã phiếu nhập <span style="color:#ef4444">*</span></label>
-            <input class="adm-input" type="text" name="maPN" placeholder="VD: PN003" required>
-        </div>
-        <div class="adm-form-group" style="margin-bottom:14px">
-            <label style="font-size:13px;font-weight:600">Nhà cung cấp <span style="color:#ef4444">*</span></label>
-            <select class="adm-input" name="maNCC" required>
-                <option value="">-- Chọn NCC --</option>
-                <?php foreach ($dsNCC as $ncc): ?>
-                    <option value="<?= $ncc['maNCC'] ?>"><?= htmlspecialchars($ncc['tenNCC']) ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
+    <form method="POST" action="XuLy/taoPhieuNhap.php" style="padding:24px" id="form-phieu-nhap">
+        <!-- Mã phiếu ẩn — đã tự sinh -->
+        <input type="hidden" name="maPN" value="<?= htmlspecialchars($maPN_sinh) ?>">
 
-        <p style="font-weight:600;font-size:14px;margin-bottom:10px;margin-top:4px">Chi tiết sách nhập:</p>
-        <div style="background:#f8fafc;border-radius:10px;padding:14px;margin-bottom:16px">
-            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px;font-size:12px;font-weight:600;color:#64748b">
-                <span>Sách</span><span>Số lượng</span><span>Giá nhập (₫)</span><span>Chiết khấu (%)</span>
-            </div>
-            <?php for ($i = 0; $i < 5; $i++): ?>
-            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:8px;margin-bottom:8px">
-                <select class="adm-input" name="maSach[]" style="padding:8px">
-                    <option value="">-- Chọn sách --</option>
-                    <?php foreach ($dsSach as $s): ?>
-                        <option value="<?= $s['maSach'] ?>"><?= htmlspecialchars($s['tenSach']) ?></option>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px">
+            <div class="adm-form-group">
+                <label style="font-size:13px;font-weight:600">Nhà cung cấp <span style="color:#ef4444">*</span></label>
+                <select class="adm-input" name="maNCC" id="sel-ncc" required>
+                    <option value="">-- Chọn NCC --</option>
+                    <?php foreach ($dsNCC_ck as $ncc): ?>
+                        <option value="<?= $ncc['maNCC'] ?>"
+                                data-chiet-khau="<?= (float)$ncc['chietKhauMacDinh'] ?>">
+                            <?= htmlspecialchars($ncc['tenNCC']) ?>
+                            (CK <?= $ncc['chietKhauMacDinh'] ?>%)
+                        </option>
                     <?php endforeach; ?>
                 </select>
-                <input class="adm-input" type="number" name="soLuong[]" min="1" placeholder="SL" style="padding:8px">
-                <input class="adm-input" type="number" name="giaNhap[]" min="0" placeholder="Giá" style="padding:8px">
-                <input class="adm-input" type="number" name="chietKhau[]" min="0" max="100" placeholder="%" style="padding:8px" value="0">
             </div>
-            <?php endfor; ?>
+            <div class="adm-form-group">
+                <label style="font-size:13px;font-weight:600">Chiết khấu chung NCC (%)</label>
+                <input class="adm-input" type="number" id="ck-chung" min="0" max="100" step="0.1"
+                       value="0" readonly
+                       style="background:#f8fafc;color:#1d4ed8;font-weight:700"
+                       title="Lấy tự động từ NCC, áp vào tất cả dòng chưa sửa">
+            </div>
         </div>
 
-        <div style="display:flex;gap:10px;justify-content:flex-end">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+            <p style="font-weight:600;font-size:14px;margin:0">Chi tiết sách nhập:</p>
+            <button type="button" id="btn-them-dong"
+                    style="background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;border-radius:8px;padding:6px 14px;font-size:13px;cursor:pointer">
+                <i class="fas fa-plus"></i> Thêm dòng sách
+            </button>
+        </div>
+
+        <!-- Header cột -->
+        <div style="background:#f8fafc;border-radius:10px 10px 0 0;padding:10px 14px">
+            <div class="dong-nhap-grid" style="font-size:12px;font-weight:700;color:#64748b">
+                <span>Sách</span>
+                <span>Số lượng</span>
+                <span>Giá nhập (₫)</span>
+                <span>CK (%)</span>
+                <span>Thành tiền</span>
+                <span></span>
+            </div>
+        </div>
+
+        <!-- Bảng dòng động -->
+        <div id="bang-chi-tiet" style="background:#f8fafc;border-radius:0 0 10px 10px;padding:0 14px 14px">
+            <!-- Dòng đầu được clone từ template -->
+        </div>
+
+        <!-- Template dòng sách (ẩn, JS cloneNode) -->
+        <template id="tmpl-dong-sach">
+            <div class="dong-nhap" style="margin-top:8px">
+                <div class="dong-nhap-grid">
+                    <select class="adm-input dong-select-sach" name="maSach[]" style="padding:7px" required>
+                        <option value="">-- Chọn sách --</option>
+                        <?php foreach ($dsSach as $s): ?>
+                            <option value="<?= $s['maSach'] ?>"><?= htmlspecialchars($s['tenSach']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <input class="adm-input dong-sl" type="number" name="soLuong[]" min="1" placeholder="SL" style="padding:7px" required>
+                    <input class="adm-input dong-gia" type="number" name="giaNhap[]" min="0" placeholder="Giá nhập" style="padding:7px" required>
+                    <input class="adm-input dong-ck" type="number" name="chietKhau[]" min="0" max="100" step="0.1" placeholder="%" style="padding:7px" value="0">
+                    <input class="adm-input dong-thanh-tien" type="text" readonly style="padding:7px;background:#f1f5f9;color:#475569;font-weight:600" placeholder="0₫">
+                    <button type="button" class="btn-xoa-dong"
+                            style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:6px;padding:6px 10px;cursor:pointer;font-size:13px">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </template>
+
+        <!-- Tổng tất cả -->
+        <div style="display:flex;justify-content:flex-end;margin-top:14px;padding:12px 0;border-top:2px solid #e2e8f0">
+            <div style="font-size:15px;font-weight:700;color:#1f2937">
+                Tổng tiền phiếu: <span id="tong-phieu" style="color:#ea580c;font-size:18px">0₫</span>
+            </div>
+        </div>
+
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
             <a href="<?= $baseUrl ?>&tab=phieu" class="adm-btn adm-btn-outline">Hủy</a>
             <button type="submit" class="adm-btn adm-btn-primary"><i class="fas fa-save"></i> Lưu phiếu nhập</button>
         </div>
     </form>
 </div>
 </div>
+
+<style>
+.dong-nhap-grid {
+    display: grid;
+    grid-template-columns: 3fr 80px 130px 80px 130px 40px;
+    gap: 8px;
+    align-items: center;
+}
+</style>
+
+<script>
+(function () {
+    var tmpl        = document.getElementById('tmpl-dong-sach');
+    var bang        = document.getElementById('bang-chi-tiet');
+    var selNCC      = document.getElementById('sel-ncc');
+    var inputCKChung= document.getElementById('ck-chung');
+    var tongPhieu   = document.getElementById('tong-phieu');
+    var demDong     = 0;
+
+    // Thêm 1 dòng rỗng lúc load
+    themDong();
+
+    document.getElementById('btn-them-dong').addEventListener('click', themDong);
+
+    // Khi chọn NCC → cập nhật chiết khấu chung + áp vào tất cả dòng
+    selNCC.addEventListener('change', function () {
+        var opt = this.options[this.selectedIndex];
+        var ck  = opt.dataset.chietKhau || '0';
+        inputCKChung.value = ck;
+        // Áp vào mọi dòng
+        bang.querySelectorAll('.dong-ck').forEach(function (inp) {
+            inp.value = ck;
+        });
+        tinhTong();
+    });
+
+    function themDong() {
+        demDong++;
+        var clone = tmpl.content.cloneNode(true);
+        var dong  = clone.querySelector('.dong-nhap');
+
+        // Áp chiết khấu chung NCC đang chọn
+        dong.querySelector('.dong-ck').value = inputCKChung.value || '0';
+
+        // Khi thay đổi số lượng / giá / CK → tính thành tiền
+        dong.querySelector('.dong-sl').addEventListener('input',  capNhatDong.bind(null, dong));
+        dong.querySelector('.dong-gia').addEventListener('input', capNhatDong.bind(null, dong));
+        dong.querySelector('.dong-ck').addEventListener('input',  capNhatDong.bind(null, dong));
+
+        // Nút xóa dòng
+        dong.querySelector('.btn-xoa-dong').addEventListener('click', function () {
+            dong.remove();
+            tinhTong();
+        });
+
+        bang.appendChild(dong);
+    }
+
+    function capNhatDong(dong) {
+        var sl  = parseFloat(dong.querySelector('.dong-sl').value)  || 0;
+        var gia = parseFloat(dong.querySelector('.dong-gia').value)  || 0;
+        var ck  = parseFloat(dong.querySelector('.dong-ck').value)   || 0;
+        var tt  = sl * gia * (1 - ck / 100);
+        dong.querySelector('.dong-thanh-tien').value = tt > 0 ? formatTien(tt) : '';
+        tinhTong();
+    }
+
+    function tinhTong() {
+        var tong = 0;
+        bang.querySelectorAll('.dong-thanh-tien').forEach(function (inp) {
+            tong += parseTien(inp.value);
+        });
+        tongPhieu.textContent = formatTien(tong);
+    }
+
+    function formatTien(so) {
+        return so.toLocaleString('vi-VN') + '₫';
+    }
+
+    function parseTien(str) {
+        return parseFloat(str.replace(/[^\d]/g, '')) || 0;
+    }
+})();
+</script>
 <?php endif; ?>
+
+

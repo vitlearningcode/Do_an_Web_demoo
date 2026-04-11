@@ -2,6 +2,9 @@
 // ══════════════════════════════════════════════════════
 //  taiKhoan.php — Quản lý tài khoản người dùng
 // ══════════════════════════════════════════════════════
+
+// [BẢO MẬT] Kiểm tra quyền Admin — chặn truy cập trực tiếp
+require_once __DIR__ . '/../_kiemTraQuyen.php';
 $timKiem = trim($_GET['tim'] ?? '');
 $locVT   = $_GET['loc_vt'] ?? '';
 

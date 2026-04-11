@@ -3,6 +3,9 @@
 //  tongQuan.php — Dashboard Tổng quan
 // ══════════════════════════════════════════════════════
 
+// [BẢO MẬT] Kiểm tra quyền Admin — chặn truy cập trực tiếp
+require_once __DIR__ . '/../_kiemTraQuyen.php';
+
 // ── Truy vấn dữ liệu ──
 try {
     // 1. Tổng đơn hôm nay + doanh thu hôm nay (chỉ tính đơn HoanThanh)
