@@ -1,13 +1,15 @@
 <?php
-// ── header.php — Sidebar + Topbar cho trang Admin (ChuCuaHang)
-// Yêu cầu: $trangHienTai (string) được truyền từ index.php
-//           $tenAdmin      (string) tên người dùng admin
-// ──────────────────────────────────────────────────────────────
+/**
+ * header.php — Phần đầu trang Admin (ChuCuaHang)
+ * File này chỉ khai báo biến + helper và gọi require_once các thành phần con.
+ * Yêu cầu: $trangHienTai, $tenAdmin, $pdo đã khai báo từ index.php
+ */
+
 $trangHienTai = $trangHienTai ?? 'tongQuan';
 $tenAdmin     = $tenAdmin     ?? 'Chủ cửa hàng';
 
-// Map trang → tiêu đề topbar
-$tieuDeBanDo = [
+// Bản đồ trang → tiêu đề topbar
+$banDoTieuDe = [
     'tongQuan'      => 'Tổng quan',
     'donHang'       => 'Quản lý đơn hàng',
     'sachVaTonKho'  => 'Sách & Tồn kho',
@@ -15,9 +17,9 @@ $tieuDeBanDo = [
     'khuyenMai'     => 'Khuyến mãi',
     'taiKhoan'      => 'Tài khoản',
 ];
-$tieuDeHienTai = $tieuDeBanDo[$trangHienTai] ?? 'Quản trị';
+$tieuDeHienTai = $banDoTieuDe[$trangHienTai] ?? 'Quản trị';
 
-// Helper: class active cho nav item
+// Helper: trả về class 'active' nếu đang ở trang tương ứng
 function navActive(string $trang, string $hienTai): string {
     return $trang === $hienTai ? ' active' : '';
 }
@@ -25,16 +27,8 @@ function navActive(string $trang, string $hienTai): string {
 // URL gốc admin
 $adminUrl = 'index.php';
 
-// Đếm đơn ChoDuyet để hiện badge
-$soDonChoDuyet = 0;
-if (isset($pdo)) {
-    try {
-        $stmtBadge = $pdo->query("SELECT COUNT(*) FROM DonHang WHERE trangThai = 'ChoDuyet'");
-        $soDonChoDuyet = (int)$stmtBadge->fetchColumn();
-    } catch (Throwable $e) {
-        $soDonChoDuyet = 0;
-    }
-}
+// Đếm đơn chờ duyệt
+require_once __DIR__ . '/thanhPhan/demDonChoDuyet.php';
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -52,9 +46,10 @@ if (isset($pdo)) {
 </head>
 <body class="admin-body">
 
+<?php require_once __DIR__ . '/thanhPhan/khuVucSidebar.php'; ?>
+<?php require_once __DIR__ . '/thanhPhan/khuVucTopbar.php'; ?>
 <!-- ===========================
      SIDEBAR
-=========================== -->
 <aside class="adm-sidebar" id="adm-sidebar">
 
     <!-- Logo -->
@@ -136,7 +131,6 @@ if (isset($pdo)) {
 
 <!-- ===========================
      MAIN WRAPPER
-=========================== -->
 <div class="adm-main">
 
     <!-- TOPBAR -->

@@ -1,15 +1,22 @@
 <?php
+/**
+ * index.php — Trang chủ cửa hàng (Entry Point)
+ * File chỉ còn: session_start, require DB, load dữ liệu, render layout.
+ * Mọi chức năng được tách thành file riêng trong KhuVucTrungBay/.
+ */
 session_start();
 require_once "KetNoi/config/db.php";
-$isLoggedIn = isset($_SESSION['nguoi_dung_id']);
 
-// ── Tải các thành phần chức năng ──────────────────────────────────────
+// ── Tải các thành phần dữ liệu ─────────────────────────────────────────────
 require_once "CuaHang/TrangBanHang/Components/bookCard.php";
 require_once "CuaHang/TrangBanHang/KhuVucTrungBay/taiFlashSale.php";
 require_once "CuaHang/TrangBanHang/KhuVucTrungBay/taiSachBanChay.php";
 require_once "CuaHang/TrangBanHang/KhuVucTrungBay/taiSachMoi.php";
 require_once "CuaHang/TrangBanHang/LoadDanhMuc/taiDanhSach_DanhMuc.php";
 require_once "CuaHang/TrangBanHang/LoadDuLieu/taiQuangCao.php";
+
+// ── Khởi tạo: kiểm tra đăng nhập + xử lý cờ xóa cart ─────────────────────
+require_once "CuaHang/TrangBanHang/KhuVucTrungBay/khoiDauTrangChu.php";
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -24,18 +31,13 @@ require_once "CuaHang/TrangBanHang/LoadDuLieu/taiQuangCao.php";
     <script>const dangDangNhap = <?= $isLoggedIn ? 'true' : 'false' ?>;</script>
     <?php if ($isLoggedIn): ?>
     <script>
-      // PHP render giỏ hàng từ Session vào biến JS (không AJAX, không fetch)
-      var cartServerData = <?= json_encode($_SESSION['cart'] ?? [], JSON_UNESCAPED_UNICODE) ?>;
+        // PHP render giỏ hàng từ Session vào biến JS (không AJAX, không fetch)
+        var cartServerData = <?= json_encode($_SESSION['cart'] ?? [], JSON_UNESCAPED_UNICODE) ?>;
     </script>
     <?php else: ?>
     <script>var cartServerData = null;</script>
     <?php endif; ?>
-    <?php
-    // Xóa cờ session (từ thanh toán thành công)
-    $phai_xoa_cart = !empty($_SESSION['xoa_cart_local']) || !empty($_COOKIE['xoa_cart_local']);
-    if (!empty($_SESSION['xoa_cart_local'])) unset($_SESSION['xoa_cart_local']);
-    if (!empty($_COOKIE['xoa_cart_local']))  setcookie('xoa_cart_local', '', time() - 1, '/');
-    if ($phai_xoa_cart): ?>
+    <?php if ($phai_xoa_cart): ?>
     <script>localStorage.removeItem('book_cart');</script>
     <?php endif; ?>
 </head>
@@ -46,6 +48,11 @@ require_once "CuaHang/TrangBanHang/LoadDuLieu/taiQuangCao.php";
 <main class="main-content container">
 <div id="home-content">
 
+    <?php require_once "CuaHang/TrangBanHang/KhuVucTrungBay/khuVucHeroBanner.php"; ?>
+    <?php require_once "CuaHang/TrangBanHang/KhuVucTrungBay/khuVucFlashSale.php"; ?>
+    <?php require_once "CuaHang/TrangBanHang/KhuVucTrungBay/khuVucDanhMuc.php"; ?>
+    <?php require_once "CuaHang/TrangBanHang/KhuVucTrungBay/khuVucSachBanChay.php"; ?>
+    <?php require_once "CuaHang/TrangBanHang/KhuVucTrungBay/khuVucSachMoi.php"; ?>
     <!-- ===== HERO BANNER ===== -->
     <section class="hero-banner">
         <div class="hero-slider" id="hero-slider">
@@ -224,39 +231,7 @@ require_once "CuaHang/TrangBanHang/LoadDuLieu/taiQuangCao.php";
 <script src="PhuongThuc/app.js"></script>
 <script src="PhuongThuc/xemNhanhSach.js"></script>
 
-<script>
-document.addEventListener("DOMContentLoaded", () => {
+<?php require_once "CuaHang/TrangBanHang/KhuVucTrungBay/scriptTrangChu.php"; ?>
 
-    // Banner Slider
-    if (document.getElementById('hero-slider') && typeof TrinhChieuBanner !== 'undefined') {
-        new TrinhChieuBanner('hero-slider');
-    }
-
-    <?php if ($flashSale_ThoiGianKT): ?>
-    // Đồng hồ đếm ngược Flash Sale — dùng ngayKetThuc thực từ DB
-    (function () {
-        const ketThuc = new Date("<?= $flashSale_ThoiGianKT ?>").getTime();
-        function tick() {
-            const d = ketThuc - Date.now();
-            if (d <= 0) {
-                ['hours','minutes','seconds'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) el.textContent = '00';
-                });
-                return;
-            }
-            const pad = v => String(v).padStart(2, '0');
-            const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = pad(v); };
-            set('hours',   Math.floor(d / 3600000));
-            set('minutes', Math.floor((d % 3600000) / 60000));
-            set('seconds', Math.floor((d % 60000) / 1000));
-        }
-        tick();
-        setInterval(tick, 1000);
-    })();
-    <?php endif; // $flashSale_ThoiGianKT ?>
-
-});
-</script>
 </body>
 </html>

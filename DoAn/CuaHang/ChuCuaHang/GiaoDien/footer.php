@@ -1,9 +1,15 @@
+<?php
+/**
+ * footer.php — Phần cuối trang Admin (ChuCuaHang)
+ * File này chỉ gọi require_once các thành phần con.
+ */
+require_once __DIR__ . '/thanhPhan/toastAdminThongBao.php';
+require_once __DIR__ . '/thanhPhan/scriptAdminLayout.php';
     </main><!-- /.adm-content -->
 </div><!-- /.adm-main -->
 
 <!-- ===========================
      TOAST NOTIFICATION
-=========================== -->
 <div class="adm-toast" id="adm-toast">
     <i class="fas fa-check-circle"></i>
     <span id="adm-toast-msg"></span>
