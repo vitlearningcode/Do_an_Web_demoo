@@ -27,13 +27,32 @@
         <div class="books-grid">
             <?php foreach ($ds_flashsale as $sach):
                 /*
-                 * Badge 1 (cam): nhãn "Flash Sale"
-                 * Badge 2 (đỏ): "-XX%" — phanTramGiam thực từ ChiTietKhuyenMai
+                 * Tính phần trăm đã bán cho thanh tiến trình
+                 * tongBan      = tổng đơn hàng HoanThanh có sách này
+                 * soLuongKM    = giới hạn khuyến mãi từ ChiTietKhuyenMai
                  */
+                $daBan       = (int)($sach['tongBan'] ?? 0);
+                $giuiHanKM   = (int)($sach['soLuongKhuyenMai'] ?? 0);
+                // Nếu không có giới hạn → dùng tồn kho + đã bán làm mốc 100%
+                $tongSoLuong = $giuiHanKM > 0 ? $giuiHanKM : max(1, $daBan + (int)($sach['soLuongTon'] ?? 0));
+                $phanTram    = $tongSoLuong > 0 ? min(100, round($daBan / $tongSoLuong * 100)) : 0;
+
+                // HTML thanh tiến trình — truyền vào customHtmlBottom
+                $thanhTienTrinh = '
+                <div class="flash-sale-progress">
+                    <div class="flash-progress-label">
+                        <span class="da-ban-label">Đã bán: ' . $daBan . '</span>
+                        <span>Còn: ' . max(0, $tongSoLuong - $daBan) . '</span>
+                    </div>
+                    <div class="flash-progress-bar-bg">
+                        <div class="flash-progress-bar-fill" style="width:' . $phanTram . '%"></div>
+                    </div>
+                </div>';
+
                 echo hienThiTheSach($sach, [
                     ['class' => 'label-type',    'label' => 'Flash Sale'],
                     ['class' => 'label-discount', 'label' => '-' . $sach['phanTramGiam'] . '%'],
-                ]);
+                ], $thanhTienTrinh);
             endforeach; ?>
         </div>
     </div>

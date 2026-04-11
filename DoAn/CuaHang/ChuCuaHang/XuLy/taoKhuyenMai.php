@@ -3,7 +3,7 @@
 //  taoKhuyenMai.php — Tạo chiến dịch khuyến mãi mới
 // ══════════════════════════════════════════════════════
 // [BẢO MẬT] Kiểm tra quyền Admin trước tiên
-require_once __DIR__ . '/../../_kiemTraQuyen.php';
+require_once __DIR__ . '/../_kiemTraQuyen.php';
 require_once '../../../KetNoi/config/db.php';
 
 function redirectKM(string $msg, string $loai = 'success'): never {

@@ -3,7 +3,7 @@
 //  thanhToanPhieuNhap.php — Ghi nhận thanh toán NCC
 // ══════════════════════════════════════════════════════
 // [BẢO MẬT] Kiểm tra quyền Admin trước tiên
-require_once __DIR__ . '/../../_kiemTraQuyen.php';
+require_once __DIR__ . '/../_kiemTraQuyen.php';
 require_once '../../../KetNoi/config/db.php';
 
 function redirectNhap(string $msg, string $loai = 'success'): never {

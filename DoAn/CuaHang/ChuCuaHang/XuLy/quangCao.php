@@ -3,7 +3,7 @@
 //  quangCao.php — Xử lý CRUD banner / quảng cáo
 //  Hành động: them | sua | xoa | doi_trang_thai
 // ══════════════════════════════════════════════════════
-require_once __DIR__ . '/../../_kiemTraQuyen.php';
+require_once __DIR__ . '/../_kiemTraQuyen.php';
 require_once '../../../KetNoi/config/db.php';
 
 function redirectQC(string $msg, string $loai = 'success'): never {

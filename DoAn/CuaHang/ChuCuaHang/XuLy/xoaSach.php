@@ -7,7 +7,7 @@
 //    3. Chưa bán, chưa trong đơn → xóa thật
 // ══════════════════════════════════════════════════════
 // [BẢO MẬT] Kiểm tra quyền Admin trước tiên
-require_once __DIR__ . '/../../_kiemTraQuyen.php';
+require_once __DIR__ . '/../_kiemTraQuyen.php';
 require_once '../../../KetNoi/config/db.php';
 
 function redirectSach(string $msg, string $loai = 'success'): never {
