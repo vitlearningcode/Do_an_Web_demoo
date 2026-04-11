@@ -109,22 +109,22 @@ require_once "CuaHang/TrangBanHang/LoadDuLieu/taiQuangCao.php";
                     // Chuẩn bị HTML label cho thanh
                     $progressLabelHtml = '';
                     if ($isPopular) {
-                        $progressLabelHtml = '<div class="_BlLSM cx1ruZ">ĐANG BÁN CHẠY</div>';
+                        $progressLabelHtml = '<div class="nhan-chu vi-tri-tuyet-doi">ĐANG BÁN CHẠY</div>';
                     } elseif ($gapHet) {
-                        $progressLabelHtml = '<div class="LUjUEs cx1ruZ"></div><div class="_BlLSM cx1ruZ">CHỈ CÒN ' . $conLai . '</div>';
+                        $progressLabelHtml = '<div class="khoang-dem vi-tri-tuyet-doi"></div><div class="nhan-chu vi-tri-tuyet-doi">CHỈ CÒN ' . $conLai . '</div>';
                     } else {
-                        $progressLabelHtml = '<div class="_BlLSM cx1ruZ">GẦN HẾT HÀNG</div>';
+                        $progressLabelHtml = '<div class="nhan-chu vi-tri-tuyet-doi">GẦN HẾT HÀNG</div>';
                     }
 
                     $borderRadiusDaBan = $pctDaBan >= 100 ? '8px' : '8px 0 0 8px';
 
                     // Khối HTML customBottom sẽ được chèn vào trong bookCard
                     $customHtmlBottom = "
-                    <div class=\"SihI9B\">
-                        <div class=\"Ko7byE\">
+                    <div class=\"thanh-tien-do\">
+                        <div class=\"thanh-nen\">
                             {$progressLabelHtml}
-                            <div class=\"f62M8e\" style=\"width: {$pctDaBan}%; border-radius: {$borderRadiusDaBan};\"></div>
-                            <div class=\"DOdbJB\" style=\"border-radius: 8px;\"></div>
+                            <div class=\"phan-da-ban\" style=\"width: {$pctDaBan}%; border-radius: {$borderRadiusDaBan};\"></div>
+                            <div class=\"phan-con-lai\"></div>
                         </div>
                     </div>";
 
