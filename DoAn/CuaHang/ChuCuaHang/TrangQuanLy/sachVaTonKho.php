@@ -3,6 +3,9 @@
 //  sachVaTonKho.php — Quản lý sách & Tồn kho tích hợp
 // ══════════════════════════════════════════════════════
 
+// [BẢO MẬT] Kiểm tra quyền Admin — chặn truy cập trực tiếp
+require_once __DIR__ . '/../_kiemTraQuyen.php';
+
 $trang      = max(1, (int)($_GET['trang_so'] ?? 1));
 $moiTrang   = 15;
 $offset     = ($trang - 1) * $moiTrang;
@@ -266,17 +269,23 @@ if ($suaMaSach) {
         </h3>
         <a href="<?= $baseUrl ?>" style="color:#94a3b8;font-size:20px;text-decoration:none"><i class="fas fa-times"></i></a>
     </div>
-    <form method="POST" action="XuLy/themSuaSach.php" style="padding:24px">
+    <form method="POST" action="XuLy/themSuaSach.php" style="padding:24px" enctype="multipart/form-data">
         <?php if ($isEdit): ?>
             <input type="hidden" name="maSach_cu" value="<?= htmlspecialchars($sachSua['maSach']) ?>">
         <?php endif; ?>
 
         <div class="adm-form-grid">
+            <!-- Mã sách tự sinh -->
             <div class="adm-form-group">
-                <label>Mã sách <?= $isEdit ? '' : '<span class="req">*</span>' ?></label>
-                <input class="adm-input" type="text" name="maSach"
-                       value="<?= htmlspecialchars($sachSua['maSach'] ?? '') ?>"
-                       placeholder="VD: S024" <?= $isEdit ? 'readonly style="background:#f8fafc"' : 'required' ?>>
+                <label>Mã sách</label>
+                <?php if ($isEdit): ?>
+                    <input class="adm-input" type="text" value="<?= htmlspecialchars($sachSua['maSach']) ?>" readonly style="background:#f8fafc;color:#64748b">
+                    <input type="hidden" name="maSach_cu" value="<?= htmlspecialchars($sachSua['maSach']) ?>">
+                <?php else: ?>
+                    <div style="background:#eff6ff;border:1px dashed #93c5fd;border-radius:8px;padding:10px 12px;font-size:13px;color:#1d4ed8">
+                        <i class="fas fa-magic"></i> Tự động sinh khi lưu (dạng S024, S025...)
+                    </div>
+                <?php endif; ?>
             </div>
             <div class="adm-form-group">
                 <label>Tên sách <span class="req">*</span></label>
@@ -307,8 +316,14 @@ if ($suaMaSach) {
             </div>
             <div class="adm-form-group">
                 <label>Số lượng tồn kho</label>
-                <input class="adm-input" type="number" name="soLuongTon" min="0"
-                       value="<?= htmlspecialchars($sachSua['soLuongTon'] ?? 0) ?>">
+                <?php if ($isEdit): ?>
+                    <input class="adm-input" type="number" value="<?= htmlspecialchars($sachSua['soLuongTon'] ?? 0) ?>" readonly
+                           style="background:#f8fafc;color:#64748b" title="Chỉ cập nhật qua phiếu nhập hàng">
+                <?php else: ?>
+                    <div style="background:#f0fdf4;border:1px dashed #86efac;border-radius:8px;padding:10px 12px;font-size:13px;color:#15803d">
+                        <i class="fas fa-info-circle"></i> Tồn kho = 0 khi thêm mới. Tăng dần qua <strong>phiếu nhập</strong>.
+                    </div>
+                <?php endif; ?>
             </div>
             <div class="adm-form-group">
                 <label>Loại bìa</label>
@@ -351,9 +366,28 @@ if ($suaMaSach) {
                 </select>
             </div>
             <div class="adm-form-group full">
-                <label>URL Ảnh bìa</label>
-                <input class="adm-input" type="text" name="urlAnh"
-                       placeholder="https://picsum.photos/seed/s024/300/400">
+                <label>Ảnh bìa</label>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <input class="adm-input" type="text" name="urlAnh"
+                               placeholder="https://... (URL ảnh, hoặc để trống nếu upload file bên dưới)"
+                               style="flex:1">
+                    </div>
+                    <div style="font-size:12px;color:#94a3b8;text-align:center">— HOẶC —</div>
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <input class="adm-input" type="file" name="anhBia_file"
+                               accept="image/jpeg,image/png,image/webp,image/gif"
+                               style="padding:6px">
+                        <span style="font-size:12px;color:#94a3b8;white-space:nowrap">JPG, PNG, WEBP</span>
+                    </div>
+                    <?php if ($isEdit && !empty($sachSua['anhBia'])): ?>
+                    <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+                        <img src="<?= htmlspecialchars($sachSua['anhBia'] ?? '') ?>" alt="Ảnh hiện tại"
+                             style="width:40px;height:55px;object-fit:cover;border-radius:4px;border:1px solid #e2e8f0">
+                        <span style="font-size:12px;color:#64748b">Ảnh hiện tại (upload mới sẽ thay thế)</span>
+                    </div>
+                    <?php endif; ?>
+                </div>
             </div>
             <div class="adm-form-group full">
                 <label>Mô tả</label>
