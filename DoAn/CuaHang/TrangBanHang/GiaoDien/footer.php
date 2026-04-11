@@ -114,7 +114,8 @@
             <div class="chatbot-message bot">
                 <div class="message-avatar bot"><i class="fas fa-robot"></i></div>
                 <div class="message-content">
-                    <p>Xin chào! Tôi là trợ lý AI của Cửa Hàng. Tôi có thể giúp gì cho bạn hôm nay?</p>
+                    <!-- <p>Xin chào bạn!!! Mình là một chat bot có thể gợi ý những sản phẩm phù hợp với nhu cầu của bạn.</p> -->
+                     <p>Đạo hữu xin dừng bước, ví tiền của của đạo hữu có duyên với cửa hàng của chúng tôi !!!</p>
                 </div>
             </div>
         </div>

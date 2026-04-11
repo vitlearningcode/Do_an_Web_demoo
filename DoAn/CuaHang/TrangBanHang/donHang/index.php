@@ -381,5 +381,6 @@ document.addEventListener('click', function() {
     if (menu) menu.classList.remove('open');
 });
 </script>
+<script src="<?= $duong_dan_goc ?>PhuongThuc/app.js"></script>
 </body>
 </html>

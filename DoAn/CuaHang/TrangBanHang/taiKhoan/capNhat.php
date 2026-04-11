@@ -300,5 +300,7 @@ function moCapNhatThongTin(e) {
     window.location.href = 'CuaHang/TrangBanHang/taiKhoan/capNhat.php';
 }
 </script>
+
+<script src="<?= $duong_dan_goc ?>PhuongThuc/app.js"></script>
 </body>
 </html>

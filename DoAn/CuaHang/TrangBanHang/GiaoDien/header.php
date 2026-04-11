@@ -280,7 +280,7 @@ $duong_dan_goc = '/DoAn-Web/DoAn/';
 
         <div class="input-group" style="display: flex; justify-content: space-between; width: 343px; margin: 0 auto;">
             <button type="button" class="btn-cancel" onclick="closeModal()">Hủy bỏ</button>
-            <a href="xuly_dangxuat.php" class="btn-confirm">Đăng xuất</a>
+            <a href="<?= $duong_dan_goc ?>xuly_dangxuat.php" class="btn-confirm">Đăng xuất</a>
         </div>
     </div>
 </div>
@@ -291,7 +291,7 @@ function moTraCuuDonHang() {
     document.getElementById('panel-tra-cuu-don-hang').classList.add('hien');
     document.getElementById('overlay-tra-cuu').classList.add('hien');
     document.body.style.overflow = 'hidden';
-}
+}   
 function dongTraCuuDonHang() {
     document.getElementById('panel-tra-cuu-don-hang').classList.remove('hien');
     document.getElementById('overlay-tra-cuu').classList.remove('hien');
