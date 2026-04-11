@@ -2,7 +2,8 @@
 // ══════════════════════════════════════════════════════
 //  capNhatTrangThaiDH.php — Xử lý duyệt / hủy đơn hàng
 // ══════════════════════════════════════════════════════
-session_start();
+// [BẢO MẬT] Kiểm tra quyền Admin trước tiên
+require_once __DIR__ . '/../_kiemTraQuyen.php';
 require_once '../../../KetNoi/config/db.php';
 
 // Hàm redirect về trang đơn hàng kèm thông báo

@@ -25,7 +25,12 @@
         <div id="cart-items" class="cart-items">
             <!-- JS cloneNode từ template xuống đây -->
             <div id="cart-empty-msg" class="cart-empty-msg" style="display: none;">
-                Giỏ hàng của bạn đang trống!
+                <div class="cart-empty-icon">🛒</div>
+                <p class="cart-empty-text">Giỏ hàng của bạn đang trống trơn!</p>
+                <p class="cart-empty-sub">Hãy ra ngoài chọn vài cuốn sách nhé...</p>
+                <a href="/DoAn/index.php" class="cart-empty-btn">
+                    📚 Quay lại cửa hàng
+                </a>
             </div>
         </div>
 

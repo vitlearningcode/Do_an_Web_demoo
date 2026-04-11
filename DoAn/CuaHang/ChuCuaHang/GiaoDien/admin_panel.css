@@ -23,7 +23,65 @@ body.admin-body {
   top: 0;
   left: 0;
   z-index: 200;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, width 0.3s ease;
+  overflow: hidden;
+}
+
+/* ===== SIDEBAR COLLAPSED (icon-only, desktop) ===== */
+.adm-sidebar.collapsed {
+  width: 64px;
+}
+
+/* Ẩn text label khi collapsed */
+.adm-sidebar.collapsed .logo-text,
+.adm-sidebar.collapsed .adm-nav-section-label,
+.adm-sidebar.collapsed .adm-nav-item span,
+.adm-sidebar.collapsed .adm-nav-badge {
+  display: none;
+}
+
+/* Logo icon căn giữa khi collapsed */
+.adm-sidebar.collapsed .adm-sidebar-logo {
+  padding: 20px 0;
+  justify-content: center;
+}
+
+/* Nav item căn giữa icon khi collapsed */
+.adm-sidebar.collapsed .adm-nav-item {
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.adm-sidebar.collapsed .adm-nav-item i {
+  width: auto;
+  font-size: 18px;
+}
+
+/* Tooltip hiện tên khi hover lúc collapsed */
+.adm-sidebar.collapsed .adm-nav-item {
+  position: relative;
+}
+.adm-sidebar.collapsed .adm-nav-item[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: #1e293b;
+  color: #f1f5f9;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  pointer-events: none;
+}
+
+/* Footer icons căn giữa */
+.adm-sidebar.collapsed .adm-sidebar-footer {
+  padding: 12px 4px;
 }
 
 .adm-sidebar-logo {
@@ -153,6 +211,12 @@ body.admin-body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  transition: margin-left 0.3s ease;
+}
+
+/* Khi sidebar collapsed → main dịch trái tương ứng */
+.adm-main.sidebar-collapsed {
+  margin-left: 64px;
 }
 
 /* ===== TOPBAR ===== */
@@ -819,12 +883,17 @@ body.admin-body {
 @media (max-width: 1024px) {
   .adm-sidebar {
     transform: translateX(-100%);
+    width: 260px !important; /* Trên mobile luôn full width */
   }
   .adm-sidebar.open {
     transform: translateX(0);
   }
+  .adm-sidebar.collapsed {
+    transform: translateX(-100%); /* collapsed không áp dụng trên mobile */
+    width: 260px !important;
+  }
   .adm-main {
-    margin-left: 0;
+    margin-left: 0 !important;
   }
   .adm-form-grid {
     grid-template-columns: 1fr;
