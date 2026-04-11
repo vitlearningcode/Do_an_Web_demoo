@@ -1,10 +1,13 @@
 // ==================== THÀNH PHẦN CHATBOT TRỢ LÝ ẢO ====================
-
 class TroLyAo {
   constructor(tuyChon = {}) {
     this.dangMo = false;
     this.danhSachTinNhan = tuyChon.messages || [];
     this.dangGoPhim = false;
+    
+    // Đưa 2 biến kiểm tra vào làm thuộc tính của class
+    this.daKiemTraHeThong = false; 
+    this.heThongBinhThuong = false;
 
     this.thanhPhan = {
       khungChinh: null,
@@ -17,37 +20,62 @@ class TroLyAo {
     this.nganHangTraLoi = [
       {
         tuKhoa: ["xin chào", "hello", "hi", "chào"],
-        cauTraLoi:
-          "Xin chào! Rất vui được hỗ trợ bạn. Bạn cần tìm sách gì hôm nay?",
+        cauTraLoi: "Xin chào! Rất vui được hỗ trợ bạn. Bạn cần tìm sách gì hôm nay?",
       },
       {
         tuKhoa: ["tìm sách", "tìm"],
         cauTraLoi: "Bạn có thể tìm kiếm sách theo tên, tác giả hoặc thể loại.",
-      },
-      // ... (Giữ nguyên các câu trả lời của ông ở đây cho gọn nhé)
+      }
     ];
 
     document.addEventListener("DOMContentLoaded", () => this.khoiTao());
   }
 
   khoiTao() {
-    // CHỈ ĐI TÌM HTML DO PHP IN RA, KHÔNG TỰ VẼ NỮA
     this.thanhPhan.khungChinh = document.getElementById("chatbot");
     this.thanhPhan.nutMo = document.getElementById("chatbot-toggle");
     this.thanhPhan.khuVucTinNhan = document.getElementById("chatbot-messages");
     this.thanhPhan.oNhapLieu = document.getElementById("chatbot-input");
     this.thanhPhan.nutGui = document.getElementById("chatbot-send");
 
-    // Nếu tìm thấy khung chatbot trên trang thì mới gắn sự kiện
     if (this.thanhPhan.khungChinh && this.thanhPhan.nutMo) {
       this.ganSuKien();
     }
+
+    //gọi bong bóng khi load xong trang 
+    this.hienThongBaoChaoMung();
   }
+  //===================================================== hàm bong bóng chat=====================================================
+  hienThongBaoChaoMung() {
+    // 1. Kiểm tra xem bong bóng đã được hiển thị trong phiên này chưa
+    if (sessionStorage.getItem("daHienChaoMungChatbot")) {
+        return; // Nếu có rồi thì thoát luôn, không hiển thị nữa
+    }
+
+    // 2. Nếu chưa có, đánh dấu vào bộ nhớ là đã hiển thị
+    sessionStorage.setItem("daHienChaoMungChatbot", "true");
+
+    // 3. Tạo phần tử bong bóng (Code cũ của bạn giữ nguyên)
+    const bubble = document.createElement("div");
+    bubble.className = "chatbot-welcome-bubble";
+    bubble.innerText = "Đạo hữu xin dừng bước, ví tiền của của đạo hữu có duyên với cửa hàng của chúng tôi !!!";
+    
+    document.body.appendChild(bubble);
+
+    // Sau 5 giây thì biến mất
+    setTimeout(() => {
+      bubble.classList.add("bubble-fade-out");
+      setTimeout(() => {
+          if (bubble.parentNode) {
+              document.body.removeChild(bubble);
+          }
+      }, 500); 
+    }, 5000);
+  }
+  // ========================================================================================================
 
   ganSuKien() {
-    this.thanhPhan.nutMo.addEventListener("click", () =>
-      this.dongMoKhungChat(),
-    );
+    this.thanhPhan.nutMo.addEventListener("click", () => this.dongMoKhungChat());
 
     const nutDong = document.getElementById("chatbot-close");
     if (nutDong) nutDong.addEventListener("click", () => this.dong());
@@ -68,11 +96,64 @@ class TroLyAo {
     else this.mo();
   }
 
-  mo() {
+  // ================================================================= TÍNH NĂNG MỚI: KIỂM TRA CHAT SỐNG KHÔNG =================
+  async kiemTraHeThong() {
+    // Tự động nhận diện đường dẫn để không lỗi ở trang con
+    const duongDanAPI = (typeof DUONG_DAN_GOC_JS !== 'undefined' ? DUONG_DAN_GOC_JS : '/DoAn-Web/DoAn/') + 'CuaHang/TrangBanHang/GiaoDien/xuly_chatbot.php';
+    try {
+        const phanHoi = await fetch(duongDanAPI, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'ping' }) // Gửi lệnh ping
+        });
+        return phanHoi.ok;
+    } catch (error) {
+        return false;
+    }
+  }
+  // ============================================================================================================================
+
+  async mo() {
     this.dangMo = true;
     this.thanhPhan.khungChinh?.classList.add("active");
     if (this.thanhPhan.nutMo) this.thanhPhan.nutMo.style.display = "none";
-    this.thanhPhan.oNhapLieu?.focus();
+
+    // KỊCH BẢN KIỂM TRA LẦN ĐẦU TIÊN
+    if (!this.daKiemTraHeThong) {
+      // 1. Khóa ô nhập liệu tránh khách gõ khi chưa kết nối xong
+      if (this.thanhPhan.oNhapLieu) this.thanhPhan.oNhapLieu.disabled = true;
+      if (this.thanhPhan.nutGui) this.thanhPhan.nutGui.disabled = true;
+
+      // 2. Hiện hiệu ứng ba chấm (Giả lập đang kết nối)
+      this.hienHieuUngGoPhim();
+
+      // 3. Chờ phản hồi Ping từ PHP
+      this.heThongBinhThuong = await this.kiemTraHeThong();
+      this.daKiemTraHeThong = true; // Đánh dấu là đã kiểm tra xong
+
+      // 4. Có kết quả, ẩn hiệu ứng
+      this.anHieuUngGoPhim();
+
+      if (this.heThongBinhThuong) {
+        // HỆ THỐNG SỐNG -> Mở khóa ô nhập liệu
+        if (this.thanhPhan.oNhapLieu) {
+            this.thanhPhan.oNhapLieu.disabled = false;
+            this.thanhPhan.oNhapLieu.focus();
+        }
+        if (this.thanhPhan.nutGui) this.thanhPhan.nutGui.disabled = false;
+        
+        // (Tuỳ chọn) In câu chào
+        this.themTinNhanVaoKhung("Mình có thể tư vấn sách gì cho bạn?", "bot");
+      } else {
+        // HỆ THỐNG CHẾT -> In thông báo, ô nhập liệu vẫn bị khóa
+        this.themTinNhanVaoKhung("Hệ thống đang quá tải, bạn vui lòng thử lại sau ít phút!!!", "bot");
+      }
+    } else {
+      // Những lần mở sau, nếu hệ thống sống thì chỉ cần focus con trỏ
+      if (this.heThongBinhThuong && this.thanhPhan.oNhapLieu) {
+          this.thanhPhan.oNhapLieu.focus();
+      }
+    }
   }
 
   dong() {
@@ -81,7 +162,6 @@ class TroLyAo {
     if (this.thanhPhan.nutMo) this.thanhPhan.nutMo.style.display = "flex";
   }
 
-  // Sửa hàm guiTinNhan thành async để đợi API trả về
   async guiTinNhan() {
     const noiDung = this.thanhPhan.oNhapLieu?.value.trim();
     if (!noiDung || this.dangGoPhim) return;
@@ -91,8 +171,10 @@ class TroLyAo {
     this.hienHieuUngGoPhim();
 
     try {
-      // Sửa thành đường dẫn tuyệt đối từ thư mục gốc localhost
-      const response = await fetch('/DoAn-Web/DoAn/CuaHang/TrangBanHang/GiaoDien/xuly_chatbot.php', {
+      // Dùng đường dẫn linh hoạt để chạy được ở mọi trang
+      const duongDanAPI = (typeof DUONG_DAN_GOC_JS !== 'undefined' ? DUONG_DAN_GOC_JS : '/DoAn-Web/DoAn/') + 'CuaHang/TrangBanHang/GiaoDien/xuly_chatbot.php';
+      
+      const response = await fetch(duongDanAPI, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: noiDung })
@@ -103,7 +185,6 @@ class TroLyAo {
       const data = await response.json();
       this.anHieuUngGoPhim();
 
-      // Kiểm tra nếu PHP trả về lỗi (bao gồm lỗi từ Google)
       if (data.error) {
          this.themTinNhanVaoKhung("⚠️ Hệ thống báo: " + data.error, "bot");
          return;
@@ -124,8 +205,7 @@ class TroLyAo {
     let hieuUng = document.getElementById("typing-indicator");
     if (hieuUng) {
       hieuUng.style.display = "flex";
-      this.thanhPhan.khuVucTinNhan.scrollTop =
-        this.thanhPhan.khuVucTinNhan.scrollHeight;
+      this.thanhPhan.khuVucTinNhan.scrollTop = this.thanhPhan.khuVucTinNhan.scrollHeight;
     }
   }
 
@@ -135,13 +215,13 @@ class TroLyAo {
     if (hieuUng) hieuUng.style.display = "none";
   }
 
-  // Chỗ này in HTML động cho từng dòng tin nhắn là hợp lý (giống giỏ hàng)
   themTinNhanVaoKhung(noiDung, nguoiGui) {
     if (!this.thanhPhan.khuVucTinNhan) return;
     this.anHieuUngGoPhim();
 
     const theTinNhan = document.createElement("div");
     theTinNhan.className = `chatbot-message ${nguoiGui}`;
+    // Nếu là bot, dùng innerHTML để có thể xử lý các icon hoặc định dạng (nếu cần), user thì in chữ bình thường
     theTinNhan.innerHTML = `
       <div class="message-avatar ${nguoiGui}">
         <i class="fas fa-${nguoiGui === "user" ? "user" : "robot"}"></i>
@@ -152,10 +232,8 @@ class TroLyAo {
     `;
 
     this.thanhPhan.khuVucTinNhan.appendChild(theTinNhan);
-    this.thanhPhan.khuVucTinNhan.scrollTop =
-      this.thanhPhan.khuVucTinNhan.scrollHeight;
+    this.thanhPhan.khuVucTinNhan.scrollTop = this.thanhPhan.khuVucTinNhan.scrollHeight;
   }
-
 }
 
 const chatbot = new TroLyAo();

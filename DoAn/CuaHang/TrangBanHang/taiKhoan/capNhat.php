@@ -80,5 +80,7 @@ document.addEventListener('click', function() {
     if (menuNguoiDung) menuNguoiDung.classList.remove('show');
 });
 </script>
+
+<script src="<?= $duong_dan_goc ?>PhuongThuc/app.js"></script>
 </body>
 </html>

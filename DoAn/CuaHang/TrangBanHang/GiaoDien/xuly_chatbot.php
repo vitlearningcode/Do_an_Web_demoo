@@ -66,6 +66,31 @@ try {
     // 4. NHẬN DỮ LIỆU TỪ JAVASCRIPT
     // =========================================================================
     $inputData = json_decode(file_get_contents('php://input'), true);
+
+    // =========================================================================
+    // TÍNH NĂNG MỚI: KIỂM TRA SỨC KHỎE API (HEALTH CHECK)
+    // =========================================================================
+    if (isset($inputData['action']) && $inputData['action'] === 'ping') {
+        $apiKey = GEMINI_API_KEY; 
+        // Dùng API ListModels siêu nhẹ để test kết nối thay vì API GenerateContent
+        $pingUrl = "https://generativelanguage.googleapis.com/v1beta/models?key=" . $apiKey;
+        
+        $chPing = curl_init($pingUrl);
+        curl_setopt($chPing, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($chPing, CURLOPT_SSL_VERIFYPEER, false);
+        curl_exec($chPing);
+        $httpCode = curl_getinfo($chPing, CURLINFO_HTTP_CODE);
+        curl_close($chPing);
+
+        if ($httpCode === 200) {
+            echo json_encode(["status" => "ok"]);
+        } else {
+            http_response_code(500); // Trả về lỗi 500 để JS nhận diện là quá tải
+            echo json_encode(["error" => "overload"]);
+        }
+        exit; // Kết thúc sớm, không chạy xuống phần xử lý sách bên dưới để nhẹ server
+    }
+    // =========================================================================
     $userMsg = $inputData['message'] ?? '';
 
     if (empty($userMsg)) {
