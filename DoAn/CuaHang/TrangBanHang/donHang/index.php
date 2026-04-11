@@ -1,17 +1,17 @@
 <?php
 /**
- * donHang/index.php — Theo dõi đơn hàng kiểu Shopee
- *
+ * donHang/index.php — Trang theo dõi đơn hàng (Entry Point)
  * Tabs: Tất cả | Chờ Duyệt | Đang Giao | Đã Giao | Đã Hủy | Đánh Giá
- * Mỗi sản phẩm trong đơn "Đã Giao" có nút Đánh giá → form submit về xuly_danhGia.php
  * Thuần PHP: không AJAX, không chèn HTML từ JS.
+ * Mỗi chức năng được tách thành file riêng và gọi qua require_once.
  */
 session_start();
 require_once '../../../KetNoi/config/db.php';
+require_once 'hamHoTroDonHang.php';
 
 $isLoggedIn = isset($_SESSION['nguoi_dung_id']);
 
-// Bắt buộc đăng nhập
+// Bắt buộc phải đăng nhập
 if (!$isLoggedIn) {
     header('Location: ../../../index.php');
     exit;
@@ -19,110 +19,29 @@ if (!$isLoggedIn) {
 
 $maND = (int)$_SESSION['nguoi_dung_id'];
 
-// Tab hiện tại
-$tabHienTai = $_GET['tab'] ?? 'tat-ca';
-
-// Trạng thái hợp lệ từ DB
+// Bản đồ tab → trạng thái DB
 $trangThaiMap = [
     'tat-ca'     => null,
     'cho-duyet'  => 'ChoDuyet',
     'dang-giao'  => 'DangGiao',
     'da-giao'    => 'HoanThanh',
     'da-huy'     => 'DaHuy',
-    'danh-gia'   => 'HoanThanh', // Chỉ đơn HoanThanh mới đánh giá được
+    'danh-gia'   => 'HoanThanh', // Chỉ đơn HoanThanh mới có thể đánh giá
 ];
 
+$tabHienTai = $_GET['tab'] ?? 'tat-ca';
 if (!array_key_exists($tabHienTai, $trangThaiMap)) {
     $tabHienTai = 'tat-ca';
 }
 
-// ── Lấy danh sách đơn hàng ──────────────────────────────────────────────────
-$where = 'WHERE dh.maND = :maND';
-$params = [':maND' => $maND];
+// Tải dữ liệu đơn hàng từ DB
+require_once 'layDuLieuDonHang.php';
 
-if ($tabHienTai !== 'tat-ca' && $trangThaiMap[$tabHienTai] !== null) {
-    $where .= ' AND dh.trangThai = :trangThai';
-    $params[':trangThai'] = $trangThaiMap[$tabHienTai];
-}
-
-$sqlDH = "
-    SELECT dh.maDH, dh.ngayDat, dh.tongTien, dh.trangThai,
-           pt.tenPT, dcgh.diaChiChiTiet
-    FROM DonHang dh
-    JOIN PhuongThucThanhToan pt ON dh.maPT = pt.maPT
-    JOIN DiaChiGiaoHang dcgh ON dh.maDC = dcgh.maDC
-    $where
-    ORDER BY dh.ngayDat DESC
-";
-
-$stmtDH = $pdo->prepare($sqlDH);
-$stmtDH->execute($params);
-$dsDonHang = $stmtDH->fetchAll();
-
-// ── Lấy chi tiết từng đơn (items) ─────────────────────────────────────────
-$chiTietDH = [];
-$daDanhGia  = []; // [maDH_maSach] => true
-
-if (!empty($dsDonHang)) {
-    $maDHList = array_column($dsDonHang, 'maDH');
-    $inParams = implode(',', array_fill(0, count($maDHList), '?'));
-
-    $sqlCT = "
-        SELECT ct.maDH, ct.maSach, ct.soLuong, ct.giaBan, ct.thanhTien,
-               s.tenSach,
-               ha.urlAnh
-        FROM ChiTietDH ct
-        JOIN Sach s ON ct.maSach = s.maSach
-        LEFT JOIN (
-            SELECT maSach, MIN(urlAnh) AS urlAnh
-            FROM HinhAnhSach
-            GROUP BY maSach
-        ) ha ON ha.maSach = ct.maSach
-        WHERE ct.maDH IN ($inParams)
-        ORDER BY ct.maDH, ct.maSach
-    ";
-    $stmtCT = $pdo->prepare($sqlCT);
-    $stmtCT->execute($maDHList);
-    $allItems = $stmtCT->fetchAll();
-
-    foreach ($allItems as $item) {
-        $chiTietDH[$item['maDH']][] = $item;
-    }
-
-    // Kiểm tra sách nào đã được đánh giá bởi user này
-    $sqlDG = "SELECT maSach FROM DanhGiaSach WHERE maND = ?";
-    $stmtDG = $pdo->prepare($sqlDG);
-    $stmtDG->execute([$maND]);
-    foreach ($stmtDG->fetchAll() as $dg) {
-        $daDanhGia[$dg['maSach']] = true;
-    }
-}
-
-// ── Tab "Đánh Giá": chỉ hiện đơn HoanThanh có sách chưa đánh giá ──────────
-if ($tabHienTai === 'danh-gia') {
-    $dsDonHang = array_filter($dsDonHang, function($dh) use ($chiTietDH, $daDanhGia) {
-        if ($dh['trangThai'] !== 'HoanThanh') return false;
-        $items = $chiTietDH[$dh['maDH']] ?? [];
-        foreach ($items as $item) {
-            if (empty($daDanhGia[$item['maSach']])) return true;
-        }
-        return false;
-    });
-}
+// Lọc riêng cho tab "Đánh giá"
+require_once 'locTabDanhGia.php';
 
 // Thông báo sau khi đánh giá thành công
-$thongBao = $_GET['tb'] ?? '';
-
-// Badge trang thái → class + nhãn
-function badgeInfo(string $tt): array {
-    return match($tt) {
-        'ChoDuyet'   => ['cho-duyet',  'Chờ Duyệt'],
-        'DangGiao'   => ['dang-giao',  'Đang Giao'],
-        'HoanThanh'  => ['hoan-thanh', 'Đã Giao'],
-        'DaHuy'      => ['da-huy',     'Đã Hủy'],
-        default      => ['cho-duyet',  $tt],
-    };
-}
+$thongBaoSauDanhGia = $_GET['tb'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -151,6 +70,9 @@ function badgeInfo(string $tt): array {
 
     <h1 class="dh-title"><i class="fas fa-box"></i> Đơn Hàng Của Tôi</h1>
 
+    <?php require_once 'khuVucTabDonHang.php'; ?>
+    <?php require_once 'danhSachTheDonHang.php'; ?>
+
     <!-- ═══ TABS ═══ -->
     <div class="dh-tabs" role="tablist">
         <?php
@@ -178,6 +100,12 @@ function badgeInfo(string $tt): array {
         <?php if (!empty($thongBao) && $thongBao === 'ok'): ?>
         <div style="background:#dcfce7;color:#15803d;padding:10px 18px;border-radius:8px;margin-bottom:14px;font-weight:500;">
             <i class="fas fa-check-circle"></i> Đánh giá của bạn đã được ghi nhận. Cảm ơn!
+        </div>
+        <?php endif; ?>
+
+        <?php if (!empty($thongBao) && $thongBao === 'ok_huy'): ?>
+        <div style="background:#fee2e2;color:#dc2626;padding:10px 18px;border-radius:8px;margin-bottom:14px;font-weight:500;">
+            <i class="fas fa-times-circle"></i> Đơn hàng của bạn đã được hủy thành công. Hàng sẽ được hoàn lại kho.
         </div>
         <?php endif; ?>
 
@@ -250,8 +178,20 @@ function badgeInfo(string $tt): array {
                     <i class="fas fa-map-marker-alt"></i>
                     <?= htmlspecialchars(mb_strimwidth($dh['diaChiChiTiet'], 0, 40, '…')) ?>
                 </div>
-                <div class="dh-order-total">
-                    Tổng cộng: <strong><?= number_format($dh['tongTien'], 0, ',', '.') ?>đ</strong>
+                <div class="dh-order-actions">
+                    <div class="dh-order-total">
+                        Tổng cộng: <strong><?= number_format($dh['tongTien'], 0, ',', '.') ?>đ</strong>
+                    </div>
+                    <?php if ($dh['trangThai'] === 'ChoDuyet'): ?>
+                    <!-- Nút Hủy đơn: chỉ hiện khi đơn đang Chờ Duyệt -->
+                    <form method="POST" action="xuly_huyDon.php"
+                          onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng <?= htmlspecialchars($dh['maDH']) ?> không?')">
+                        <input type="hidden" name="maDH" value="<?= htmlspecialchars($dh['maDH']) ?>">
+                        <button type="submit" class="dh-btn-cancel-order">
+                            <i class="fas fa-times"></i> Hủy đơn
+                        </button>
+                    </form>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -263,123 +203,14 @@ function badgeInfo(string $tt): array {
 </div><!-- /dh-container -->
 </div><!-- /dh-page -->
 
-<!-- ═══ MODAL ĐÁNH GIÁ ═══ -->
-<!-- PHP render sẵn modal, JS chỉ toggle class và điền data-* vào form -->
-<div id="review-overlay" class="dh-review-overlay" role="dialog" aria-modal="true" aria-labelledby="review-title">
-    <div class="dh-review-modal">
-        <button class="dh-modal-close" type="button" onclick="dongModalDanhGia()" aria-label="Đóng">&times;</button>
-        <h3 id="review-title">Đánh giá sản phẩm</h3>
-        <p class="dh-book-name" id="review-ten-sach"></p>
-
-        <!-- Form POST thuần PHP → xuly_danhGia.php -->
-        <form action="xuly_danhGia.php" method="POST" id="form-danh-gia">
-            <input type="hidden" name="maDH"   id="review-maDH"   value="">
-            <input type="hidden" name="maSach" id="review-maSach" value="">
-            <input type="hidden" name="diem"   id="review-diem"   value="0">
-
-            <!-- 5 sao — JS chỉ thêm/xóa class 'selected', không tạo element mới -->
-            <div class="dh-star-row" id="review-stars" role="group" aria-label="Chọn số sao">
-                <span class="dh-star" data-vi-tri="1" onclick="chonSao(1)" title="1 sao">&#9733;</span>
-                <span class="dh-star" data-vi-tri="2" onclick="chonSao(2)" title="2 sao">&#9733;</span>
-                <span class="dh-star" data-vi-tri="3" onclick="chonSao(3)" title="3 sao">&#9733;</span>
-                <span class="dh-star" data-vi-tri="4" onclick="chonSao(4)" title="4 sao">&#9733;</span>
-                <span class="dh-star" data-vi-tri="5" onclick="chonSao(5)" title="5 sao">&#9733;</span>
-            </div>
-
-            <textarea class="dh-review-textarea"
-                      name="nhanXet"
-                      id="review-nhanXet"
-                      placeholder="Chia sẻ cảm nhận của bạn về cuốn sách này..."
-                      rows="4"></textarea>
-
-            <div class="dh-review-actions">
-                <button type="button" class="dh-btn-cancel-review" onclick="dongModalDanhGia()">Hủy</button>
-                <button type="submit" class="dh-btn-submit-review">
-                    <i class="fas fa-paper-plane"></i> Gửi đánh giá
-                </button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Toast thông báo -->
-<div id="dh-toast" class="dh-toast"></div>
-
+<?php require_once 'modalDanhGiaSanPham.php'; ?>
 <?php include_once '../../../CuaHang/TrangBanHang/GioHang/formGioHang.php'; ?>
 
-<!-- JS thuần: chỉ toggle class + điền textContent/value — không innerHTML, không AJAX -->
 <script src="../../../PhuongThuc/cart.js"></script>
 <script src="../../../PhuongThuc/components/xacNhanDangXuat.js"></script>
 <script src="../../../PhuongThuc/components/xacThuc.js"></script>
 
-<script>
-// ── Mở modal đánh giá ────────────────────────────────────────────────────────
-function moModalDanhGia(nutBam) {
-    var overlay  = document.getElementById('review-overlay');
-    var tenSach  = document.getElementById('review-ten-sach');
-    var inpMaDH  = document.getElementById('review-maDH');
-    var inpMaSach= document.getElementById('review-maSach');
-    var inpDiem  = document.getElementById('review-diem');
-    var textarea = document.getElementById('review-nhanXet');
+<?php require_once 'scriptDonHang.php'; ?>
 
-    // Điền dữ liệu từ data-* (PHP đã render) — không innerHTML
-    tenSach.textContent   = nutBam.dataset.ten    || '';
-    inpMaDH.value         = nutBam.dataset.madh   || '';
-    inpMaSach.value       = nutBam.dataset.masach || '';
-    inpDiem.value         = '0';
-    textarea.value        = '';
-
-    // Reset sao
-    chonSao(0);
-
-    overlay.classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-// ── Đóng modal ───────────────────────────────────────────────────────────────
-function dongModalDanhGia() {
-    document.getElementById('review-overlay').classList.remove('active');
-    document.body.style.overflow = '';
-}
-
-// Đóng khi click ngoài
-document.getElementById('review-overlay').addEventListener('click', function(e) {
-    if (e.target === this) dongModalDanhGia();
-});
-
-// ── Chọn sao ─────────────────────────────────────────────────────────────────
-function chonSao(n) {
-    var stars = document.querySelectorAll('#review-stars .dh-star');
-    stars.forEach(function(star, idx) {
-        if (idx < n) {
-            star.classList.add('selected');
-        } else {
-            star.classList.remove('selected');
-        }
-    });
-    var inp = document.getElementById('review-diem');
-    if (inp) inp.value = n;
-}
-
-// ── Validate trước khi submit ─────────────────────────────────────────────
-document.getElementById('form-danh-gia').addEventListener('submit', function(e) {
-    var diem = parseInt(document.getElementById('review-diem').value) || 0;
-    if (diem < 1) {
-        e.preventDefault();
-        alert('Vui lòng chọn ít nhất 1 sao!');
-    }
-});
-
-// ── Toggle user menu ────────────────────────────────────────────────────────
-function toggleUserMenu(e) {
-    e.stopPropagation();
-    var menu = document.getElementById('userDropdown');
-    if (menu) menu.classList.toggle('open');
-}
-document.addEventListener('click', function() {
-    var menu = document.getElementById('userDropdown');
-    if (menu) menu.classList.remove('open');
-});
-</script>
 </body>
 </html>

@@ -824,3 +824,103 @@
     color: #ef4444;
     font-size: 13px;
 }
+
+/* ══════════════════════════════════════════════════════
+   FLASH SALE — Thanh tiến độ đã bán (Shopee-style)
+   Usage: SihI9B > Ko7byE > [_BlLSM + f62M8e + DOdbJB]
+   ══════════════════════════════════════════════════════ */
+
+/* Grid: kế thừa .books-grid chuẩn */
+.flash-sale-grid {
+    /* Khôi phục lại kích thước cũ, không ép minmax(180px) */
+}
+
+/* ==============================================================
+   FLASH SALE — Thanh tiến độ đã bán kiểu Shopee
+   Cấu trúc: .thanh-tien-do > .thanh-nen > [nhan-chu + phan-da-ban + phan-con-lai]
+   ============================================================== */
+
+/* Wrapper ngoài cùng */
+.thanh-tien-do {
+    margin-top: 12px;
+    margin-bottom: 4px;
+}
+
+/* Track chứa toàn bộ thanh + label */
+.thanh-nen {
+    position: relative;
+    height: 16px;
+    background: #ffbda6;        /* nền cam nhạt để chữ trắng nổi bật */
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+/* ── Phần đã bán (cam → đỏ) ── */
+.phan-da-ban {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #ff7337, #ee4d2d);
+    /* border-radius được set inline tùy % */
+    transition: width 0.5s ease;
+    min-width: 4px;
+}
+
+/* ── Phần còn lại (transparent, nền thanh-nen làm nền) ── */
+.phan-con-lai {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    background: transparent;
+}
+
+/* ── Vị trí tuyệt đối (shared) ── */
+.vi-tri-tuyet-doi {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Nhãn chính: "ĐANG BÁN CHẠY" / "CHỈ CÒN X" / "GẦN HẾT HÀNG" */
+.nhan-chu {
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    letter-spacing: 0.02em;
+}
+
+/* Khoảng đệm bên trái khi hiện nhãn “CHỈ CÒN X” */
+.khoang-dem {
+    background: transparent;
+}
+
+/* ══════════════════════════════════════════════════════
+   CART TOAST — Trạng thái active + màu cảnh báo vàng
+   ══════════════════════════════════════════════════════ */
+.cart-toast.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Toast cảnh báo tồn kho thấp — nền vàng */
+.cart-toast.toast-warning .toast-content {
+    background: #78350f;
+    border-color: #92400e;
+}
+
+.cart-toast.toast-warning .toast-icon-wrapper {
+    background: rgba(251, 191, 36, 0.25);
+}

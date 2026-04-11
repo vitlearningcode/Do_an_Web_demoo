@@ -3,6 +3,9 @@
 //  donHang.php — Quản lý đơn hàng
 // ══════════════════════════════════════════════════════
 
+// [BẢO MẬT] Kiểm tra quyền Admin — chặn truy cập trực tiếp
+require_once __DIR__ . '/../_kiemTraQuyen.php';
+
 $locTrangThai = $_GET['loc'] ?? 'TatCa';
 $trang        = max(1, (int)($_GET['trang_so'] ?? 1));
 $moi_trang    = 15;
