@@ -125,3 +125,96 @@ function moCapNhatThongTin(event) {
     if (event) event.preventDefault();
     window.location.href = 'CuaHang/TrangBanHang/taiKhoan/capNhat.php';
 }
+//==========================================================gợi ý tìm kiếm==========================================================
+// ========================================================
+// CHỨC NĂNG: THANH TÌM KIẾM THÔNG MINH (Không dùng JSON)
+// ========================================================
+
+function timKiemNhanh(tuKhoa) {
+    let khungKetQua = document.getElementById('danh-sach-ket-qua');
+    
+    // Nếu xóa hết chữ thì ẩn khung đi
+    if (tuKhoa.trim() === '') {
+        khungKetQua.style.display = 'none';
+        khungKetQua.innerHTML = '';
+        return;
+    }
+    
+    // Gói dữ liệu để gửi đi
+    let duLieuGuiDi = new FormData();
+    duLieuGuiDi.append('tu_khoa', tuKhoa);
+
+    // CẬP NHẬT ĐƯỜNG DẪN MỚI TRỎ VÀO THƯ MỤC GIAO DIỆN
+    fetch(DUONG_DAN_GOC_JS + 'CuaHang/TrangBanHang/GiaoDien/xuly_timkiem_nhanh.php', {
+        method: 'POST',
+        body: duLieuGuiDi
+    })
+    .then(phanHoi => phanHoi.text()) // Lấy dữ liệu dưới dạng text thuần (HTML)
+    .then(htmlMoi => {
+        if (htmlMoi.trim() !== '') {
+            // Thay thế nội dung HTML cũ bằng HTML mới và hiện khung lên
+            khungKetQua.innerHTML = htmlMoi;
+            khungKetQua.style.display = 'block';
+        }
+    })
+    .catch(loi => {
+        console.log('Đã xảy ra lỗi khi tìm kiếm:', loi);
+    });
+}
+
+// Chức năng phụ: Click ra ngoài vùng tìm kiếm thì tự động ẩn danh sách
+document.addEventListener('click', function(suKien) {
+    let khungTimKiem = document.getElementById('khung-tim-kiem');
+    let khungKetQua = document.getElementById('danh-sach-ket-qua');
+    
+    // Nếu click không nằm trong khung tìm kiếm
+    if (khungTimKiem && !khungTimKiem.contains(suKien.target)) {
+        if (khungKetQua) khungKetQua.style.display = 'none';
+    }
+}); 
+// =========================================================chức năng sách yêu thích ==========================================================
+// ========================================================
+// CHỨC NĂNG: CẬP NHẬT TRẠNG THÁI YÊU THÍCH (PDO + PHP THUẦN)
+// ========================================================
+
+function thayDoiYeuThich(su_kien, nut_bam) {
+    if (su_kien) {
+        su_kien.stopPropagation();
+        su_kien.preventDefault();
+    }
+
+    let the_sach = nut_bam.closest('.book-card');
+    if (!the_sach) return;
+    
+    let ma_sach = the_sach.dataset.id;
+    let bieu_tuong_trai_tim = nut_bam.querySelector('i');
+
+    let du_lieu_gui_di = new FormData();
+    du_lieu_gui_di.append('ma_sach', ma_sach);
+
+    // CẬP NHẬT ĐƯỜNG DẪN MỚI TẠI ĐÂY
+    fetch(DUONG_DAN_GOC_JS + 'CuaHang/TrangBanHang/GiaoDien/xuly_yeuthich.php', {
+        method: 'POST',
+        body: du_lieu_gui_di
+    })
+    .then(phan_hoi => phan_hoi.text())
+    .then(ket_qua_tra_ve => {
+        let trang_thai = ket_qua_tra_ve.trim();
+        
+        if (trang_thai === 'CHUA_DANG_NHAP') {
+            alert('Bạn vui lòng đăng nhập để sử dụng tính năng yêu thích!');
+            if (typeof openLogin === "function") openLogin();
+        } 
+        else if (trang_thai === 'DA_THEM') {
+            bieu_tuong_trai_tim.className = 'fas fa-heart';
+            bieu_tuong_trai_tim.style.color = '#ef4444'; // Hiện màu đỏ
+        } 
+        else if (trang_thai === 'DA_XOA') {
+            bieu_tuong_trai_tim.className = 'far fa-heart';
+            bieu_tuong_trai_tim.style.color = ''; // Trở về mặc định
+        }
+    })
+    .catch(loi => {
+        console.error('Lỗi khi cập nhật danh sách yêu thích:', loi);
+    });
+}

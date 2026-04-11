@@ -303,7 +303,7 @@
       // Gán src iframe → PHP layDanhGia.php render HTML danh sách review
       iframeDG.setAttribute(
         'src',
-        'CuaHang/TrangBanHang/ChiTietSach/layDanhGia.php?maSach=' + encodeURIComponent(sachHienTai.maSach)
+        DUONG_DAN_GOC_JS +'CuaHang/TrangBanHang/ChiTietSach/layDanhGia.php?maSach=' + encodeURIComponent(sachHienTai.maSach)
       );
       panelDanhGia.style.display = '';
     }
