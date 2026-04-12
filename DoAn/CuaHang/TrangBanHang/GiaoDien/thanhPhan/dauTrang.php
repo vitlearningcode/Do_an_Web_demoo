@@ -15,6 +15,7 @@
             </marquee>
             <div class="top-bar-links">
                 <a href="javascript:void(0)" onclick="moTraCuuDonHang()">
+                    <!-- fas fa-box-open: Class của thư viện FontAwesome (Giữ nguyên tiếng Anh) -->
                     <i class="fas fa-box-open" style="margin-right:4px;"></i>Theo dõi đơn hàng
                 </a>
                 <a href="javascript:void(0)" onclick="moHoTro()">
@@ -31,6 +32,7 @@
                 <!-- Logo -->
                 <div class="logo">
                     <div class="logo-icon">
+                        <!-- fas fa-book-open: Class của thư viện FontAwesome -->
                         <i class="fas fa-book-open"></i>
                     </div>
                     <div class="logo-text">
@@ -43,6 +45,7 @@
                 <div class="search-box" id="khung-tim-kiem" style="position: relative;">
                     <input type="text" id="o-nhap-tu-khoa" placeholder="Tìm kiếm tựa sách, tác giả..." onkeyup="timKiemNhanh(this.value)" autocomplete="off">
                     <button>
+                        <!-- fas fa-search: Class của thư viện FontAwesome -->
                         <i class="fas fa-search"></i>
                     </button>
                     <div id="danh-sach-ket-qua" class="khung-goi-y-tim-kiem" style="display: none;"></div>
@@ -54,6 +57,7 @@
                     <div class="user-dropdown-container">
                         <button class="action-btn profile-ring-btn" id="btn-user-profile" onclick="toggleUserMenu(event)">
                             <div class="profile-avatar">
+                                <!-- fas fa-user: Class của thư viện FontAwesome -->
                                 <i class="fas fa-user"></i>
                             </div>
                             <span><?= htmlspecialchars($_SESSION['ten_nguoi_dung'] ?? 'Tài khoản') ?></span>
@@ -93,6 +97,7 @@
                     <!-- Nút giỏ hàng -->
                     <button class="action-btn" id="btn-cart">
                         <div class="cart-icon-wrapper">
+                            <!-- fas fa-shopping-cart: Class của thư viện FontAwesome -->
                             <i class="fas fa-shopping-cart"></i>
                             <span class="cart-count hidden" id="cart-count">0</span>
                         </div>
