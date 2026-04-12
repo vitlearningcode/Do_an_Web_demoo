@@ -165,7 +165,7 @@ if ($suaMaSach) {
                 <tr>
                     <td>
                         <?php if ($sach['anhBia']): ?>
-                            <img src="<?= htmlspecialchars($sach['anhBia']) ?>" alt="Bìa"
+                            <img src="<?= anhSach($sach['anhBia'] ?? null) ?>" alt="Bìa"
                                  style="width:40px;height:55px;object-fit:cover;border-radius:5px;border:1px solid #e2e8f0">
                         <?php else: ?>
                             <div style="width:40px;height:55px;background:#f1f5f9;border-radius:5px;display:flex;align-items:center;justify-content:center;color:#94a3b8;font-size:18px">
@@ -382,7 +382,7 @@ if ($suaMaSach) {
                     </div>
                     <?php if ($isEdit && !empty($sachSua['anhBia'])): ?>
                     <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
-                        <img src="<?= htmlspecialchars($sachSua['anhBia'] ?? '') ?>" alt="Ảnh hiện tại"
+                        <img src="<?= anhSach($sachSua['anhBia'] ?? null) ?>" alt="Ảnh hiện tại"
                              style="width:40px;height:55px;object-fit:cover;border-radius:4px;border:1px solid #e2e8f0">
                         <span style="font-size:12px;color:#64748b">Ảnh hiện tại (upload mới sẽ thay thế)</span>
                     </div>

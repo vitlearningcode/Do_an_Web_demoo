@@ -15,7 +15,7 @@
             <?php foreach ($gioHang as $sanPham): ?>
             <div class="summary-item">
                 <div class="s-img-wrapper">
-                    <img src="<?= htmlspecialchars($sanPham['hinhAnh']) ?>" alt="Cover">
+                    <img src="<?= anhSach($sanPham['hinhAnh'] ?? null) ?>" alt="Cover">
                     <span class="s-qty-badge"><?= $sanPham['soLuong'] ?></span>
                 </div>
                 <div class="s-info">

@@ -106,7 +106,7 @@ $baseUrl = 'index.php?trang=khuyenMai';
         <div style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.06)">
             <!-- Preview ảnh -->
             <div style="height:140px;background:#f1f5f9;overflow:hidden;position:relative">
-                <img src="<?= htmlspecialchars($qc['hinhAnh']) ?>" alt="Banner"
+                <img src="<?= anhBanner($qc['hinhAnh'] ?? null) ?>" alt="Banner"
                      style="width:100%;height:100%;object-fit:cover">
                 <span style="position:absolute;top:8px;left:8px;background:<?= $qc['trangThai'] ? '#16a34a' : '#9ca3af' ?>;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:99px">
                     <?= $qc['trangThai'] ? '● Đang hiển thị' : '○ Đang ẩn' ?>

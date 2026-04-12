@@ -664,7 +664,7 @@ $giaHienTai = $sach ? ($sach['giaSau'] ?? $sach['giaBan']) : 0;
     $soReview   = (int)($sach['soReview'] ?? 0);
     $tongBan    = (int)($sach['tongBan'] ?? 0);
     $tonKho     = (int)($sach['soLuongTon'] ?? 0);
-    $hinhAnh    = !empty($sach['hinhAnh']) ? hienThiAn($sach['hinhAnh']) : 'https://placehold.co/300x400/eff6ff/2563eb?text=📚';
+    $hinhAnh    = anhSach($sach['hinhAnh'] ?? null);
 ?>
 
     <!-- ── Layout 2 cột: ảnh | thông tin ── -->

@@ -18,8 +18,8 @@
 function hienThiTheSach(array $sach, array $nhanHieu = [], string $customHtmlBottom = ''): string
 {
     // ── Dữ liệu cơ bản ──────────────────────────────────────────────────
-    $anh        = !empty($sach['hinhAnh'])  ? htmlspecialchars($sach['hinhAnh'], ENT_QUOTES)
-                                            : 'https://placehold.co/300x400/eff6ff/2563eb?text=📚';
+    // anhSach(): tự nhận biết link online (http/https) hoặc đường dẫn local (/DoAn/HinhAnh/sach/...)
+    $anh        = anhSach($sach['hinhAnh'] ?? null);
     $ten        = htmlspecialchars($sach['tenSach'] ?? '', ENT_QUOTES);
     $tacGia     = htmlspecialchars(!empty($sach['tacGia'])  ? $sach['tacGia']  : 'Đang cập nhật', ENT_QUOTES);
     $theLoai    = htmlspecialchars(!empty($sach['theLoai']) ? $sach['theLoai'] : '', ENT_QUOTES);

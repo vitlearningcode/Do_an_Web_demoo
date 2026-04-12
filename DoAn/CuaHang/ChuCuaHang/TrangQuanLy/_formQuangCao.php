@@ -20,7 +20,7 @@ $mauNens = [
         <label style="font-size:13px;font-weight:600">Hình ảnh banner <span style="color:#ef4444">*</span></label>
         <?php if (!empty($qcData['hinhAnh'])): ?>
         <div style="margin-bottom:8px">
-            <img src="<?= htmlspecialchars($qcData['hinhAnh']) ?>" alt="Ảnh hiện tại"
+            <img src="<?= anhBanner($qcData['hinhAnh'] ?? null) ?>" alt="Ảnh hiện tại"
                  style="width:100%;max-height:120px;object-fit:cover;border-radius:8px;border:1px solid #e2e8f0">
             <div style="font-size:12px;color:#64748b;margin-top:4px">Ảnh hiện tại — upload mới để thay thế</div>
         </div>

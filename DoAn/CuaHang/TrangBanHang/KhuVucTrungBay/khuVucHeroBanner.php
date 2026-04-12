@@ -12,7 +12,7 @@
         ?>
         <div class="hero-slide <?= htmlspecialchars($mauNen) ?> <?= $viTri === 0 ? 'active' : '' ?>">
             <div class="hero-slide-bg">
-                <img src="<?= htmlspecialchars($banner['hinhAnh']) ?>" alt="Banner">
+                <img src="<?= anhBanner($banner['hinhAnh'] ?? null) ?>" alt="Banner">
                 <div class="gradient-overlay"></div>
             </div>
             <div class="hero-content">

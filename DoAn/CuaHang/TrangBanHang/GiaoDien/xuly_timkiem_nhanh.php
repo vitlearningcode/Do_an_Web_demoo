@@ -43,7 +43,7 @@ if (isset($_POST['tu_khoa'])) {
             // Nếu có kết quả thì in ra HTML (Không dùng JSON)
             if (count($danhSachKetQua) > 0) {
                 foreach ($danhSachKetQua as $sach) {
-                    $anhHienThi = !empty($sach['hinhAnh']) ? htmlspecialchars($sach['hinhAnh']) : 'https://placehold.co/45x65/eff6ff/2563eb?text=Sách';
+                    $anhHienThi = layDuongDanAnh($sach['hinhAnh'] ?? null, 'https://placehold.co/45x65/eff6ff/2563eb?text=Sách');
                     $tenSach = htmlspecialchars($sach['tenSach']);
                     $tacGia = htmlspecialchars($sach['tacGia'] ?: 'Đang cập nhật');
                     $giaBan = number_format($sach['giaBan'], 0, ',', '.') . ' ₫';

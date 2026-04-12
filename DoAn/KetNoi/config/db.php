@@ -30,4 +30,7 @@ try {
 } catch (PDOException $e) {
     die("Kết nối DB thất bại: " . $e->getMessage());
 }
+
+// 4. [Global Helper] Nạp sẵn hàm xử lý ảnh để các trang có thể dùng (anhSach, anhBanner)
+require_once __DIR__ . '/../../PhuongThuc/layDuongDanAnh.php';
 ?>
