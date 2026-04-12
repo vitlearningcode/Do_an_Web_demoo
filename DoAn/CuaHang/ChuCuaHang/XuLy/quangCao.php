@@ -27,7 +27,7 @@ function xuLyUploadAnh(): string {
         $thuMuc  = __DIR__ . '/../../../HinhAnh/banner/';
         if (!is_dir($thuMuc)) mkdir($thuMuc, 0755, true);
         if (move_uploaded_file($file['tmp_name'], $thuMuc . $tenFile)) {
-            return '/DoAn/HinhAnh/banner/' . $tenFile;
+            return '/DoAn-Web/DoAn/HinhAnh/banner/' . $tenFile;
         }
     }
     return trim($_POST['hinhAnh_url'] ?? '');

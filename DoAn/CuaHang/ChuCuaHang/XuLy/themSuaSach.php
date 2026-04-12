@@ -46,7 +46,7 @@ if (!empty($_FILES['anhBia_file']['name']) && $_FILES['anhBia_file']['error'] ==
     if (!move_uploaded_file($file['tmp_name'], $thuMuc . $tenFileMoi)) {
         redirectSach('Không thể lưu file ảnh. Kiểm tra quyền ghi thư mục HinhAnh/sach/.', 'error');
     }
-    $anhDaUpload = '/DoAn/HinhAnh/sach/' . $tenFileMoi;
+    $anhDaUpload = '/DoAn-Web/DoAn/HinhAnh/sach/' . $tenFileMoi;
 }
 if ($anhDaUpload !== '') $urlAnh = $anhDaUpload;
 
