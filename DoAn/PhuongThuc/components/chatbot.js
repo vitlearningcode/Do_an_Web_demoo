@@ -4,9 +4,9 @@ class TroLyAo {
     this.dangMo = false;
     this.danhSachTinNhan = tuyChon.messages || [];
     this.dangGoPhim = false;
-    
+
     // Đưa 2 biến kiểm tra vào làm thuộc tính của class
-    this.daKiemTraHeThong = false; 
+    this.daKiemTraHeThong = false;
     this.heThongBinhThuong = false;
 
     this.thanhPhan = {
@@ -32,6 +32,8 @@ class TroLyAo {
   }
 
   khoiTao() {
+
+
     this.thanhPhan.khungChinh = document.getElementById("chatbot");
     this.thanhPhan.nutMo = document.getElementById("chatbot-toggle");
     this.thanhPhan.khuVucTinNhan = document.getElementById("chatbot-messages");
@@ -49,7 +51,7 @@ class TroLyAo {
   hienThongBaoChaoMung() {
     // 1. Kiểm tra xem bong bóng đã được hiển thị trong phiên này chưa
     if (sessionStorage.getItem("daHienChaoMungChatbot")) {
-        return; // Nếu có rồi thì thoát luôn, không hiển thị nữa
+      return; // Nếu có rồi thì thoát luôn, không hiển thị nữa
     }
 
     // 2. Nếu chưa có, đánh dấu vào bộ nhớ là đã hiển thị
@@ -59,17 +61,17 @@ class TroLyAo {
     const bubble = document.createElement("div");
     bubble.className = "chatbot-welcome-bubble";
     bubble.innerText = "Đạo hữu xin dừng bước, ví tiền của của đạo hữu có duyên với cửa hàng của chúng tôi !!!";
-    
+
     document.body.appendChild(bubble);
 
     // Sau 5 giây thì biến mất
     setTimeout(() => {
       bubble.classList.add("bubble-fade-out");
       setTimeout(() => {
-          if (bubble.parentNode) {
-              document.body.removeChild(bubble);
-          }
-      }, 500); 
+        if (bubble.parentNode) {
+          document.body.removeChild(bubble);
+        }
+      }, 500);
     }, 5000);
   }
   // ========================================================================================================
@@ -101,14 +103,14 @@ class TroLyAo {
     // Tự động nhận diện đường dẫn để không lỗi ở trang con
     const duongDanAPI = (typeof DUONG_DAN_GOC_JS !== 'undefined' ? DUONG_DAN_GOC_JS : '/DoAn-Web/DoAn/') + 'CuaHang/TrangBanHang/GiaoDien/xuly_chatbot.php';
     try {
-        const phanHoi = await fetch(duongDanAPI, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'ping' }) // Gửi lệnh ping
-        });
-        return phanHoi.ok;
+      const phanHoi = await fetch(duongDanAPI, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'ping' }) // Gửi lệnh ping
+      });
+      return phanHoi.ok;
     } catch (error) {
-        return false;
+      return false;
     }
   }
   // ============================================================================================================================
@@ -137,11 +139,11 @@ class TroLyAo {
       if (this.heThongBinhThuong) {
         // HỆ THỐNG SỐNG -> Mở khóa ô nhập liệu
         if (this.thanhPhan.oNhapLieu) {
-            this.thanhPhan.oNhapLieu.disabled = false;
-            this.thanhPhan.oNhapLieu.focus();
+          this.thanhPhan.oNhapLieu.disabled = false;
+          this.thanhPhan.oNhapLieu.focus();
         }
         if (this.thanhPhan.nutGui) this.thanhPhan.nutGui.disabled = false;
-        
+
         // (Tuỳ chọn) In câu chào
         this.themTinNhanVaoKhung("Mình có thể tư vấn sách gì cho bạn?", "bot");
       } else {
@@ -151,7 +153,7 @@ class TroLyAo {
     } else {
       // Những lần mở sau, nếu hệ thống sống thì chỉ cần focus con trỏ
       if (this.heThongBinhThuong && this.thanhPhan.oNhapLieu) {
-          this.thanhPhan.oNhapLieu.focus();
+        this.thanhPhan.oNhapLieu.focus();
       }
     }
   }
@@ -173,7 +175,7 @@ class TroLyAo {
     try {
       // Dùng đường dẫn linh hoạt để chạy được ở mọi trang
       const duongDanAPI = (typeof DUONG_DAN_GOC_JS !== 'undefined' ? DUONG_DAN_GOC_JS : '/DoAn-Web/DoAn/') + 'CuaHang/TrangBanHang/GiaoDien/xuly_chatbot.php';
-      
+
       const response = await fetch(duongDanAPI, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -186,8 +188,8 @@ class TroLyAo {
       this.anHieuUngGoPhim();
 
       if (data.error) {
-         this.themTinNhanVaoKhung("⚠️ Hệ thống báo: " + data.error, "bot");
-         return;
+        this.themTinNhanVaoKhung("⚠️ Hệ thống báo: " + data.error, "bot");
+        return;
       }
 
       const cauTraLoi = data.candidates[0]?.content?.parts[0]?.text || "Xin lỗi, tôi gặp chút trục trặc.";

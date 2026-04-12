@@ -83,6 +83,7 @@ $thongBaoSauDanhGia = $_GET['tb'] ?? '';
 <script src="../../../PhuongThuc/cart.js"></script>
 <script src="../../../PhuongThuc/components/xacNhanDangXuat.js"></script>
 <script src="../../../PhuongThuc/components/xacThuc.js"></script>
+<script src="<?= $duong_dan_goc ?>PhuongThuc/app.js"></script>
 
 <?php require_once 'scriptDonHang.php'; ?>
 
