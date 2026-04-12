@@ -47,37 +47,35 @@
     if (e.key === 'Escape' && overlay.classList.contains('active')) dongModal();
   });
 
-  // ── Gắn click cho tất cả .book-card ──────────────────────────────────
-  document.querySelectorAll('.book-card').forEach(function (card) {
-    card.addEventListener('click', function (e) {
+  // ── Gắn click cho nút "Xem Nhanh" (con mắt) trong từng .book-card ──────
+  // Click vào nút mắt → mở modal; click vào phần còn lại của card → điều hướng đến trang chi tiết (href)
+  document.querySelectorAll('.btn-quickview').forEach(function (nut) {
+    nut.addEventListener('click', function (e) {
+      e.stopPropagation(); // Ngăn event lan lên thẻ <a> cha
+      e.preventDefault();  // Ngăn link <a> điều hướng trang
 
-      // Bỏ qua: nút thêm giỏ, thêm nhanh, icon tim/mắt
-      if (
-        e.target.closest('.btn-add-to-cart') ||
-        e.target.closest('.btn-add-quick')   ||
-        e.target.closest('.btn-action-icon')
-      ) {
-        return;
-      }
+      // Tìm card cha chứa toàn bộ data-*
+      var card = nut.closest('.book-card');
+      if (!card) return;
 
       // Đọc toàn bộ dữ liệu từ data-* của card (PHP đã render sẵn)
       var chiTiet = {
-        maSach      : card.getAttribute('data-id')         || '',
-        tenSach     : card.getAttribute('data-name')       || 'Chưa có tên',
-        hinhAnh     : card.getAttribute('data-image')      || '',
-        giaHienTai  : card.getAttribute('data-price')      || '0',   // giá hiện tại (đã giảm hoặc gốc)
-        giaBan      : card.getAttribute('data-gia-ban')    || '0',   // giá gốc trước giảm
-        phanTramGiam: card.getAttribute('data-giam')       || '',    // % giảm, rỗng = không giảm
-        tacGia      : card.getAttribute('data-tac-gia')   || 'Đang cập nhật',
-        theLoai     : card.getAttribute('data-the-loai')  || '',
-        diemTB      : card.getAttribute('data-diem')       || '0',
-        soReview    : card.getAttribute('data-reviews')   || '0',
-        tongBan     : card.getAttribute('data-da-ban')     || '0',
-        moTa        : card.getAttribute('data-mo-ta')      || '',
-        nhaXuatBan  : card.getAttribute('data-nxb')        || '',
-        namSX       : card.getAttribute('data-nam-sx')     || '',
-        hinhThucBia : card.getAttribute('data-bia')        || '',
-        tonKho      : card.getAttribute('data-ton-kho')    || '',
+        maSach      : card.getAttribute('data-id')        || '',
+        tenSach     : card.getAttribute('data-name')      || 'Chưa có tên',
+        hinhAnh     : card.getAttribute('data-image')     || '',
+        giaHienTai  : card.getAttribute('data-price')     || '0',   // giá hiện tại (đã giảm hoặc gốc)
+        giaBan      : card.getAttribute('data-gia-ban')   || '0',   // giá gốc trước giảm
+        phanTramGiam: card.getAttribute('data-giam')      || '',    // % giảm, rỗng = không giảm
+        tacGia      : card.getAttribute('data-tac-gia')  || 'Đang cập nhật',
+        theLoai     : card.getAttribute('data-the-loai') || '',
+        diemTB      : card.getAttribute('data-diem')      || '0',
+        soReview    : card.getAttribute('data-reviews')  || '0',
+        tongBan     : card.getAttribute('data-da-ban')    || '0',
+        moTa        : card.getAttribute('data-mo-ta')     || '',
+        nhaXuatBan  : card.getAttribute('data-nxb')       || '',
+        namSX       : card.getAttribute('data-nam-sx')    || '',
+        hinhThucBia : card.getAttribute('data-bia')       || '',
+        tonKho      : card.getAttribute('data-ton-kho')   || '',
       };
 
       // Nhãn từ card (BÁN CHẠY / FLASH SALE / MỚI…)

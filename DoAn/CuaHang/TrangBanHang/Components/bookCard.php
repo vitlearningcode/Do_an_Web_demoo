@@ -78,24 +78,28 @@ function hienThiTheSach(array $sach, array $nhanHieu = [], string $customHtmlBot
 
     $danhMucHtml = $theLoai ? "<span class=\"book-category\">{$theLoai}</span>" : '';
 
+    // URL trang chi tiết sách (điều hướng server-side, không dùng JS)
+    $urlChiTiet = 'CuaHang/TrangBanHang/ChiTietSach/layChiTietSach.php?maSach=' . urlencode($sach['maSach'] ?? '');
+
     return "
-    <div class=\"book-card\"
-         data-id=\"{$maSach}\"
-         data-name=\"{$ten}\"
-         data-price=\"{$giaHienTai}\"
-         data-gia-ban=\"{$giaBan}\"
-         data-image=\"{$anh}\"
-         data-giam=\"{$dataGiam}\"
-         data-tac-gia=\"{$dataTacGia}\"
-         data-the-loai=\"{$dataTheLoai}\"
-         data-diem=\"{$dataDiem}\"
-         data-reviews=\"{$dataReviews}\"
-         data-da-ban=\"{$dataDaBan}\"
-         data-mo-ta=\"{$dataMoTa}\"
-         data-nxb=\"{$dataNXB}\"
-         data-nam-sx=\"{$dataNamSX}\"
-         data-bia=\"{$dataBia}\"
-         data-ton-kho=\"{$dataTonKho}\">
+    <a class=\"book-card\"
+       href=\"{$urlChiTiet}\"
+       data-id=\"{$maSach}\"
+       data-name=\"{$ten}\"
+       data-price=\"{$giaHienTai}\"
+       data-gia-ban=\"{$giaBan}\"
+       data-image=\"{$anh}\"
+       data-giam=\"{$dataGiam}\"
+       data-tac-gia=\"{$dataTacGia}\"
+       data-the-loai=\"{$dataTheLoai}\"
+       data-diem=\"{$dataDiem}\"
+       data-reviews=\"{$dataReviews}\"
+       data-da-ban=\"{$dataDaBan}\"
+       data-mo-ta=\"{$dataMoTa}\"
+       data-nxb=\"{$dataNXB}\"
+       data-nam-sx=\"{$dataNamSX}\"
+       data-bia=\"{$dataBia}\"
+       data-ton-kho=\"{$dataTonKho}\">
 
     <div class=\"book-image\">
         " . ($nhanHtml ? "<div class=\"book-badges\">{$nhanHtml}</div>" : '') . "
@@ -135,5 +139,5 @@ function hienThiTheSach(array $sach, array $nhanHieu = [], string $customHtmlBot
         </div>
         {$customHtmlBottom}
     </div>
-</div>";
+</a>";
 }

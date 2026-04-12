@@ -69,6 +69,12 @@
   transition: box-shadow 0.3s ease, border-color 0.3s ease, transform 0.25s ease;
   isolation: isolate;
 }
+/* Reset style mặc định của thẻ <a> khi dùng làm book-card */
+a.book-card {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+}
 .book-card:hover {
   box-shadow: 0 20px 40px rgba(0,0,0,0.13);  /* hover:shadow-xl */
   border-color: #bfdbfe;                      /* hover:border-blue-200 */
