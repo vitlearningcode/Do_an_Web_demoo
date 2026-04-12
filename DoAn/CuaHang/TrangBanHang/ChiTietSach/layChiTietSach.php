@@ -216,20 +216,29 @@ $giaHienTai = $sach ? ($sach['giaSau'] ?? $sach['giaBan']) : 0;
         padding: 0 24px;
     }
 
-    /* ── Card chính: 2 cột ── */
-    .ct-main-card {
+    /* ── Layout toàn trang: 2 cột ── */
+    .ct-layout-wrap {
+        display: flex;
+        gap: 24px;
+        align-items: flex-start;
+    }
+
+    /* Cột trái — ảnh bìa — sticky độc lập (không có overflow parent) */
+    .ct-col-left {
+        flex: 0 0 300px;
+        position: sticky;
+        top: 180px;          /* header ~160px + 20px khoảng cách */
+        align-self: flex-start;
+    }
+
+    /* Cột phải — thông tin — scroll bình thường */
+    .ct-col-right {
+        flex: 1;
         background: #ffffff;
         border-radius: 20px;
         box-shadow: 0 2px 24px rgba(0,0,0,.07);
         padding: 36px;
-        display: grid;
-        grid-template-columns: 300px 1fr;
-        gap: 48px;
-        align-items: start;
     }
-
-    /* ── Cột trái: ảnh bìa ── */
-    .ct-left { position: sticky; top: 90px; }
 
     .ct-cover-wrap {
         position: relative;
@@ -596,13 +605,17 @@ $giaHienTai = $sach ? ($sach['giaSau'] ?? $sach['giaBan']) : 0;
 
     /* ── Responsive ── */
     @media (max-width: 768px) {
-        .ct-main-card {
-            grid-template-columns: 1fr;
-            gap: 28px;
-            padding: 24px;
+        .ct-layout-wrap {
+            flex-direction: column;
+            gap: 20px;
         }
-        .ct-left { position: static; }
-        .ct-cover-wrap { max-width: 220px; margin: 0 auto; }
+        .ct-col-left {
+            flex: none;
+            position: static; /* disable sticky on mobile */
+            width: 100%;
+        }
+        .ct-cover-wrap { max-width: 200px; margin: 0 auto; }
+        .ct-col-right { padding: 20px; }
         .ct-ten-sach { font-size: 1.3rem; }
         .ct-gia-moi { font-size: 1.5rem; }
         .ct-mua-wrap { gap: 10px; }
@@ -654,21 +667,21 @@ $giaHienTai = $sach ? ($sach['giaSau'] ?? $sach['giaBan']) : 0;
     $hinhAnh    = !empty($sach['hinhAnh']) ? hienThiAn($sach['hinhAnh']) : 'https://placehold.co/300x400/eff6ff/2563eb?text=📚';
 ?>
 
-    <!-- ── Main card: ảnh + thông tin ── -->
-    <div class="ct-main-card">
+    <!-- ── Layout 2 cột: ảnh | thông tin ── -->
+    <div class="ct-layout-wrap">
 
-        <!-- Cột trái: ảnh bìa -->
-        <div class="ct-left">
+        <!-- Cột trái: ảnh bìa (sticky riêng) -->
+        <div class="ct-col-left">
             <div class="ct-cover-wrap">
                 <img src="<?= $hinhAnh ?>" alt="<?= hienThiAn($sach['tenSach']) ?>" id="ct-anh-bia">
                 <?php if ($giam > 0): ?>
                 <div class="ct-badge-km">-<?= $giam ?>%</div>
                 <?php endif; ?>
             </div>
-        </div>
+        </div><!-- /ct-col-left -->
 
         <!-- Cột phải: thông tin -->
-        <div class="ct-right">
+        <div class="ct-col-right">
 
             <!-- Thể loại chip -->
             <?php if (!empty($sach['theLoai'])): ?>
@@ -791,8 +804,8 @@ $giaHienTai = $sach ? ($sach['giaSau'] ?? $sach['giaBan']) : 0;
                 </div>
             </div>
 
-        </div><!-- /ct-right -->
-    </div><!-- /ct-main-card -->
+        </div><!-- /ct-col-right -->
+    </div><!-- /ct-layout-wrap -->
 
     <!-- ── Mô tả sách ── -->
     <?php if (!empty($sach['moTa'])): ?>
