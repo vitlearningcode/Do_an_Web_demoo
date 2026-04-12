@@ -24,6 +24,7 @@ $cacTrang = [
     'sachVaTonKho' => 'TrangQuanLy/sachVaTonKho.php',
     'nhapHang'     => 'TrangQuanLy/nhapHang.php',
     'khuyenMai'    => 'TrangQuanLy/khuyenMai.php',
+    'nhaCungCap'   => 'TrangQuanLy/nhaCungCap.php',
     'taiKhoan'     => 'TrangQuanLy/taiKhoan.php',
 ];
 

@@ -16,14 +16,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') redirectQC('Yêu cầu không hợp l
 $hanhDong = trim($_POST['hanh_dong'] ?? '');
 $maQC     = (int)($_POST['maQC'] ?? 0);
 
-// ── Xử lý upload ảnh ──────────────────────────────────────────────────────
-function xuLyUploadAnh(): string {
+// ── Xử lý upload ảnh ─────────────────────────────────────────────────────
+// Tên file: b{soTuDong}_{timestamp}.{ext}
+// soTuDong = AUTO_INCREMENT mới nhất (mode 'them') hoặc maQC đã có (mode 'sua')
+function xuLyUploadAnh(int $soTuDong = 0): string {
     if (!empty($_FILES['hinhAnh_file']['name']) && $_FILES['hinhAnh_file']['error'] === UPLOAD_ERR_OK) {
         $file       = $_FILES['hinhAnh_file'];
         $ext        = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         $extChophep = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
         if (!in_array($ext, $extChophep)) return '';
-        $tenFile = 'banner_' . time() . '.' . $ext;
+        // b{soTuDong}_{timestamp}.{ext}  —  VD: b3_1715000000.webp
+        $tenFile = 'b' . ($soTuDong > 0 ? $soTuDong : time()) . '_' . time() . '.' . $ext;
         $thuMuc  = __DIR__ . '/../../../HinhAnh/banner/';
         if (!is_dir($thuMuc)) mkdir($thuMuc, 0755, true);
         if (move_uploaded_file($file['tmp_name'], $thuMuc . $tenFile)) {
@@ -33,28 +36,39 @@ function xuLyUploadAnh(): string {
     return trim($_POST['hinhAnh_url'] ?? '');
 }
 
+
 try {
     switch ($hanhDong) {
 
         case 'them':
-            $hinhAnh = xuLyUploadAnh();
-            $nhan    = trim($_POST['nhan']    ?? '');
-            $tieuDe  = trim($_POST['tieuDe']  ?? '');
-            $moTa    = trim($_POST['moTa']    ?? '');
-            $chuNut  = trim($_POST['chuNut']  ?? 'Xem thêm');
-            $mauNen  = trim($_POST['mauNen']  ?? 'blue');
-            if (empty($hinhAnh) || empty($nhan) || empty($tieuDe)) {
-                redirectQC('Vui lòng nhập đầy đủ hình ảnh, nhãn và tiêu đề.', 'error');
+            $nhan   = trim($_POST['nhan']   ?? '');
+            $tieuDe = trim($_POST['tieuDe'] ?? '');
+            $moTa   = trim($_POST['moTa']   ?? '');
+            $chuNut = trim($_POST['chuNut'] ?? 'Xem thêm');
+            $mauNen = trim($_POST['mauNen'] ?? 'blue');
+            if (empty($nhan) || empty($tieuDe)) {
+                redirectQC('Vui lòng nhập đầy đủ nhãn và tiêu đề.', 'error');
             }
+            // Chèn hàng trước (hinhAnh tạm = ''), lấy maQC → đặt tên ảnh đúng chuẩn
             $pdo->prepare("
                 INSERT INTO QuangCao (hinhAnh, nhan, tieuDe, moTa, chuNut, mauNen, trangThai)
-                VALUES (?, ?, ?, ?, ?, ?, 1)
-            ")->execute([$hinhAnh, $nhan, $tieuDe, $moTa, $chuNut, $mauNen]);
-            redirectQC('Đã thêm banner quảng cáo thành công.');
+                VALUES ('', ?, ?, ?, ?, ?, 1)
+            ")->execute([$nhan, $tieuDe, $moTa, $chuNut, $mauNen]);
+            $maQCMoi = (int)$pdo->lastInsertId();
+            // Tên file: b{maQC}_{timestamp}.{ext}
+            $hinhAnh = xuLyUploadAnh($maQCMoi);
+            if (empty($hinhAnh)) {
+                // Nếu không có ảnh → xóa hàng vừa thêm để tránh record rác
+                $pdo->prepare("DELETE FROM QuangCao WHERE maQC = ?")->execute([$maQCMoi]);
+                redirectQC('Vui lòng cung cấp hình ảnh (upload file hoặc nhập URL).', 'error');
+            }
+            $pdo->prepare("UPDATE QuangCao SET hinhAnh=? WHERE maQC=?")->execute([$hinhAnh, $maQCMoi]);
+            redirectQC("Đã thêm banner #$maQCMoi thành công.");
 
         case 'sua':
             if ($maQC <= 0) redirectQC('Thiếu mã quảng cáo.', 'error');
-            $hinhAnhMoi = xuLyUploadAnh();
+            // Truyền maQC hiện tại → tên file: b{maQC}_{timestamp}.{ext}
+            $hinhAnhMoi = xuLyUploadAnh($maQC);
             $nhan    = trim($_POST['nhan']   ?? '');
             $tieuDe  = trim($_POST['tieuDe'] ?? '');
             $moTa    = trim($_POST['moTa']   ?? '');

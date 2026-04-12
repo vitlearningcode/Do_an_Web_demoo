@@ -18,9 +18,24 @@ try {
         ORDER BY km.ngayBatDau DESC
     ")->fetchAll(PDO::FETCH_ASSOC);
 
+    // Lấy sách + tồn kho + tổng đã bán để phục vụ gợi ý Flash Sale
     $dsSach = $pdo->query("
-        SELECT maSach, tenSach FROM Sach WHERE trangThai = 'DangKD' ORDER BY tenSach
+        SELECT s.maSach, s.tenSach, s.giaBan, s.soLuongTon,
+               COALESCE(SUM(ct.soLuong), 0) AS tong_ban
+        FROM Sach s
+        LEFT JOIN ChiTietDH ct ON s.maSach = ct.maSach
+        WHERE s.trangThai = 'DangKD'
+        GROUP BY s.maSach
+        ORDER BY s.tenSach
     ")->fetchAll(PDO::FETCH_ASSOC);
+
+    // Gợi ý: sách bán ít (tong_ban < 10) và còn tồn (soLuongTon > 0)
+    $goiYSach = array_filter($dsSach, fn($s) => (int)$s['tong_ban'] < 10 && (int)$s['soLuongTon'] > 0);
+    // map maSach => soLuongTon để JS dùng
+    $bangTonKho = [];
+    foreach ($dsSach as $s) {
+        $bangTonKho[$s['maSach']] = (int)$s['soLuongTon'];
+    }
 
     // Quảng cáo / banner
     $dsQC = $pdo->query("
@@ -273,22 +288,37 @@ $baseUrl = 'index.php?trang=khuyenMai';
 
 <!-- ═══ POPUP: TẠO CHIẾN DỊCH MỚI ═══ -->
 <?php if (isset($_GET['tao'])): ?>
+<?php
+// PHP truyền bangTonKho vào JS dưới dạng JSON
+$bangTonKhoJson = json_encode($bangTonKho, JSON_UNESCAPED_UNICODE);
+$goiYJson       = json_encode(
+    array_values(array_map(fn($s) => [
+        'maSach'   => $s['maSach'],
+        'tenSach'  => $s['tenSach'],
+        'tong_ban' => (int)$s['tong_ban'],
+        'ton'      => (int)$s['soLuongTon'],
+    ], $goiYSach)),
+    JSON_UNESCAPED_UNICODE
+);
+?>
 <div style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto">
-<div style="background:#fff;border-radius:16px;width:100%;max-width:640px;box-shadow:0 20px 60px rgba(0,0,0,0.2);max-height:90vh;overflow-y:auto">
-    <div style="padding:20px 24px;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff">
-        <h3 style="font-size:16px;font-weight:700">Tạo chiến dịch khuyến mãi</h3>
+<div style="background:#fff;border-radius:16px;width:100%;max-width:680px;box-shadow:0 20px 60px rgba(0,0,0,0.2);max-height:90vh;overflow-y:auto">
+    <div style="padding:20px 24px;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#fff;z-index:1">
+        <h3 style="font-size:16px;font-weight:700"><i class="fas fa-fire" style="color:#ef4444;margin-right:8px"></i>Tạo chiến dịch Flash Sale</h3>
         <a href="<?= $baseUrl ?>" style="color:#94a3b8;font-size:20px;text-decoration:none"><i class="fas fa-times"></i></a>
     </div>
-    <form method="POST" action="XuLy/taoKhuyenMai.php" style="padding:24px">
-        <div class="adm-form-group" style="margin-bottom:12px">
-            <label style="font-size:13px;font-weight:600">Mã chiến dịch <span style="color:#ef4444">*</span></label>
-            <input class="adm-input" type="text" name="maKM" placeholder="VD: SALE_HE_2026" required>
+    <form method="POST" action="XuLy/taoKhuyenMai.php" style="padding:24px" id="form-tao-km">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+            <div class="adm-form-group">
+                <label style="font-size:13px;font-weight:600">Mã chiến dịch <span style="color:#ef4444">*</span></label>
+                <input class="adm-input" type="text" name="maKM" placeholder="VD: SALE_HE_2026" required>
+            </div>
+            <div class="adm-form-group">
+                <label style="font-size:13px;font-weight:600">Tên chiến dịch <span style="color:#ef4444">*</span></label>
+                <input class="adm-input" type="text" name="tenKM" placeholder="Flash Sale Mùa Hè..." required>
+            </div>
         </div>
-        <div class="adm-form-group" style="margin-bottom:12px">
-            <label style="font-size:13px;font-weight:600">Tên chiến dịch <span style="color:#ef4444">*</span></label>
-            <input class="adm-input" type="text" name="tenKM" placeholder="Flash Sale Mùa Hè..." required>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
             <div class="adm-form-group">
                 <label style="font-size:13px;font-weight:600">Ngày bắt đầu <span style="color:#ef4444">*</span></label>
                 <input class="adm-input" type="datetime-local" name="ngayBatDau" required>
@@ -299,20 +329,46 @@ $baseUrl = 'index.php?trang=khuyenMai';
             </div>
         </div>
 
+        <?php if (!empty($goiYSach)): ?>
+        <!-- Gợi ý sách bán chậm -->
+        <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:12px 14px;margin-bottom:14px">
+            <p style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:8px">
+                <i class="fas fa-lightbulb" style="color:#f59e0b"></i>
+                Gợi ý — Sách đang bán chậm (tổng bán &lt; 10)</p>
+            <div style="display:flex;flex-wrap:wrap;gap:6px" id="khu-goi-y">
+                <?php foreach ($goiYSach as $s): ?>
+                <button type="button"
+                    class="nut-goi-y"
+                    data-masach="<?= htmlspecialchars($s['maSach']) ?>"
+                    data-ten="<?= htmlspecialchars($s['tenSach']) ?>"
+                    data-ton="<?= (int)$s['soLuongTon'] ?>"
+                    style="padding:5px 10px;border-radius:99px;border:1px solid #f59e0b;background:#fef3c7;color:#78350f;font-size:12px;cursor:pointer;transition:background .2s">
+                    <i class="fas fa-plus-circle"></i>
+                    <?= htmlspecialchars($s['tenSach']) ?>
+                    <span style="opacity:.6">(tồn: <?= (int)$s['soLuongTon'] ?>)</span>
+                </button>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <p style="font-weight:600;font-size:14px;margin-bottom:10px">Sách áp dụng:</p>
-        <div style="background:#f8fafc;border-radius:10px;padding:14px;margin-bottom:16px">
+        <div style="background:#f8fafc;border-radius:10px;padding:14px;margin-bottom:16px" id="khu-sach-km">
             <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-bottom:8px;font-size:12px;font-weight:600;color:#64748b">
                 <span>Sách</span><span>Giảm (%)</span><span>Số lượng KM</span>
             </div>
             <?php
-            // Các mức giảm hợp lệ (theo CHECK constraint trong DB)
             $mucGiam = [10, 22, 33];
             for ($i = 0; $i < 5; $i++): ?>
-            <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-bottom:8px">
-                <select class="adm-input" name="maSach[]" style="padding:8px">
+            <div class="dong-km" style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-bottom:8px;align-items:center">
+                <select class="adm-input km-chon-sach" name="maSach[]" style="padding:8px">
                     <option value="">-- Chọn sách --</option>
                     <?php foreach ($dsSach as $s): ?>
-                        <option value="<?= $s['maSach'] ?>"><?= htmlspecialchars($s['tenSach']) ?></option>
+                        <option value="<?= htmlspecialchars($s['maSach']) ?>"
+                                data-ton="<?= (int)$s['soLuongTon'] ?>">
+                            <?= htmlspecialchars($s['tenSach']) ?>
+                            (còn <?= (int)$s['soLuongTon'] ?>)
+                        </option>
                     <?php endforeach; ?>
                 </select>
                 <select class="adm-input" name="phanTramGiam[]" style="padding:8px">
@@ -320,7 +376,7 @@ $baseUrl = 'index.php?trang=khuyenMai';
                         <option value="<?= $m ?>"><?= $m ?>%</option>
                     <?php endforeach; ?>
                 </select>
-                <input class="adm-input" type="number" name="soLuongKM[]" min="1" placeholder="SL" style="padding:8px" value="50">
+                <input class="adm-input km-sl" type="number" name="soLuongKM[]" min="1" max="9999" placeholder="SL" style="padding:8px" value="50">
             </div>
             <?php endfor; ?>
         </div>
@@ -332,5 +388,63 @@ $baseUrl = 'index.php?trang=khuyenMai';
     </form>
 </div>
 </div>
+
+<script>
+(function() {
+    var bangTon = <?= $bangTonKhoJson ?>;
+    var goiY    = <?= $goiYJson ?>;
+
+    // Khi chọn sách → tự cập nhật max số lượng KM bằng soLuongTon
+    document.querySelectorAll('.km-chon-sach').forEach(function(sel) {
+        sel.addEventListener('change', function() {
+            var dong  = this.closest('.dong-km');
+            var inpSL = dong.querySelector('.km-sl');
+            var maSach = this.value;
+            if (maSach && bangTon[maSach] !== undefined) {
+                var ton = bangTon[maSach];
+                inpSL.max   = ton;
+                inpSL.title = 'Tối đa ' + ton + ' (theo tồn kho)';
+                if (parseInt(inpSL.value) > ton) inpSL.value = ton;
+                // Hiện nhãn tồn kho cạnh input
+                var nhan = dong.querySelector('.nhan-ton');
+                if (!nhan) {
+                    nhan = document.createElement('small');
+                    nhan.className = 'nhan-ton';
+                    nhan.style.cssText = 'grid-column:1/-1;font-size:11px;color:#64748b;margin-top:-4px';
+                    dong.appendChild(nhan);
+                }
+                nhan.textContent = 'Tồn kho: ' + ton + ' cuốn — số lượng KM tối đa ' + ton;
+            } else {
+                inpSL.max   = 9999;
+                inpSL.title = '';
+                var nhan = dong.querySelector('.nhan-ton');
+                if (nhan) nhan.remove();
+            }
+        });
+    });
+
+    // Click chip gợi ý → điền vào dòng trống đầu tiên
+    document.querySelectorAll('.nut-goi-y').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var maSach = this.dataset.masach;
+            var ton    = parseInt(this.dataset.ton);
+            // Tìm dòng chưa chọn sách
+            var dongTrong = null;
+            document.querySelectorAll('.km-chon-sach').forEach(function(sel) {
+                if (!dongTrong && sel.value === '') dongTrong = sel;
+            });
+            if (!dongTrong) { alert('Đã đủ 5 dòng sách, vui lòng xóa bớt một dòng.'); return; }
+            dongTrong.value = maSach;
+            // Trigger change để cập nhật max
+            dongTrong.dispatchEvent(new Event('change'));
+            // Highlight chip đã chọn
+            this.style.background  = '#d1fae5';
+            this.style.borderColor = '#34d399';
+            this.style.color       = '#065f46';
+            this.disabled = true;
+        });
+    });
+})();
+</script>
 <?php endif; ?>
 <?php endif; /* endif tab khuyenmai vs quangcao */ ?>

@@ -340,30 +340,50 @@ if ($suaMaSach) {
                 </select>
             </div>
             <div class="adm-form-group full">
-                <label>Tác giả (giữ Ctrl để chọn nhiều)</label>
-                <select class="adm-input" name="maTG[]" multiple style="height:100px">
+                <label style="font-weight:600;margin-bottom:6px;display:block">
+                    Tác giả
+                    <span style="font-size:11px;font-weight:400;color:#94a3b8;margin-left:6px">✓ chọn một hoặc nhiều</span>
+                </label>
+                <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;display:flex;flex-wrap:wrap;gap:8px;max-height:140px;overflow-y:auto;">
                     <?php
-                    $cacMaTGSua = $sachSua ? explode(',', $sachSua['maTG_list'] ?? '') : [];
+                    $cacMaTGSua = $sachSua ? array_filter(explode(',', $sachSua['maTG_list'] ?? '')) : [];
                     foreach ($dsTacGia as $tg): ?>
-                        <option value="<?= $tg['maTG'] ?>"
-                            <?= in_array($tg['maTG'], $cacMaTGSua) ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($tg['tenTG']) ?>
-                        </option>
+                    <label style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:13px;white-space:nowrap;transition:background .15s">
+                        <input type="checkbox" name="maTG[]" value="<?= $tg['maTG'] ?>"
+                            <?= in_array((string)$tg['maTG'], array_map('strval', $cacMaTGSua)) ? 'checked' : '' ?>
+                            style="accent-color:#2563eb">
+                        <?= htmlspecialchars($tg['tenTG']) ?>
+                    </label>
                     <?php endforeach; ?>
-                </select>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+                    <input class="adm-input" type="text" name="tenTG_moi" placeholder="+ Thêm tác giả mới..."
+                           style="flex:1;font-size:13px;padding:8px 12px">
+                    <span style="font-size:11px;color:#94a3b8;white-space:nowrap">Nhập tên → lưu tự động vào DB</span>
+                </div>
             </div>
             <div class="adm-form-group full">
-                <label>Thể loại (giữ Ctrl để chọn nhiều)</label>
-                <select class="adm-input" name="maTL[]" multiple style="height:100px">
+                <label style="font-weight:600;margin-bottom:6px;display:block">
+                    Thể loại
+                    <span style="font-size:11px;font-weight:400;color:#94a3b8;margin-left:6px">✓ chọn một hoặc nhiều</span>
+                </label>
+                <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;display:flex;flex-wrap:wrap;gap:8px;max-height:140px;overflow-y:auto;">
                     <?php
-                    $cacMaTLSua = $sachSua ? explode(',', $sachSua['maTL_list'] ?? '') : [];
+                    $cacMaTLSua = $sachSua ? array_filter(explode(',', $sachSua['maTL_list'] ?? '')) : [];
                     foreach ($dsTheLoai as $tl): ?>
-                        <option value="<?= $tl['maTL'] ?>"
-                            <?= in_array($tl['maTL'], $cacMaTLSua) ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($tl['tenTL']) ?>
-                        </option>
+                    <label style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:13px;white-space:nowrap;transition:background .15s">
+                        <input type="checkbox" name="maTL[]" value="<?= $tl['maTL'] ?>"
+                            <?= in_array((string)$tl['maTL'], array_map('strval', $cacMaTLSua)) ? 'checked' : '' ?>
+                            style="accent-color:#2563eb">
+                        <?= htmlspecialchars($tl['tenTL']) ?>
+                    </label>
                     <?php endforeach; ?>
-                </select>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+                    <input class="adm-input" type="text" name="tenTL_moi" placeholder="+ Thêm thể loại mới..."
+                           style="flex:1;font-size:13px;padding:8px 12px">
+                    <span style="font-size:11px;color:#94a3b8;white-space:nowrap">Nhập tên → lưu tự động vào DB</span>
+                </div>
             </div>
             <div class="adm-form-group full">
                 <label>Ảnh bìa</label>

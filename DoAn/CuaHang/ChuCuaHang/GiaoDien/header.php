@@ -14,6 +14,7 @@ $banDoTieuDe = [
     'donHang'       => 'Quản lý đơn hàng',
     'sachVaTonKho'  => 'Sách & Tồn kho',
     'nhapHang'      => 'Nhập hàng & Công nợ',
+    'nhaCungCap'    => 'Nhà cung cấp',
     'khuyenMai'     => 'Khuyến mãi',
     'taiKhoan'      => 'Tài khoản',
 ];

@@ -47,6 +47,11 @@
                 <i class="fas fa-truck"></i>
                 <span>Nhập hàng</span>
             </a>
+            <a href="<?= $adminUrl ?>?trang=nhaCungCap"
+               class="adm-nav-item<?= navActive('nhaCungCap', $trangHienTai) ?>">
+                <i class="fas fa-handshake"></i>
+                <span>Nhà cung cấp</span>
+            </a>
             <a href="<?= $adminUrl ?>?trang=khuyenMai"
                class="adm-nav-item<?= navActive('khuyenMai', $trangHienTai) ?>">
                 <i class="fas fa-tags"></i>
