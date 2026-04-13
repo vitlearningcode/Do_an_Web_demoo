@@ -74,7 +74,7 @@ class XacNhanDangXuat {
     this.khiXacNhan();
 
     // Chuyển hướng tới xuly_dangxuat.php để xóa session và redirect
-    window.location.href = "xuly_dangxuat.php";
+    window.location.href = DUONG_DAN_GOC_JS + "CuaHang/PhienDangNhap/xuly_dangxuat.php";
   }
 }
 

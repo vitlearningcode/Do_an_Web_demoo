@@ -1,10 +1,10 @@
 <?php
 session_start();
-require_once 'KetNoi/config/db.php';
+require_once '../../KetNoi/config/db.php';
 
 if (isset($_POST['btn_dangnhap'])) {
     $tendangnhap = $_POST['tendangnhap'];
-    $matkhau     = $_POST['matkhau'];
+    $matkhau     = md5($_POST['matkhau']);
 
     $sql = "SELECT tk.tenDN, tk.maND, tk.maVT, vt.tenVT, nd.tenND 
             FROM TaiKhoan tk
@@ -71,7 +71,7 @@ if (isset($_POST['btn_dangnhap'])) {
         if (strtolower($user['tenVT']) === 'admin') {
             header("Location: CuaHang/ChuCuaHang/index.php");
         } else {
-            header("Location: index.php");
+            header("Location: ../../index.php");
         }
         exit();
     } else {
