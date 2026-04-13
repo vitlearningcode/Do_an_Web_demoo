@@ -76,7 +76,7 @@
             <i class="fas fa-store"></i>
             <span>Trang bán hàng</span>
         </a>
-        <a href="../../xuly_dangxuat.php" class="adm-nav-item logout">
+        <a href="../../CuaHang/PhienDangNhap/xuly_dangxuat.php" class="adm-nav-item logout">
             <i class="fas fa-sign-out-alt"></i>
             <span>Đăng xuất</span>
         </a>

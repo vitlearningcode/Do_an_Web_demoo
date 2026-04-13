@@ -17,6 +17,7 @@
  */
 function hienThiTheSach(array $sach, array $nhanHieu = [], string $customHtmlBottom = ''): string
 {
+
     // ── Dữ liệu cơ bản ──────────────────────────────────────────────────
     // anhSach(): tự nhận biết link online (http/https) hoặc đường dẫn local (/DoAn/HinhAnh/sach/...)
     $anh        = anhSach($sach['hinhAnh'] ?? null);
@@ -79,8 +80,8 @@ function hienThiTheSach(array $sach, array $nhanHieu = [], string $customHtmlBot
     $danhMucHtml = $theLoai ? "<span class=\"book-category\">{$theLoai}</span>" : '';
 
     // URL trang chi tiết sách (điều hướng server-side, không dùng JS)
-    $urlChiTiet = 'CuaHang/TrangBanHang/ChiTietSach/layChiTietSach.php?maSach=' . urlencode($sach['maSach'] ?? '');
-
+    $urlChiTiet = '/DoAn-Web/DoAn/CuaHang/TrangBanHang/ChiTietSach/layChiTietSach.php?maSach=' . urlencode($sach['maSach'] ?? '');
+    
     return "
     <a class=\"book-card\"
        href=\"{$urlChiTiet}\"

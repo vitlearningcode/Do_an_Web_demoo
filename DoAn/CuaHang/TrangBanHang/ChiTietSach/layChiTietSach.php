@@ -157,7 +157,7 @@ if ($maSach !== '') {
 }
 
 // ── Kiểm tra đăng nhập ────────────────────────────────────────────────────────
-$isLoggedIn    = isset($_SESSION['maNguoiDung']);
+$isLoggedIn    = isset($_SESSION['nguoi_dung_id']);
 $phai_xoa_cart = false;
 $duong_dan_goc = '/DoAn-Web/DoAn/';
 
@@ -552,7 +552,7 @@ $giaHienTai = $sach ? ($sach['giaSau'] ?? $sach['giaBan']) : 0;
         pointer-events: none;
         transition: opacity .3s;
     }
-    .ct-mota-text.expanded + .ct-mota-fade { opacity: 0; }
+    .ct-mota-text.expanded  .ct-mota-fade { opacity: 0; }
     .ct-btn-xem-them {
         background: none;
         border: none;
@@ -813,8 +813,9 @@ $giaHienTai = $sach ? ($sach['giaSau'] ?? $sach['giaBan']) : 0;
         <h2 class="ct-section-title">Mô tả sản phẩm</h2>
         <div class="ct-mota-text" id="ct-mota-text">
             <?= nl2br(hienThiAn($sach['moTa'])) ?>
+            <br/>
+            <div class="ct-mota-fade" id="ct-mota-fade"></div>
         </div>
-        <div class="ct-mota-fade" id="ct-mota-fade"></div>
         <?php if (mb_strlen($sach['moTa']) > 300): ?>
         <button class="ct-btn-xem-them" id="ct-xem-them">
             <i class="fas fa-chevron-down" id="ct-icon-xem-them"></i>

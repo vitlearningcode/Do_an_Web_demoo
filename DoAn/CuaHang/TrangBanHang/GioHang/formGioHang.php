@@ -28,9 +28,7 @@
                 <div class="cart-empty-icon">🛒</div>
                 <p class="cart-empty-text">Giỏ hàng của bạn đang trống trơn!</p>
                 <p class="cart-empty-sub">Hãy ra ngoài chọn vài cuốn sách nhé...</p>
-                <a href="/DoAn/index.php" class="cart-empty-btn">
-                    📚 Quay lại cửa hàng
-                </a>
+                
             </div>
         </div>
 

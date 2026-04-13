@@ -96,24 +96,24 @@
       });
     }
 
-    // 2. Click vào card → điều hướng trang chi tiết
-    //    (bỏ qua các nút: thêm giỏ, thêm nhanh, tim, mắt)
-    card.addEventListener('click', function (e) {
-      if (
-        e.target.closest('.btn-add-to-cart') ||
-        e.target.closest('.btn-add-quick')   ||
-        e.target.closest('.btn-action-icon')
-      ) {
-        return;
-      }
+    // // 2. Click vào card → điều hướng trang chi tiết
+    // //    (bỏ qua các nút: thêm giỏ, thêm nhanh, tim, mắt)
+    // card.addEventListener('click', function (e) {
+    //   if (
+    //     e.target.closest('.btn-add-to-cart') ||
+    //     e.target.closest('.btn-add-quick')   ||
+    //     e.target.closest('.btn-action-icon')
+    //   ) {
+    //     return;
+    //   }
 
-      var maSach = card.getAttribute('data-id');
-      if (!maSach) return;
+    //   var maSach = card.getAttribute('data-id');
+    //   if (!maSach) return;
 
-      // Xây dựng URL trang chi tiết (tương đối từ gốc site)
-      var url = DUONG_DAN_GOC_JS + 'CuaHang/TrangBanHang/ChiTietSach/layChiTietSach.php?maSach=' + encodeURIComponent(maSach);
-      window.location.href = url;
-    });
+    //   // Xây dựng URL trang chi tiết (tương đối từ gốc site)
+    //   var url = DUONG_DAN_GOC_JS + 'CuaHang/TrangBanHang/ChiTietSach/layChiTietSach.php?maSach=' + encodeURIComponent(maSach);
+    //   window.location.href = url;
+    // });
 
   });
 

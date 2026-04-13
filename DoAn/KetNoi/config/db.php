@@ -27,6 +27,7 @@ $options = [
 
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
+    $pdo->exec("SET time_zone = '+07:00';");
 } catch (PDOException $e) {
     die("Kết nối DB thất bại: " . $e->getMessage());
 }

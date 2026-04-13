@@ -1,13 +1,13 @@
 <?php
 session_start();
-require_once 'KetNoi/config/db.php'; // Cung cấp biến $pdo
+require_once '../../KetNoi/config/db.php'; // Cung cấp biến $pdo
 
 if (isset($_POST['btn_dangky'])) {
     $hoten = $_POST['hoten'];
     $tendangnhap = $_POST['tendangnhap'];
     $email = $_POST['email'];
     $sodienthoai = $_POST['sodienthoai'];
-    $matkhau = $_POST['matkhau'];
+    $matkhau = md5($_POST['matkhau']);
 
     try {
         // 1. Kiểm tra trùng lặp Tên đăng nhập
@@ -59,7 +59,7 @@ if (isset($_POST['btn_dangky'])) {
 
         // Xác nhận lưu dữ liệu (Commit)
         $pdo->commit();
-        echo "<script>alert('Đăng ký thành công! Vui lòng đăng nhập.'); window.location.href='index.php';</script>";
+        echo "<script>alert('Đăng ký thành công! Vui lòng đăng nhập.'); window.location.href='../../index.php';</script>";
 
     } catch (Exception $e) {
         // Nếu có lỗi, hoàn tác toàn bộ (Rollback)

@@ -15,7 +15,7 @@
         <span class="close-btn" onclick="closeModal()">&times;</span>
     </div>
     <div class="modal-body">
-        <form action="<?= $duong_dan_goc ?>xuly_dangnhap.php" method="POST">
+        <form action="<?= $duong_dan_goc ?>CuaHang/PhienDangNhap/xuly_dangnhap.php" method="POST">
             <div class="input-group">
                 <label>Tên đăng nhập</label>
                 <input type="text" name="tendangnhap" placeholder="Nhập tên đăng nhập" required>
@@ -40,7 +40,7 @@
         <span class="close-btn" onclick="closeModal()">&times;</span>
     </div>
     <div class="modal-body">
-        <form action="<?= $duong_dan_goc ?>xuly_dangky.php" method="POST">
+        <form action="<?= $duong_dan_goc ?>CuaHang/PhienDangNhap/xuly_dangky.php" method="POST">
             <div class="input-group">
                 <label>Họ và tên</label>
                 <input type="text" name="hoten" placeholder="Nhập họ và tên" required>
@@ -80,7 +80,7 @@
         <div class="input-group" style="display: flex; justify-content: space-between; width: 343px; margin: 0 auto;">
             <button type="button" class="btn-cancel" id="logout-cancel" onclick="closeModal()">Hủy bỏ</button>
             <!-- Dùng href tuyệt đối → đúng từ mọi trang. JS xacNhanDangXuat.js cũng gắn listener vào đây -->
-            <a href="<?= $duong_dan_goc ?>xuly_dangxuat.php" class="btn-confirm" id="logout-confirm">Đăng xuất</a>
+            <a href="<?= $duong_dan_goc ?>CuaHang/PhienDangNhap/xuly_dangxuat.php" class="btn-confirm" id="logout-confirm">Đăng xuất</a>
         </div>
     </div>
 </div>
