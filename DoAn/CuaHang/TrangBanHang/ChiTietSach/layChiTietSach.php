@@ -11,7 +11,7 @@
 
 session_start();
 require_once '../../../KetNoi/config/db.php';
-require_once '../../TrangBanHang/Components/bookCard.php';
+require_once '../../TrangBanHang/GiaoDien/thanhPhan/bookCard.php';
 
 // ── Hàm tiện ích ──────────────────────────────────────────────────────────────
 

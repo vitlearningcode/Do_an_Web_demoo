@@ -69,7 +69,7 @@ if (isset($_POST['btn_dangnhap'])) {
         // ─────────────────────────────────────────────────────────────────────
 
         if (strtolower($user['tenVT']) === 'admin') {
-            header("Location: CuaHang/ChuCuaHang/index.php");
+            header("Location: ../ChuCuaHang/index.php");
         } else {
             header("Location: ../../index.php");
         }

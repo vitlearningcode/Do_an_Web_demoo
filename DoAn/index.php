@@ -8,7 +8,7 @@ session_start();
 require_once "KetNoi/config/db.php";
 
 // ── Tải các thành phần dữ liệu ─────────────────────────────────────────────
-require_once "CuaHang/TrangBanHang/Components/bookCard.php";
+require_once "CuaHang/TrangBanHang/GiaoDien/thanhPhan/bookCard.php";
 require_once "CuaHang/TrangBanHang/KhuVucTrungBay/taiFlashSale.php";
 require_once "CuaHang/TrangBanHang/KhuVucTrungBay/taiSachBanChay.php";
 require_once "CuaHang/TrangBanHang/KhuVucTrungBay/taiSachMoi.php";

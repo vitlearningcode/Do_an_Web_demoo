@@ -8,7 +8,7 @@ if (!isset($_SESSION['nguoi_dung_id'])) {
     exit();
 }
 
-require_once "../Components/bookCard.php";
+require_once "../GiaoDien/thanhPhan/bookCard.php";
 
 $maNguoiDung = $_SESSION['nguoi_dung_id'];
 $isLoggedIn = true;
