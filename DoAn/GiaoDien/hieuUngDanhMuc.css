@@ -1,0 +1,75 @@
+/* ================================================================
+   HIỆU ỨNG MENU DANH MỤC BAY NGANG (HORIZONTAL FLY-IN)
+   ================================================================ */
+
+/* Khung chứa menu: Nằm ngang hàng với nút Danh mục */
+.fly-menu-container {
+    position: absolute;
+    top: 0;
+    left: 100%; /* Bắt đầu ngay mép phải của cái nút */
+    margin-left: 20px; /* Cách cái nút ra 20px */
+    height: 100%; /* Cao bằng với thanh navbar */
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    z-index: 9999;
+    
+    /* Ẩn đi và lùi về trái một chút */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-30px); 
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Khi active: Khung menu trượt ra mượt mà */
+.fly-menu-container.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+/* Danh sách nằm ngang */
+.fly-menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex; /* Dàn hàng ngang */
+    gap: 16px; /* Khoảng cách giữa các thể loại */
+    background: #ffffff; /* Nền trắng cho dễ đọc */
+    padding: 8px 24px;
+    border-radius: 30px; /* Bo góc tròn tròn */
+    /* box-shadow: 0 4px 15px rgba(0,0,0,0.08); */
+}
+
+/* Từng mục (li): Mặc định bị thu nhỏ và lùi về trái */
+.fly-menu-list li {
+    opacity: 0;
+    transform: translateX(-20px) scale(0.9);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    white-space: nowrap; /* Không cho rớt dòng */
+}
+
+/* Khi active: Từng mục bay tới và phình to ra đúng kích thước */
+.fly-menu-container.active .fly-menu-list li {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+}
+
+/* Style chữ */
+.fly-menu-list li a {
+    display: block;
+    color: #4b5563;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.fly-menu-list li a:hover {
+    color: #2563eb;
+}
+
+/* Xoay icon khi mở */
+.category-btn.active svg {
+    transform: rotate(90deg);
+    transition: transform 0.3s ease;
+}

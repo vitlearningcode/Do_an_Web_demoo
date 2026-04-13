@@ -2,6 +2,9 @@
 // Lùi về 3 cấp thư mục (GiaoDien -> TrangBanHang -> CuaHang -> Gốc) để nạp kết nối PDO
 require_once '../../../KetNoi/config/db.php'; 
 
+// THÊM DÒNG NÀY: Nạp file chứa hàm layDuongDanAnh()
+require_once '../../../PhuongThuc/layDuongDanAnh.php'; 
+
 // Kiểm tra xem có nhận được từ khóa hay không
 if (isset($_POST['tu_khoa'])) {
     $tuKhoa = trim($_POST['tu_khoa']);
@@ -46,10 +49,12 @@ if (isset($_POST['tu_khoa'])) {
                     $anhHienThi = layDuongDanAnh($sach['hinhAnh'] ?? null, 'https://placehold.co/45x65/eff6ff/2563eb?text=Sách');
                     $tenSach = htmlspecialchars($sach['tenSach']);
                     $tacGia = htmlspecialchars($sach['tacGia'] ?: 'Đang cập nhật');
-                    $giaBan = number_format($sach['giaBan'], 0, ',', '.') . ' ₫';
+                    
+                    // ĐÃ XÓA CHỮ "o1" BỊ LỖI Ở ĐÂY
+                    $giaBan = number_format($sach['giaBan'], 0, ',', '.') . ' ₫'; 
                     
                     // In ra thẻ HTML để hiển thị lên giao diện
-                    echo '
+                    echo'
                     <a href="/DoAn-Web/DoAn/CuaHang/TrangBanHang/ChiTietSach/layChiTietSach.php?maSach=' . urlencode($sach['maSach'] ?? '') . '" class="muc-ket-qua">
                         <img src="' . $anhHienThi . '" alt="' . $tenSach . '">
                         <div class="thong-tin-sach-tim-kiem">

@@ -10,10 +10,13 @@ $duong_dan_goc = '/DoAn-Web/DoAn/';
 ?>
 <script>
     // Khai báo biến toàn cục cho JavaScript
-    const DUONG_DAN_GOC_JS = '<?= $duong_dan_goc ?>';
+const DUONG_DAN_GOC_JS = '<?= $duong_dan_goc ?>';
 </script>
 <link rel="stylesheet" href="<?= $duong_dan_goc ?>GiaoDien/gioHang.css">
 <link rel="stylesheet" href="<?= $duong_dan_goc ?>GiaoDien/xemNhanhSach.css">
+
+<link rel="stylesheet" href="<?= $duong_dan_goc ?>GiaoDien/hieuUngDanhMuc.css">
+<script src="<?= $duong_dan_goc ?>PhuongThuc/btnDanhMuc.js" defer></script>
 
 <?php require_once __DIR__ . '/thanhPhan/dauTrang.php'; ?>
 <?php require_once __DIR__ . '/thanhPhan/panelTraCuuDonHang.php'; ?>

@@ -140,6 +140,7 @@ function timKiemNhanh(tuKhoa) {
         return;
     }
     
+    
     // Gói dữ liệu để gửi đi
     let duLieuGuiDi = new FormData();
     duLieuGuiDi.append('tu_khoa', tuKhoa);
