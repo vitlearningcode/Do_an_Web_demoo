@@ -108,10 +108,12 @@ function renderSao(int $diem, int $max = 5): string {
             flex-shrink: 0;
         }
 
-        .dg-body { flex: 1; min-width: 0; }
-        .dg-ten  { font-weight: 600; font-size: .875rem; color: #111; margin-bottom: 4px; }
+        .dg-body { flex: 1; min-width: 0; overflow: hidden; }
+        .dg-ten  { font-weight: 600; font-size: .875rem; color: #111; margin-bottom: 4px;
+                   word-break: break-word; overflow-wrap: break-word; }
         .dg-sao  { color: #f59e0b; font-size: .8rem; margin-bottom: 6px; }
-        .dg-nd   { font-size: .875rem; color: #374151; line-height: 1.5; }
+        .dg-nd   { font-size: .875rem; color: #374151; line-height: 1.5;
+                   word-break: break-word; overflow-wrap: break-word; white-space: pre-wrap; }
         .dg-ngay { font-size: .75rem; color: #9ca3af; margin-top: 4px; }
 
         /* Rỗng */

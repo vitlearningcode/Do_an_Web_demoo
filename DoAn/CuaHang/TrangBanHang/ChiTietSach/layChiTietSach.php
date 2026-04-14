@@ -153,6 +153,29 @@ if ($maSach !== '') {
                 $ds_lienQuan = [];
             }
         }
+
+        // ── Đánh giá của độc giả ────────────────────────────────
+        $dsDanhGia   = [];
+        $tongDanhGia = 0;
+        $diemTBDanhGia = 0;
+        try {
+            $stmtDG = $pdo->prepare("
+                SELECT dg.diemDG, dg.nhanXet, dg.ngayDG, nd.tenND
+                FROM DanhGiaSach dg
+                JOIN NguoiDung nd ON dg.maND = nd.maND
+                WHERE dg.maSach = ?
+                ORDER BY dg.ngayDG DESC
+                LIMIT 20
+            ");
+            $stmtDG->execute([$maSach]);
+            $dsDanhGia   = $stmtDG->fetchAll(PDO::FETCH_ASSOC);
+            $tongDanhGia = count($dsDanhGia);
+            if ($tongDanhGia > 0) {
+                $diemTBDanhGia = round(array_sum(array_column($dsDanhGia, 'diemDG')) / $tongDanhGia, 1);
+            }
+        } catch (PDOException $e) {
+            $dsDanhGia = [];
+        }
     }
 }
 
@@ -589,6 +612,74 @@ $giaHienTai = $sach ? ($sach['giaSau'] ?? $sach['giaBan']) : 0;
         margin-top: 24px;
     }
 
+    /* ── Section đánh giá từ độc giả ── */
+    .ct-danh-gia-section {
+        background: #fff;
+        border-radius: 20px;
+        box-shadow: 0 2px 16px rgba(0,0,0,.06);
+        padding: 32px;
+        margin-top: 24px;
+    }
+    .ct-dg-tong {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 20px;
+        background: #fff8f0;
+        border: 1px solid #fed7aa;
+        border-radius: 12px;
+        margin-bottom: 24px;
+    }
+    .ct-dg-diem-lon {
+        font-size: 2.8rem;
+        font-weight: 800;
+        color: #ea580c;
+        line-height: 1;
+    }
+    .ct-dg-sao { color: #f59e0b; font-size: 1rem; margin-bottom: 4px; }
+    .ct-dg-tong-so { font-size: .8rem; color: #6b7280; }
+    .ct-dg-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+    .ct-dg-item {
+        display: flex;
+        gap: 14px;
+        padding: 16px 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+    .ct-dg-item:last-child { border-bottom: none; }
+    .ct-dg-avatar {
+        width: 40px; height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        display: flex; align-items: center; justify-content: center;
+        color: #fff; font-size: .9rem; font-weight: 700;
+        flex-shrink: 0;
+    }
+    .ct-dg-body { flex: 1; min-width: 0; overflow: hidden; }
+    .ct-dg-ten {
+        font-weight: 600; font-size: .9rem; color: #111;
+        margin-bottom: 4px;
+        word-break: break-word; overflow-wrap: break-word;
+    }
+    .ct-dg-sao i { font-size: .8rem; }
+    .ct-dg-nd {
+        font-size: .875rem; color: #374151; line-height: 1.6;
+        margin: 6px 0 4px;
+        word-break: break-word; overflow-wrap: break-word;
+        white-space: pre-wrap;
+    }
+    .ct-dg-ngay { font-size: .75rem; color: #9ca3af; }
+    .ct-dg-rong {
+        text-align: center;
+        padding: 40px;
+        color: #9ca3af;
+        font-size: .95rem;
+    }
+    .ct-dg-rong i { font-size: 2.5rem; display: block; margin-bottom: 10px; opacity: .35; }
+
     /* ── Error state ── */
     .ct-error-card {
         background: #fff;
@@ -831,6 +922,62 @@ $giaHienTai = $sach ? ($sach['giaSau'] ?? $sach['giaBan']) : 0;
             <i class="fas fa-chevron-down" id="ct-icon-xem-them"></i>
             <span id="ct-text-xem-them">Xem thêm</span>
         </button>
+        <?php endif; ?>
+    </div>
+    <?php endif; ?>
+
+    <!-- ── Đánh giá từ độc giả ── -->
+    <?php if (!empty($dsDanhGia) || $tongDanhGia === 0): ?>
+    <div class="ct-danh-gia-section">
+        <h2 class="ct-section-title">
+            <i class="fas fa-star" style="color:#f59e0b;margin-right:8px"></i>
+            Đánh giá từ độc giả
+        </h2>
+
+        <?php if ($tongDanhGia === 0): ?>
+        <div class="ct-dg-rong">
+            <i class="far fa-comment-alt"></i>
+            Chưa có đánh giá nào cho cuốn sách này.
+        </div>
+        <?php else: ?>
+
+        <!-- Tổng điểm -->
+        <div class="ct-dg-tong">
+            <div class="ct-dg-diem-lon"><?= $diemTBDanhGia ?></div>
+            <div>
+                <div class="ct-dg-sao">
+                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                        <i class="<?= $i <= round($diemTBDanhGia) ? 'fas' : 'far' ?> fa-star"></i>
+                    <?php endfor; ?>
+                </div>
+                <div class="ct-dg-tong-so"><?= $tongDanhGia ?> lượt đánh giá</div>
+            </div>
+        </div>
+
+        <!-- Danh sách đánh giá -->
+        <div class="ct-dg-list">
+        <?php foreach ($dsDanhGia as $dg):
+            $kyTuDau = mb_strtoupper(mb_substr($dg['tenND'], 0, 1, 'UTF-8'), 'UTF-8');
+            $ngay    = date('d/m/Y', strtotime($dg['ngayDG']));
+        ?>
+        <div class="ct-dg-item">
+            <div class="ct-dg-avatar"><?= hienThiAn($kyTuDau) ?></div>
+            <div class="ct-dg-body">
+                <div class="ct-dg-ten"><?= hienThiAn($dg['tenND']) ?></div>
+                <div class="ct-dg-sao">
+                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                        <i class="<?= $i <= $dg['diemDG'] ? 'fas' : 'far' ?> fa-star"></i>
+                    <?php endfor; ?>
+                </div>
+                <?php if (!empty($dg['nhanXet'])): ?>
+                <div class="ct-dg-nd"><?= hienThiAn($dg['nhanXet']) ?></div>
+                <?php endif; ?>
+                <div class="ct-dg-ngay"><?= $ngay ?></div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+        </div>
+
         <?php endif; ?>
     </div>
     <?php endif; ?>
