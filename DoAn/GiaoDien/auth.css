@@ -1,0 +1,242 @@
+/* đăng xuất */
+.logout-modal {
+  max-width: 400px;
+  text-align: center;
+}
+
+.logout-icon {
+  width: 60px;
+  height: 60px;
+  background: #fee2e2;
+  color: #ef4444;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin: 0 auto 16px;
+}
+
+.logout-modal h2 {
+  margin-bottom: 8px;
+}
+
+.logout-modal p {
+  color: var(--gray-500);
+  margin-bottom: 24px;
+}
+
+.logout-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.logout-actions button {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.logout-actions .cancel-btn {
+  background: var(--gray-100);
+  color: var(--gray-700);
+  border: none;
+}
+
+.logout-actions .cancel-btn:hover {
+  background: var(--gray-200);
+}
+
+.logout-actions .confirm-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+}
+
+.logout-actions .confirm-btn:hover {
+  background: #dc2626;
+}
+
+/* ============================================================================================================================
+   CSS CHO CÁC MODAL (ĐĂNG NHẬP, ĐĂNG KÝ, ĐĂNG XUẤT)
+   ========================================================================== */
+
+/* 1. Nền mờ (Overlay) */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+}
+
+/* 2. Định dạng chung cho tất cả các Modal */
+.auth-modal {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  padding: 20px 30px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  color: #000;
+}
+
+/* 3. Kích thước riêng cho từng loại Form theo yêu cầu */
+.login-size {
+  width: 403px;
+  height: 393px;
+}
+
+.register-size {
+  width: 403px;
+  height: 603px;
+}
+
+.logout-size {
+  width: 403px;
+  height: 230px;
+}
+
+/* 4. Phần Header của Modal */
+.modal-header h2 {
+  margin: 0 0 5px 0;
+  font-size: 20px;
+  text-align: center;
+}
+
+.modal-header p {
+  margin: 0 0 20px 0;
+  font-size: 12px;
+  text-align: center;
+  color: #666;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #999;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+/* 5. Định dạng các Input nhập liệu */
+.input-group {
+  margin-bottom: 18px;
+  /* Khoảng cách giữa các input theo yêu cầu */
+}
+
+.input-group label {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.input-group input {
+  width: 343px;
+  height: 40px;
+  border: 1px solid #ddd;
+  border-radius: 7px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.input-group input:focus {
+  border-color: #0d6efd;
+}
+
+/* 6. Định dạng nút bấm chính (Đăng nhập / Đăng ký) */
+.btn-primary {
+  width: 343px;
+  height: 44px;
+  background-color: #0d6efd;
+  /* Xanh dương chủ đạo */
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+}
+
+.btn-primary:hover {
+  background-color: #0b5ed7;
+}
+
+/* 7. Nút bấm trong form Đăng xuất */
+.btn-cancel {
+  width: 164px;
+  height: 44px;
+  background-color: #f1f1f1;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-cancel:hover {
+  background-color: #e2e2e2;
+}
+
+.btn-confirm {
+  width: 164px;
+  height: 44px;
+  background-color: #ef4444;
+  /* Màu đỏ cảnh báo */
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  line-height: 44px;
+  /* Giúp chữ căn giữa theo chiều dọc */
+}
+
+.btn-confirm:hover {
+  background-color: #dc2626;
+}
+
+/* 8. Phần Footer của Modal (Chuyển đổi Đăng nhập / Đăng ký) */
+.modal-footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+}
+
+.modal-footer a {
+  color: #0d6efd;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.modal-footer a:hover {
+  text-decoration: underline;
+}

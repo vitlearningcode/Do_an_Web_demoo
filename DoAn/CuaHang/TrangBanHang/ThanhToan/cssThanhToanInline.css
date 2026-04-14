@@ -1,10 +1,4 @@
-<?php
-/**
- * cssThanhToanInline.php — Inline CSS riêng cho trang thanh toán
- * Đặt bên trong <head> của thanhToan.php
- */
-?>
-<style>
+
     /* ── Chọn loại địa chỉ ── */
     .chon-loai-dc { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
     .chon-loai-dc label {
@@ -32,4 +26,3 @@
     /* ── Ẩn/hiện khung nhập địa chỉ mới ── */
     .khung-dc-moi { display: none; }
     .khung-dc-moi.hien { display: block; }
-</style>

@@ -24,7 +24,8 @@ require_once 'layThongTinKhachHang.php';
     <link rel="stylesheet" href="../../../GiaoDien/style.css">
     <link rel="stylesheet" href="thanhToan.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <?php require_once 'cssThanhToanInline.php'; ?>
+    <link rel="stylesheet" href="cssThanhToanInline.css">
+    
 </head>
 <body class="bg-gray-50 checkout-body">
 
