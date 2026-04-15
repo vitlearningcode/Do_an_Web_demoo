@@ -136,12 +136,13 @@ if ($xemNCC > 0) {
             <th>Đã thanh toán</th>
             <th>Còn nợ</th>
             <th>Trạng thái</th>
-            <th style="text-align:center">Thao tác</th>
+            <th style="text-align:center;width:110px">Thanh toán</th>
+            <th style="text-align:center;width:60px">Xóa</th>
         </tr>
     </thead>
     <tbody>
     <?php if (empty($dsPhieuNhap)): ?>
-        <tr><td colspan="9"><div class="adm-empty"><i class="fas fa-box-open"></i><p>Chưa có phiếu nhập nào.</p></div></td></tr>
+        <tr><td colspan="10"><div class="adm-empty"><i class="fas fa-box-open"></i><p>Chưa có phiếu nhập nào.</p></div></td></tr>
     <?php else: ?>
         <?php foreach ($dsPhieuNhap as $pn): ?>
         <tr>
@@ -167,6 +168,7 @@ if ($xemNCC > 0) {
                     <span class="adm-badge adm-badge-warning">Đang chờ</span>
                 <?php endif; ?>
             </td>
+            <!-- Cột Thanh toán -->
             <td style="text-align:center">
                 <?php if ($pn['trangThai'] === 'Waiting' && (float)$pn['conNo'] > 0): ?>
                 <a href="<?= $baseUrl ?>&tab=phieu&thanh_toan=<?= urlencode($pn['maPN']) ?>"
@@ -175,6 +177,20 @@ if ($xemNCC > 0) {
                 </a>
                 <?php else: ?>
                     <span style="color:#94a3b8;font-size:13px">—</span>
+                <?php endif; ?>
+            </td>
+            <!-- Cột Xóa -->
+            <td style="text-align:center">
+                <?php if ((float)$pn['soTienDaThanhToan'] == 0): ?>
+                <form method="POST" action="XuLy/xoaPhieuNhap.php" style="display:inline"
+                      onsubmit="return confirm('Xóa phiếu <?= htmlspecialchars($pn['maPN'], ENT_QUOTES) ?>?\nTồn kho sẽ được hoàn lại. Hành động này không thể hoàn tác!')">
+                    <input type="hidden" name="maPN" value="<?= htmlspecialchars($pn['maPN']) ?>">
+                    <button type="submit" class="adm-btn adm-btn-danger adm-btn-sm" title="Xóa phiếu nhập">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+                <?php else: ?>
+                    <span style="color:#cbd5e1;font-size:18px" title="Đã thanh toán, không thể xóa"><i class="fas fa-lock"></i></span>
                 <?php endif; ?>
             </td>
         </tr>

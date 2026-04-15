@@ -57,6 +57,11 @@
                 <i class="fas fa-tags"></i>
                 <span>Khuyến mãi</span>
             </a>
+            <a href="<?= $adminUrl ?>?trang=baoCaoDoanhThu"
+               class="adm-nav-item<?= navActive('baoCaoDoanhThu', $trangHienTai) ?>">
+                <i class="fas fa-chart-bar"></i>
+                <span>Báo cáo DT</span>
+            </a>
         </div>
 
         <div class="adm-nav-section">

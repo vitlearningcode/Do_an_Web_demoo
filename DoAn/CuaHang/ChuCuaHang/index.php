@@ -19,13 +19,14 @@ $tenAdmin = $_SESSION['ten_nguoi_dung'] ?? ($_SESSION['tendangnhap'] ?? 'Admin')
 
 // ── [3] ROUTING: đọc ?trang= ──────────────────────────────────
 $cacTrang = [
-    'tongQuan'     => 'TrangQuanLy/tongQuan.php',
-    'donHang'      => 'TrangQuanLy/donHang.php',
-    'sachVaTonKho' => 'TrangQuanLy/sachVaTonKho.php',
-    'nhapHang'     => 'TrangQuanLy/nhapHang.php',
-    'khuyenMai'    => 'TrangQuanLy/khuyenMai.php',
-    'nhaCungCap'   => 'TrangQuanLy/nhaCungCap.php',
-    'taiKhoan'     => 'TrangQuanLy/taiKhoan.php',
+    'tongQuan'        => 'TrangQuanLy/tongQuan.php',
+    'donHang'         => 'TrangQuanLy/donHang.php',
+    'sachVaTonKho'    => 'TrangQuanLy/sachVaTonKho.php',
+    'nhapHang'        => 'TrangQuanLy/nhapHang.php',
+    'khuyenMai'       => 'TrangQuanLy/khuyenMai.php',
+    'nhaCungCap'      => 'TrangQuanLy/nhaCungCap.php',
+    'taiKhoan'        => 'TrangQuanLy/taiKhoan.php',
+    'baoCaoDoanhThu'  => 'TrangQuanLy/baoCaoDoanhThu.php',
 ];
 
 $trangHienTai = $_GET['trang'] ?? 'tongQuan';

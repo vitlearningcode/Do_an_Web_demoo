@@ -10,13 +10,14 @@ $tenAdmin     = $tenAdmin     ?? 'Chủ cửa hàng';
 
 // Bản đồ trang → tiêu đề topbar
 $banDoTieuDe = [
-    'tongQuan'      => 'Tổng quan',
-    'donHang'       => 'Quản lý đơn hàng',
-    'sachVaTonKho'  => 'Sách & Tồn kho',
-    'nhapHang'      => 'Nhập hàng & Công nợ',
-    'nhaCungCap'    => 'Nhà cung cấp',
-    'khuyenMai'     => 'Khuyến mãi',
-    'taiKhoan'      => 'Tài khoản',
+    'tongQuan'       => 'Tổng quan',
+    'donHang'        => 'Quản lý đơn hàng',
+    'sachVaTonKho'   => 'Sách & Tồn kho',
+    'nhapHang'       => 'Nhập hàng & Công nợ',
+    'nhaCungCap'     => 'Nhà cung cấp',
+    'khuyenMai'      => 'Khuyến mãi',
+    'taiKhoan'       => 'Tài khoản',
+    'baoCaoDoanhThu' => 'Báo cáo Doanh thu',
 ];
 $tieuDeHienTai = $banDoTieuDe[$trangHienTai] ?? 'Quản trị';
 
@@ -44,6 +45,7 @@ require_once __DIR__ . '/thanhPhan/demDonChoDuyet.php';
     <!-- Font Awesome + Google Font Inter -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../GiaoDien/baoCao.css">
 </head>
 <body class="admin-body">
 
