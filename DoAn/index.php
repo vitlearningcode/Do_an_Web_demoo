@@ -12,7 +12,6 @@ require_once "CuaHang/TrangBanHang/GiaoDien/thanhPhan/bookCard.php";
 require_once "CuaHang/TrangBanHang/KhuVucTrungBay/taiFlashSale.php";
 require_once "CuaHang/TrangBanHang/KhuVucTrungBay/taiSachBanChay.php";
 require_once "CuaHang/TrangBanHang/KhuVucTrungBay/taiSachMoi.php";
-require_once "CuaHang/TrangBanHang/LoadDanhMuc/taiDanhSach_DanhMuc.php";
 require_once "CuaHang/TrangBanHang/LoadDuLieu/taiQuangCao.php";
 
 // ── Khởi tạo: kiểm tra đăng nhập + xử lý cờ xóa cart ─────────────────────

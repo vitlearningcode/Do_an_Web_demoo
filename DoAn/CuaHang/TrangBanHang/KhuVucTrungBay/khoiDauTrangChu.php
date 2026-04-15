@@ -3,11 +3,11 @@
  * ============================================================
  * LUỒNG: KHỚI ĐẦU TRANG CHỦ (Chạy ngay sau session_start và require db)
  *
- * GọI BỚI: index.php (require_once sau require db.php)
+ * Gọi bởi: index.php (require_once sau require db.php)
  *
  * XÁC ĐỊNH:
  *   $isLoggedIn  (bool) — dùng để quyết định có load layGioHangCoGia.php không
- *   $phai_xoa_cart (bool) — nếu true, index.php sẽ render JS xóa localStorage
+ *   $phai_xoa_cart (bool) — nếu true, index.php sẽ hiển thị và dỏ hàng localStorage
  *
  * CUỐI TRANG: index.php dùng $isLoggedIn và $phai_xoa_cart để:
  *   - Load layGioHangCoGia.php cho user đăng nhập

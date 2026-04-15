@@ -45,7 +45,7 @@ $sslCA = getenv('AIVEN_SSL_CA');       // Đường dẫn tới file CA certific
 // BƯỚC 3: Xây dựng DSN và thiết lập options kết nối
 // charset=utf8mb4 đảm bảo lưu được tiếng Việt + emoji
 // -------------------------------------------------------------
-$dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4";
+$dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4";// data source name (DSN) cho PDO
 
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, // Throw PDOException khi lỗi

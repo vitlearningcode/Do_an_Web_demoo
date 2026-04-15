@@ -43,6 +43,7 @@ function layDuongDanAnh(?string $urlAnh, string $anhMacDinh = ''): string
 
     // Sửa nhanh lỗi sai thư mục gốc: do project nằm trong DoAn-Web 
     // nhưng đường dẫn CSDL lưu là /DoAn/...
+    //strpos -> string position, trả về vị trí xuất hiện đầu tiên của chuỗi con, hoặc false nếu không tìm thấy
     if (str_starts_with($url, '/DoAn/') && strpos($url, '/DoAn-Web/') === false) {
         $url = '/DoAn-Web' . $url;
     }
@@ -78,3 +79,4 @@ function anhBanner(?string $urlAnh): string
 {
     return layDuongDanAnh($urlAnh, 'https://placehold.co/1200x450/1e3a8a/ffffff?text=Banner');
 }
+?>

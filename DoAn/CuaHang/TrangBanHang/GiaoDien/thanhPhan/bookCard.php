@@ -1,14 +1,5 @@
 <?php
 /**
- * bookCard.php
- * Chứa hàm hienThiTheSach() — render card hiển thị thông tin một cuốn sách.
- * Được include từ index.php; dùng chung scope $pdo, không require DB ở đây.
- *
- * v2: Bổ sung data-* attributes cho modal Xem Nhanh.
- *     JS đọc trực tiếp từ card — không AJAX, không JSON.
- */
-
-/**
  * hienThiTheSach()
  *
  * @param array $sach      Dữ liệu một cuốn sách từ DB
@@ -17,7 +8,7 @@
  */
 function hienThiTheSach(array $sach, array $nhanHieu = [], string $customHtmlBottom = ''): string
 {
-
+    //?? tương đương A?:B nếu A tồn tại và không null thì dùng A, ngược lại dùng B
     // ── Dữ liệu cơ bản ──────────────────────────────────────────────────
     // anhSach(): tự nhận biết link online (http/https) hoặc đường dẫn local (/DoAn/HinhAnh/sach/...)
     $anh        = anhSach($sach['hinhAnh'] ?? null);
@@ -33,10 +24,10 @@ function hienThiTheSach(array $sach, array $nhanHieu = [], string $customHtmlBot
     $giaHienTai = ($giaSau !== null) ? $giaSau : $giaBan;
 
     // ── Data-* cho Modal Xem Nhanh (dùng ENT_QUOTES để an toàn trong thuộc tính) ───
-    $dataTacGia  = htmlspecialchars($sach['tacGia']       ?? '', ENT_QUOTES);
-    $dataTheLoai = htmlspecialchars($sach['theLoai']      ?? '', ENT_QUOTES);
-    $dataDiem    = htmlspecialchars((string)($sach['diemTB']  ?? ''), ENT_QUOTES);
-    $dataReviews = htmlspecialchars((string)($sach['soReview'] ?? ''), ENT_QUOTES);
+    $dataTacGia  = htmlspecialchars($sach['tacGia']       ?? 'Đang cập nhật', ENT_QUOTES);
+    $dataTheLoai = htmlspecialchars($sach['theLoai']      ?? 'Đang cập nhật', ENT_QUOTES);
+    $dataDiem    = htmlspecialchars((string)($sach['diemTB']  ?? 'Đang cập nhật'), ENT_QUOTES);
+    $dataReviews = htmlspecialchars((string)($sach['soReview'] ?? 'Đang cập nhật'), ENT_QUOTES);
     $dataGiam    = htmlspecialchars((string)$phanTramGiam,  ENT_QUOTES);
     // tongBanThang (bán chạy) hoặc tongBan (tổng), ưu tiên tongBanThang
     $dataDaBan   = htmlspecialchars((string)($sach['tongBanThang'] ?? ($sach['tongBan'] ?? '')), ENT_QUOTES);
@@ -49,6 +40,8 @@ function hienThiTheSach(array $sach, array $nhanHieu = [], string $customHtmlBot
     $dataTonKho  = htmlspecialchars((string)($sach['soLuongTon']   ?? '0'), ENT_QUOTES);
 
     // ── Nhãn góc trái dọc ────────────────────────────────────────────────
+    //$nhan là một biến tạm để lưu từng nhãn trong mảng $nhanHieu, sau đó ghép vào $nhanHtml
+    // .= nghĩa là nối chuỗi, mỗi lần lặp sẽ thêm một nhãn vào $nhanHtml
     $nhanHtml = '';
     foreach ($nhanHieu as $nhan) {
         $nhanHtml .= "<span class=\"book-badge {$nhan['class']}\">{$nhan['label']}</span>\n";
