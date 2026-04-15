@@ -28,13 +28,15 @@
             <?php foreach ($ds_flashsale as $sach):
                 /*
                  * Tính phần trăm đã bán cho thanh tiến trình
-                 * tongBan      = tổng đơn hàng HoanThanh có sách này
+                 * tongBan      = tổng đơn (chưa bị hủy) → phản ánh chính xác số đã được đặt
                  * soLuongKM    = giới hạn khuyến mãi từ ChiTietKhuyenMai
+                 * conLai       = soLuongTon (kho đã trừ ngay khi đặt hàng)
                  */
                 $daBan       = (int)($sach['tongBan'] ?? 0);
+                $conLai      = max(0, (int)($sach['soLuongTon'] ?? 0));
                 $giuiHanKM   = (int)($sach['soLuongKhuyenMai'] ?? 0);
                 // Nếu không có giới hạn → dùng tồn kho + đã bán làm mốc 100%
-                $tongSoLuong = $giuiHanKM > 0 ? $giuiHanKM : max(1, $daBan + (int)($sach['soLuongTon'] ?? 0));
+                $tongSoLuong = $giuiHanKM > 0 ? $giuiHanKM : max(1, $daBan + $conLai);
                 $phanTram    = $tongSoLuong > 0 ? min(100, round($daBan / $tongSoLuong * 100)) : 0;
 
                 // HTML thanh tiến trình — truyền vào customHtmlBottom
@@ -42,7 +44,7 @@
                 <div class="flash-sale-progress">
                     <div class="flash-progress-label">
                         <span class="da-ban-label">Đã bán: ' . $daBan . '</span>
-                        <span>Còn: ' . max(0, $tongSoLuong - $daBan) . '</span>
+                        <span>Còn: ' . $conLai . '</span>
                     </div>
                     <div class="flash-progress-bar-bg">
                         <div class="flash-progress-bar-fill" style="width:' . $phanTram . '%"></div>

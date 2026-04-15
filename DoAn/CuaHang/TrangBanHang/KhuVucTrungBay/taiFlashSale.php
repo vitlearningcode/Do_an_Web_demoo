@@ -34,7 +34,7 @@ $ds_flashsale = $pdo->query("
             SELECT SUM(ct.soLuong)
             FROM ChiTietDH ct
             JOIN DonHang dh ON dh.maDH = ct.maDH
-            WHERE ct.maSach = s.maSach AND dh.trangThai = 'HoanThanh'
+            WHERE ct.maSach = s.maSach AND dh.trangThai != 'DaHuy'
         ), 0) AS tongBan
     FROM Sach s
     JOIN ChiTietKhuyenMai ckm ON ckm.maSach = s.maSach

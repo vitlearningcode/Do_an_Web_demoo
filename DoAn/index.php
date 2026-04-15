@@ -78,7 +78,7 @@ if ($isLoggedIn) {
 <script src="PhuongThuc/components/xacThuc.js"></script>
 <script src="PhuongThuc/components/xacNhanDangXuat.js"></script>
 <script src="PhuongThuc/components/chatbot.js"></script>
-<script src="PhuongThuc/btnDanhMuc.js"></script>
+
 <script src="PhuongThuc/btnThemGioHang.js"></script>
 <script src="PhuongThuc/app.js"></script>
 <script src="PhuongThuc/xemNhanhSach.js"></script>
