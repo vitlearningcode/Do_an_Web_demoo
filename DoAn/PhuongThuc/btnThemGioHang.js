@@ -1,152 +1,49 @@
-// // ==========================================
-// // XỬ LÝ THÊM VÀO GIỎ HÀNG (CÓ KIỂM TRA ĐĂNG NHẬP)
-// // ==========================================
-
-// window.themVaoGioHang = function (event, nutBam) {
-//   if (event) {
-//     event.stopPropagation();
-//     event.preventDefault();
-//   }
-//   // RÀO CHẮN: Kiểm tra xem PHP có báo là đã đăng nhập chưa?
-//   /* --- TẠM TẮT BẮT LOGIN ---
-//   if (typeof dangDangNhap === "undefined" || !dangDangNhap) {
-//     if (typeof hienThiThongBao !== "undefined") {
-//       hienThiThongBao("Vui lòng đăng nhập để thêm sách vào giỏ!");
-//     } else {
-//       alert("Vui lòng đăng nhập để thêm sách vào giỏ!");
-//     }
-
-//     if (typeof authModal !== "undefined") {
-//       authModal.mo("dang_nhap");
-//     }
-//     return;
-//   }
-//   */
-
-//   // 1. Tìm ngược lên thẻ div bọc ngoài cùng của cuốn sách
-//   const theSach = nutBam.closest(".book-card");
-//   if (!theSach) {
-//     console.error("Lỗi: Không tìm thấy khung bọc thông tin sách!");
-//     return;
-//   }
-
-//   // 2. Móc dữ liệu trực tiếp từ các thuộc tính data-* mà file PHP đã in ra
-//   const thongTinSach = {
-//     maSach: theSach.dataset.id,
-//     tenSach: theSach.dataset.name,
-//     giaBan: parseFloat(theSach.dataset.price),
-//     hinhAnh: theSach.dataset.image,
-//     tacGia: "Đang cập nhật",
-//   };
-
-//   // 3. Đưa vào hệ thống xử lý giỏ hàng
-//   if (typeof cartDrawer !== "undefined") {
-//     cartDrawer.addItem(thongTinSach, 1);
-//   } else {
-//     console.error("Lỗi: Không tìm thấy hệ thống quản lý giỏ hàng.");
-//   }
-// };
-// =====================================================================================================
-
-
-
-
-
-// ==========================================
-// XỬ LÝ THÊM VÀO GIỎ HÀNG (BẮT BUỘC ĐĂNG NHẬP)
-// ==========================================
-
 // ==========================================
 // XỬ LÝ THÊM VÀO GIỎ HÀNG (BẮT BUỘC ĐĂNG NHẬP)
 // ==========================================
 
 window.themVaoGioHang = function (suKien, nutBam) {
-  // Ngăn chặn sự kiện click lan truyền (ví dụ: tránh mở trang chi tiết sách khi bấm thêm giỏ hàng)
+  // Ngăn click lan truyền lên thẻ <a> cha (tránh mở trang chi tiết sách)
   if (suKien) {
     suKien.stopPropagation();
     suKien.preventDefault();
   }
 
   // 1. KIỂM TRA ĐĂNG NHẬP
-  // Biến dangDangNhap được lấy từ file index.php (<script>const dangDangNhap = true/false;</script>)
   if (typeof dangDangNhap === "undefined" || !dangDangNhap) {
-    
-    // Hiển thị thông báo (Dùng hàm thông báo nếu có, không thì dùng mặc định của trình duyệt)
     alert("Bạn cần đăng nhập để thêm sách vào giỏ hàng!");
-
-    // Tự động mở form Đăng nhập (gọi hàm openLogin từ file app.js)
-    if (typeof openLogin === "function") {
-      openLogin();
-    } else {
-      console.error("Lỗi: Không tìm thấy hàm openLogin() để hiển thị form.");
-    }
-    
-    // Kết thúc hàm sớm, không cho chạy tiếp xuống phần thêm giỏ hàng
-    return; 
-  }
-
-  // 2. NẾU ĐÃ ĐĂNG NHẬP -> TÌM LẤY KHUNG CHỨA SÁCH
-  const theSach = nutBam.closest(".book-card");
-  if (!theSach) {
-    console.error("Lỗi: Không tìm thấy khung bọc thông tin sách (.book-card)!");
+    if (typeof openLogin === "function") openLogin();
     return;
   }
 
-  // 2b. KIỂM TRA HẾT HÀNG — chặn sớm trước khi làm bất cứ điều gì
+  // 2. TÌM KHUNG CHỨA SÁCH (.book-card)
+  var theSach = nutBam.closest(".book-card");
+  if (!theSach) {
+    console.error("Lỗi: Không tìm thấy .book-card!");
+    return;
+  }
+
+  // 3. KIỂM TRA HẾT HÀNG — đọc data-ton-kho do PHP render
   var tonKhoKT = parseInt(theSach.dataset.tonKho, 10);
   if (!isNaN(tonKhoKT) && tonKhoKT <= 0) {
-    var toastEl  = document.getElementById('cart-toast');
-    var toastMsg = document.getElementById('toast-message');
-    if (toastEl && toastMsg) {
-      toastMsg.textContent = '❌ Sản phẩm này hiện đã hết hàng!';
-      toastEl.classList.remove('show', 'toast-warning', 'toast-error');
-      toastEl.classList.add('show', 'toast-error');
-      clearTimeout(toastEl._warnTimer);
-      toastEl._warnTimer = setTimeout(function () {
-        toastEl.classList.remove('show', 'toast-error');
-      }, 3000);
-    } else {
-      alert('Sản phẩm này hiện đã hết hàng!');
-    }
-    return; // Dừng, không thêm vào giỏ
+    alert("Sản phẩm này hiện đã hết hàng!");
+    return; // Dừng hoàn toàn, không thêm vào giỏ
   }
 
-  // 3. MÓC DỮ LIỆU TỪ CÁC THUỘC TÍNH DATA-* TRONG HTML (Được tạo ra bởi bookCard.php)
-  // BẢO MẬT: Giá lấy từ __giaSach (PHP inject từ DB), không từ data-price (có thể F12 sửa)
+  // 4. MÓC DỮ LIỆU từ data-* (Giá từ __giaSach — PHP inject từ DB, chống F12)
   var maSach = theSach.dataset.id || '';
-  const thongTinSach = {
-    maSach: maSach,
-    tenSach: theSach.dataset.name,
-    giaBan: (window.__giaSach && window.__giaSach[maSach]) ? window.__giaSach[maSach] : 0,
-    hinhAnh: theSach.dataset.image,
-    tacGia: theSach.dataset.tacGia || "Đang cập nhật",
+  var thongTinSach = {
+    maSach  : maSach,
+    tenSach : theSach.dataset.name,
+    giaBan  : (window.__giaSach && window.__giaSach[maSach]) ? window.__giaSach[maSach] : 0,
+    hinhAnh : theSach.dataset.image,
+    tacGia  : theSach.dataset.tacGia || "Đang cập nhật",
   };
 
-  // 4. ĐƯA DỮ LIỆU VÀO HỆ THỐNG QUẢN LÝ GIỎ HÀNG
+  // 5. ĐƯA VÀO GIỎ HÀNG — cartDrawer sẽ show toast "Đã thêm..."
   if (typeof cartDrawer !== "undefined") {
-    // Gọi hàm addItem từ file cart.js
     cartDrawer.addItem(thongTinSach, 1);
   } else {
-    console.error("Lỗi: Không tìm thấy hệ thống quản lý giỏ hàng (cartDrawer).");
-  }
-
-  // 5. CẢNH BÁO TỒN KHO THẤP (đọc data-ton-kho từ PHP bookCard render sẵn)
-  var tonKho = parseInt(theSach.dataset.tonKho, 10);
-  if (!isNaN(tonKho) && tonKho <= 5 && tonKho > 0) {
-    // Hiển thị toast cảnh báo vàng sau 800ms (để toast "Đã thêm" hiện trước)
-    setTimeout(function () {
-      var toastEl  = document.getElementById('cart-toast');
-      var toastMsg = document.getElementById('toast-message');
-      if (toastEl && toastMsg) {
-        toastMsg.textContent = '⚠️ Chỉ còn ' + tonKho + ' cuốn — đặt hàng ngay!';
-        toastEl.classList.remove('show', 'toast-error', 'toast-warning');
-        toastEl.classList.add('show', 'toast-warning');
-        // Tự ẩn sau 3 giây
-        clearTimeout(toastEl._warnTimer);
-        toastEl._warnTimer = setTimeout(function () {
-          toastEl.classList.remove('show', 'toast-warning');
-        }, 3000);
-      }
-    }, 800);
+    console.error("Lỗi: Không tìm thấy cartDrawer.");
   }
 };
