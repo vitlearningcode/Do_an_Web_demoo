@@ -335,17 +335,17 @@ $goiYJson       = json_encode(
             <p style="font-size:12px;font-weight:700;color:#92400e;margin-bottom:8px">
                 <i class="fas fa-lightbulb" style="color:#f59e0b"></i>
                 Gợi ý — Sách đang bán chậm (tổng bán &lt; 10)</p>
-            <div style="display:flex;flex-wrap:wrap;gap:6px" id="khu-goi-y">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px" id="khu-goi-y">
                 <?php foreach ($goiYSach as $s): ?>
                 <button type="button"
                     class="nut-goi-y"
                     data-masach="<?= htmlspecialchars($s['maSach']) ?>"
                     data-ten="<?= htmlspecialchars($s['tenSach']) ?>"
                     data-ton="<?= (int)$s['soLuongTon'] ?>"
-                    style="padding:5px 10px;border-radius:99px;border:1px solid #f59e0b;background:#fef3c7;color:#78350f;font-size:12px;cursor:pointer;transition:background .2s">
-                    <i class="fas fa-plus-circle"></i>
-                    <?= htmlspecialchars($s['tenSach']) ?>
-                    <span style="opacity:.6">(tồn: <?= (int)$s['soLuongTon'] ?>)</span>
+                    style="padding:7px 10px;border-radius:8px;border:1px solid #f59e0b;background:#fef3c7;color:#78350f;font-size:12px;cursor:pointer;transition:background .2s;text-align:left;overflow:hidden;display:flex;align-items:center;gap:6px">
+                    <i class="fas fa-plus-circle" style="flex-shrink:0"></i>
+                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1"><?= htmlspecialchars($s['tenSach']) ?></span>
+                    <span style="opacity:.6;white-space:nowrap;flex-shrink:0">(<?= (int)$s['soLuongTon'] ?>)</span>
                 </button>
                 <?php endforeach; ?>
             </div>

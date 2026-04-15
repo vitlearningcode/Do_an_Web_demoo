@@ -28,14 +28,18 @@ $moTa       = trim($_POST['moTa']      ?? '');
 $urlAnh     = trim($_POST['urlAnh']    ?? '');
 $maTG_list  = $_POST['maTG'] ?? [];
 $maTL_list  = $_POST['maTL'] ?? [];
-$tenTGMoi   = trim($_POST['tenTG_moi'] ?? '');   // Tác giả mới thêm
-$tenTLMoi   = trim($_POST['tenTL_moi'] ?? '');   // Thể loại mới thêm
+$tenTGMoi   = trim($_POST['tenTG_moi']  ?? '');   // Tác giả mới thêm
+$tenTLMoi   = trim($_POST['tenTL_moi']  ?? '');   // Thể loại mới thêm
+$tenNXBMoi  = trim($_POST['tenNXB_moi'] ?? '');   // NXB mới thêm
 
 $isEdit = $maSach_cu !== '';
 
 // ── Validate sớm ─────────────────────────────────────
-if (empty($tenSach) || $giaBan <= 0 || $maNXB <= 0) {
-    redirectSach('Vui lòng điền đầy đủ tên sách, NXB và giá bán.', 'error');
+if (empty($tenSach) || $giaBan <= 0) {
+    redirectSach('Vui lòng điền đầy đủ tên sách và giá bán.', 'error');
+}
+if ($maNXB <= 0 && $tenNXBMoi === '') {
+    redirectSach('Vui lòng chọn hoặc nhập mới Nhà xuất bản.', 'error');
 }
 
 // ── Kiểm tra file upload (chưa move — cần biết maSach trước) ────────────
@@ -54,6 +58,17 @@ if (!empty($_FILES['anhBia_file']['name']) && $_FILES['anhBia_file']['error'] ==
 
 try {
     $pdo->beginTransaction();
+
+    // ── NXB mới (thêm vào DB trước, ghi đè $maNXB) ──────────
+    if ($tenNXBMoi !== '') {
+        $pdo->prepare("INSERT IGNORE INTO NhaXuatBan (tenNXB) VALUES (?)")->execute([$tenNXBMoi]);
+        $newId = (int)$pdo->lastInsertId();
+        if ($newId === 0) { // Đã tồn tại (INSERT IGNORE bỏ qua) — lấy ID cũ
+            $r = $pdo->prepare("SELECT maNXB FROM NhaXuatBan WHERE tenNXB = ?");
+            $r->execute([$tenNXBMoi]); $newId = (int)$r->fetchColumn();
+        }
+        if ($newId > 0) $maNXB = $newId; // Ghi đè $maNXB bằng ID vừa tạo/tìm thấy
+    }
 
     // ── Tác giả mới (thêm vào DB trước) ─────────────
     if ($tenTGMoi !== '') {

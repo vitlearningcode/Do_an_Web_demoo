@@ -294,7 +294,7 @@ if ($suaMaSach) {
             </div>
             <div class="adm-form-group">
                 <label>Nhà xuất bản <span class="req">*</span></label>
-                <select class="adm-input" name="maNXB" required>
+                <select class="adm-input" name="maNXB" id="selectNXB">
                     <option value="">-- Chọn NXB --</option>
                     <?php foreach ($dsNXB as $nxb): ?>
                         <option value="<?= $nxb['maNXB'] ?>"
@@ -303,6 +303,13 @@ if ($suaMaSach) {
                         </option>
                     <?php endforeach; ?>
                 </select>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+                    <input class="adm-input" type="text" name="tenNXB_moi" id="inputNXBMoi"
+                           placeholder="+ Thêm NXB mới..."
+                           style="flex:1;font-size:13px;padding:8px 12px"
+                           oninput="document.getElementById('selectNXB').required = this.value.trim() === ''">
+                    <span style="font-size:11px;color:#94a3b8;white-space:nowrap">Nhập tên → lưu tự động vào DB</span>
+                </div>
             </div>
             <div class="adm-form-group">
                 <label>Năm xuất bản</label>
@@ -344,15 +351,15 @@ if ($suaMaSach) {
                     Tác giả
                     <span style="font-size:11px;font-weight:400;color:#94a3b8;margin-left:6px">✓ chọn một hoặc nhiều</span>
                 </label>
-                <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;display:flex;flex-wrap:wrap;gap:8px;max-height:140px;overflow-y:auto;">
+                <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-height:160px;overflow-y:auto;">
                     <?php
                     $cacMaTGSua = $sachSua ? array_filter(explode(',', $sachSua['maTG_list'] ?? '')) : [];
                     foreach ($dsTacGia as $tg): ?>
-                    <label style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:13px;white-space:nowrap;transition:background .15s">
+                    <label style="display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:13px;transition:background .15s;overflow:hidden">
                         <input type="checkbox" name="maTG[]" value="<?= $tg['maTG'] ?>"
                             <?= in_array((string)$tg['maTG'], array_map('strval', $cacMaTGSua)) ? 'checked' : '' ?>
-                            style="accent-color:#2563eb">
-                        <?= htmlspecialchars($tg['tenTG']) ?>
+                            style="accent-color:#2563eb;flex-shrink:0">
+                        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?= htmlspecialchars($tg['tenTG']) ?></span>
                     </label>
                     <?php endforeach; ?>
                 </div>
@@ -367,15 +374,15 @@ if ($suaMaSach) {
                     Thể loại
                     <span style="font-size:11px;font-weight:400;color:#94a3b8;margin-left:6px">✓ chọn một hoặc nhiều</span>
                 </label>
-                <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;display:flex;flex-wrap:wrap;gap:8px;max-height:140px;overflow-y:auto;">
+                <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-height:160px;overflow-y:auto;">
                     <?php
                     $cacMaTLSua = $sachSua ? array_filter(explode(',', $sachSua['maTL_list'] ?? '')) : [];
                     foreach ($dsTheLoai as $tl): ?>
-                    <label style="display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:13px;white-space:nowrap;transition:background .15s">
+                    <label style="display:flex;align-items:center;gap:7px;padding:6px 10px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;cursor:pointer;font-size:13px;transition:background .15s;overflow:hidden">
                         <input type="checkbox" name="maTL[]" value="<?= $tl['maTL'] ?>"
                             <?= in_array((string)$tl['maTL'], array_map('strval', $cacMaTLSua)) ? 'checked' : '' ?>
-                            style="accent-color:#2563eb">
-                        <?= htmlspecialchars($tl['tenTL']) ?>
+                            style="accent-color:#2563eb;flex-shrink:0">
+                        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?= htmlspecialchars($tl['tenTL']) ?></span>
                     </label>
                     <?php endforeach; ?>
                 </div>
